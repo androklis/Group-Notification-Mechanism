@@ -1,0 +1,56 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+#footer {
+    width:100%;
+    bottom:0;
+}
+
+.icon-block {
+    padding: 0 15px;
+}
+.icon-block .material-icons {
+    font-size: inherit;
+}
+
+.card.hoverable.small > .card-content{
+    max-height: 85%;
+}
+
+#guestsView.collection{
+    margin: 0.5rem 0 1rem 0;
+    overflow: hidden;
+    position: relative;
+    border: 0px;
+    border-radius: 0px;
+}
+
+#guestsView.collection .collection-item.avatar {
+    min-height: 0px;
+    float: left;
+    padding-left: 72px;
+}
+
+#guestsView.collection .collection-item{
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 0px;
+    width: 300px;
+    background-color: transparent;
+}
+
+#logo-img{
+    max-width: 100%;
+    width: auto;
+}
+
+div#deleteModal {
+    height: 35%;
+    width: 30%;
+}
