@@ -30,12 +30,12 @@ public class GNMServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        switch (request.getParameter("type")) {
+        switch (request.getParameter("json[type]")) {
             case "ADD":
                 break;
             case "DELETE":
                 try {
-                    GoogleSpreadsheet.getInstance().deleteScheme(request.getParameter("uuid"), request.getParameter("email"));
+                    GoogleSpreadsheet.getInstance().deleteScheme(request.getParameter("json[uuid]"), request.getParameter("json[user_email]"));
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -45,8 +45,8 @@ public class GNMServlet extends HttpServlet {
             default:
                 break;
         }
-        response.sendRedirect("index.jsp");
-        response.setHeader("REFRESH", "0");
+//        response.sendRedirect("index.jsp");
+//        response.setHeader("REFRESH", "0");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

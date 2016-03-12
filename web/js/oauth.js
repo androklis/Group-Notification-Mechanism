@@ -50,7 +50,7 @@ function updateProfileInfo(code) {
                 img = response.image.url;
             }
 
-            $('#user').append('<ul id="userDropdown" class="dropdown-content waves-effect waves-light"><li><a href="#!" class="light-blue-text" onclick="signOut();">Sign Out</a></li></ul>');
+            $('#user').append('<ul id="userDropdown" class="dropdown-content waves-effect waves-light" style="position: fixed;"><li><a href="#!" class="light-blue-text" onclick="signOut();">Sign Out</a></li></ul>');
             $('#user').append('<li><a href="javascript:void(0);" id="" class="waves-effect waves-light"><i class="material-icons">settings</i></a></li>');
             $('#user').append('<li><a class="dropdown-button waves-effect waves-light" href="#!" data-activates="userDropdown"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/>&nbsp;&nbsp;' + name + '<i class="material-icons right">arrow_drop_down</i></a></li>');
 
@@ -77,19 +77,10 @@ function servletCall(code, email) {
         user_email: email
     };
 
-    $.ajax({
-        url: "Auth2Servlet",
-        type: "POST",
-        dataType: 'json',
-        data: {
-            json: json
-        },
-        success: function (data) {
-            loadCards(email, data.schemes);
+    $.post("Auth2Servlet", {json: json}, function (response, statusText, xhr) {
+        if (xhr.status === 200) {
+            loadCards(email, response.schemes);
             $('#spinnerContainer').attr('style', 'display: none');
-        },
-        error: function (error) {
-            console.error('ERROR:', error);
         }
     });
 }

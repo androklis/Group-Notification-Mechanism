@@ -5,38 +5,11 @@
  * is loaded.
  */
 function loadCards(userEmail, schemes) {
-
     $.each(schemes, function (index, value) {
-        var element = jQuery(".adr_schema:first").clone();
-        element.attr('id', value.uuid);
-        element.addClass('scheme');
-        element.find("#adr_title").html(value.subject);
-        element.find("#adr_description").html(value.message);
-        element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + value.timestamp + '</span>');
-
-        var guests = [];
-        var i = 0;
-        $.each(value.recipients.split(', '), function (index, attendee) {
-            guests.push(attendee);
-            i++;
-        });
-        element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="' + i + '">people</i>');
-
-        element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
-        if (value.status === "Pending") {
-            element.find(".card-action").append('<a href="javascript:void(0);" id="editScheme"><i class="material-icons waves-effect waves-light right black-text">mode_edit</i></a>');
-        } else {
-            element.find(".card-action").append('<a href="javascript:void(0);" id="duplicateScheme"><i class="material-icons waves-effect waves-light right black-text">repeat_one</i></a>');
-        }
-
-        element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
-        element.find("#adr_badge").html(value.status).css('color', '#ffab40');
-        element.find("#rcpts").val(guests);
-        element.appendTo("#schemes .row").slideDown(1000);
+        createCard(value.uuid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40', '');
     });
 
     var schemeIds = [];
-
     $("#schemes .row .adr_schema").each(function () {
         schemeIds.push($(this).attr('id'));
     });
@@ -80,46 +53,18 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
             }
             if ($.inArray(event.id, schemeIds) < 0) {
                 if (((event.id).indexOf('BIRTHDAY') > -1) && (index < events.length / 2)) {
-                    var element = jQuery(".adr_schema:first").clone();
-                    element.attr('id', event.id);
-                    element.find("#adr_title").html(event.summary);
-                    element.find("#adr_description").html(event.description);
-                    element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + when + '</span>');
-                    element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="1">people</i>');
-                    element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
-                    element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
-                    element.find("#adr_badge").html(summary + ' Calendar').css('color', color);
-                    element.find("#rcpts").val(event.gadget.preferences["goo.contactsEmail"]);
-                    element.prependTo("#schemes .row").slideDown(1000);
+                    createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], when, summary + ' Calendar', color, '');
                 } else if ((event.id).indexOf('BIRTHDAY') < 0) {
-                    var element = jQuery(".adr_schema:first").clone();
-                    element.attr('id', event.id);
-                    element.find("#adr_title").html(event.summary);
-                    element.find("#adr_description").html(event.description);
-                    element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5) + '</span>');
-                    element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
-                    element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
-                    var guests = [];
-                    var i = 0;
-                    $.each(event.attendees, function (index, attendee) {
-                        if (attendee.email.indexOf(userEmail) < 0) {
-                            guests.push(attendee.email);
-                            i++;
-                        }
-                    });
-                    element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="' + i + '">people</i>');
                     if (calendarID.indexOf('@gmail.com') > -1) {
-                        element.find("#adr_badge").html('Primary Calendar').css('color', color);
+                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color, userEmail);
                     } else {
-                        element.find("#adr_badge").html(summary + ' Calendar').css('color', color);
+                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color, userEmail);
                     }
-
-                    element.find("#rcpts").val(guests);
-                    element.prependTo("#schemes .row").slideDown(1000);
                 }
                 $('.tooltipped').tooltip();
             }
         });
+
         $('a#addSuggestion').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
             $('#addModal').openModal({
@@ -141,6 +86,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
                 }
             });
         });
+
         $('a#editScheme').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
             $('#editModal').openModal({
@@ -160,6 +106,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
                 }
             });
         });
+
         $('a#duplicateScheme').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
             $('#copyModal').openModal({
@@ -175,6 +122,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
                 }
             });
         });
+
         $('a#viewCard').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
             var rcpts = card.find('#rcpts').val();
@@ -184,7 +132,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
             });
             rcptsNames += '</ul>';
             $('#viewModal #viewTitle').text(card.find('#adr_title').text());
-            $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Date range:</strong> " + card.find('#timestamp').attr('data-tooltip') + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong> " + rcptsNames);
+            $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong> " + rcptsNames);
             $('#viewModal').openModal({
                 complete: function () {
                     $('#viewModal #viewTitle').empty();
@@ -192,6 +140,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
                 }
             });
         });
+
         $('a#deleteScheme').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
             $("#deleteModal #uuid").val(card.attr('id'));
@@ -204,4 +153,64 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
         });
     });
 
+}
+
+function createCard(id, className, title, content, recipients, timestamp, status, color, userEmail) {
+
+    var element = jQuery(".adr_schema:first").clone();
+    element.attr('id', id);
+    element.addClass(className);
+    element.find("#adr_title").html(title);
+    element.find("#adr_description").html(content);
+    element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + timestamp + '</span>');
+
+    switch (className) {
+        case "scheme":
+            var guests = [];
+            var i = 0;
+            $.each(recipients.split(', '), function (index, attendee) {
+                guests.push(attendee);
+                i++;
+            });
+            element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="' + i + '">people</i>');
+            element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
+            if (status === "Pending") {
+                element.find(".card-action").append('<a href="javascript:void(0);" id="editScheme"><i class="material-icons waves-effect waves-light right black-text">mode_edit</i></a>');
+                element.find("#adr_type").html('<i class="material-icons">notifications_active</i>');
+            } else {
+                element.find(".card-action").append('<a href="javascript:void(0);" id="duplicateScheme"><i class="material-icons waves-effect waves-light right black-text">content_copy</i></a>');
+                element.find("#adr_type").html('<i class="material-icons">notifications_off</i>');
+            }
+            element.find("#rcpts").val(guests);
+            element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
+            element.find("#adr_badge").html(status).css('color', color);
+            element.appendTo("#schemes .row").slideDown(1000);
+            break;
+        case "birthday":
+            element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="1">people</i>');
+            element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
+            element.find("#adr_type").html('<i class="material-icons">cake</i>');
+            element.find("#rcpts").val(recipients);
+            element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
+            element.find("#adr_badge").html(status).css('color', color);
+            element.prependTo("#schemes .row").slideDown(1000);
+            break;
+        case "calendar":
+            var guests = [];
+            var i = 0;
+            $.each(recipients, function (index, attendee) {
+                if (attendee.email.indexOf(userEmail) < 0) {
+                    guests.push(attendee.email);
+                    i++;
+                }
+            });
+            element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="' + i + '">people</i>');
+            element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
+            element.find("#adr_type").html('<i class="material-icons">event</i>');
+            element.find("#rcpts").val(guests);
+            element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
+            element.find("#adr_badge").html(status).css('color', color);
+            element.prependTo("#schemes .row").slideDown(1000);
+            break;
+    }
 }

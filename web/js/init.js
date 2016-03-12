@@ -76,7 +76,6 @@ $(function () {
         $('#addModal #addForm').validate();
     });
 
-
     $('#search').keyup(function () {
         var filter = $("#search").val();
         $("#schemes .row .adr_schema").each(function (index) {

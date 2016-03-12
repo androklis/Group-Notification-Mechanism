@@ -50,7 +50,10 @@
     width: auto;
 }
 
-div#deleteModal {
-    height: 35%;
-    width: 30%;
+span#adr_type{
+    right: -8px;
+}
+
+.card-content{
+    position: absolute;
 }

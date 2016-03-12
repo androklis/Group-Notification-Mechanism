@@ -44,7 +44,10 @@
     <body>
         <div class="adr_schema col s12 m6 l3" style="display:none;">
             <div class="card hoverable small">
-                <span id="adr_badge" class="badge right">Lorem ipsum</span>
+                <div style="padding-top: 5px;">
+                    <span id="adr_type" class="badge left">Lorem ipsum</span>
+                    <span id="adr_badge" class="badge right">Lorem ipsum</span>
+                </div>
                 <div class="card-content">
                     <span id="adr_title" class="card-title">Lorem ipsum dolor sit amet</span>
                     <p id="adr_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -74,17 +77,14 @@
         <div id="deleteModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;">Delete Scheme?</h4>
-                <form id="deleteForm" class="col s12" action="GNMServlet" method="POST">
-                    <input type="hidden" id="uuid" name="uuid" />
-                    <input type="hidden" id="email" name="email" /> 
-                    <input type="hidden" id="type" name="type" value="DELETE"/>
-                </form>
+                <input type="hidden" id="uuid" name="uuid" />
+                <input type="hidden" id="email" name="email" /> 
                 <div class="viewContent" style="font-size: 1.5rem;">
                 </div>
             </div>
             <div class="modal-footer">
                 <strong class="btn-flat left" style="cursor: default;"><font color='red'>THIS PROCEDURE IS IRREVERSIBLE</font></strong>
-                <a id="delBtn" class="waves-effect btn-flat red-text" onclick="$('#deleteForm').submit();"> Delete </a>
+                <a id="delBtn" class="modal-action modal-close waves-effect btn-flat red-text" onclick="delCard();"> Delete </a>
                 <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
             </div>
         </div>
@@ -191,9 +191,11 @@
 
             </div>
         </nav>
+        <div class="progress" style="display: none;">
+            <div class="indeterminate"></div>
+        </div>
         <div class="section no-pad-bot" id="index-banner">
             <div class="container">
-
                 <div id="welcomeScreen" class="row center" style="display:none;">
                     <br><br>
                     <img id="logo-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
@@ -202,7 +204,6 @@
                     <button id="customBtn" class="waves-effect waves-light btn red">Sign in with Google</button>
                     <br><br>
                 </div>
-
                 <div id="schemes" style="display:none;">
                     <form>
                         <div class="input-field">
@@ -269,8 +270,10 @@
         </footer>
 
         <!--  Scripts-->
+        <script src="js/isotope.pkgd.min.js"></script>
         <script src="js/oauth.js"></script>
         <script src="js/init.js"></script>
+        <script src="js/modal-actions.js"></script>
         <script src="js/google.contacts-v3.js"></script>
         <script src="js/google.calendar-v3.js"></script>
     </body>
