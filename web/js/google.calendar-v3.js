@@ -4,9 +4,9 @@
  * Load Google Calendar client library. List upcoming events once client library
  * is loaded.
  */
-function loadCards(userEmail, schemes) {
+function loadCards(schemes) {
     $.each(schemes, function (index, value) {
-        createCard(value.uuid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40', '');
+        createCard(value.uuid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
     });
 
     var schemeIds = [];
@@ -23,7 +23,7 @@ function loadCards(userEmail, schemes) {
                 } else {
                     $('select#calendars').append('<option value="' + value.id + '">' + value.summary + ' Calendar</option>');
                 }
-                listUpcomingEvents(userEmail, schemeIds, value.id, value.summary, value.backgroundColor);
+                listUpcomingEvents(schemeIds, value.id, value.summary, value.backgroundColor);
             });
             $('select#calendars').material_select();
         });
@@ -35,7 +35,7 @@ function loadCards(userEmail, schemes) {
  * authorized user's calendar. If no events are found an appropriate message is
  * printed.
  */
-function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
+function listUpcomingEvents(schemeIds, calendarID, summary, color) {
     var request = gapi.client.calendar.events.list({
         'calendarId': calendarID,
         'timeMin': (new Date()).toISOString(),
@@ -53,12 +53,12 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
             }
             if ($.inArray(event.id, schemeIds) < 0) {
                 if (((event.id).indexOf('BIRTHDAY') > -1) && (index < events.length / 2)) {
-                    createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], when, summary + ' Calendar', color, '');
+                    createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], when, summary + ' Calendar', color);
                 } else if ((event.id).indexOf('BIRTHDAY') < 0) {
                     if (calendarID.indexOf('@gmail.com') > -1) {
-                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color, userEmail);
+                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
                     } else {
-                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color, userEmail);
+                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
                     }
                 }
                 $('.tooltipped').tooltip();
@@ -67,11 +67,16 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
 
         $('a#addSuggestion').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
+            var datepicker = $('.datepicker').pickadate({});
+            var picker = datepicker.pickadate('picker');
             $('#addModal').openModal({
                 complete: function () {
                     $('#addModal #contacts').val('');
                     $('#addModal #contacts').material_select();
                     $("#addModal #now").prop("checked", true);
+                    picker.set('max', '');
+                    picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
+                    $('select#calendars').prop('disabled', false);
                     $("#addModal #calendars").val('0');
                     $('#addModal #calendars').material_select();
                     $("#addModal #subject").val('');
@@ -79,6 +84,14 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
                     updateTime();
                 },
                 ready: function () {
+                    $('#uuid').val(card.attr('id'));
+                    $('select#contacts').val(card.find('#rcpts').val().split(','));
+                    console.log(fetchGroupContacts('http://www.google.com/m8/feeds/groups/test1.gnm%40gmail.com/base/6e8a7dfc8cc76dba'));
+                    $('select#contacts').material_select();
+                    $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
+                    $('select#calendars').prop('disabled', true);
+                    $('select#calendars').material_select();
+                    picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
                     $('#addModal #date, #addModal #time').prop('disabled',
                             $('#addModal #now').is(':checked'));
                     $('#addModal #subject').val(card.find('#adr_title').text()).change();
@@ -143,7 +156,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
 
         $('a#deleteScheme').unbind("click").click(function () {
             var card = $(this).parents('.adr_schema');
-            $("#deleteModal #uuid").val(card.attr('id'));
+            $('#uuid').val(card.attr('id'));
             $('#deleteModal .viewContent').append("Scheme subject:<br/><br/><strong>" + card.find('#adr_title').text() + "</strong><br/><br/>Are you sure you want to delete this scheme?");
             $('#deleteModal').openModal({
                 complete: function () {
@@ -155,7 +168,7 @@ function listUpcomingEvents(userEmail, schemeIds, calendarID, summary, color) {
 
 }
 
-function createCard(id, className, title, content, recipients, timestamp, status, color, userEmail) {
+function createCard(id, className, title, content, recipients, timestamp, status, color) {
 
     var element = jQuery(".adr_schema:first").clone();
     element.attr('id', id);
@@ -199,7 +212,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
             var guests = [];
             var i = 0;
             $.each(recipients, function (index, attendee) {
-                if (attendee.email.indexOf(userEmail) < 0) {
+                if (attendee.email.indexOf($.cookie("email")) < 0) {
                     guests.push(attendee.email);
                     i++;
                 }

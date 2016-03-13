@@ -14,8 +14,12 @@ function signinCallback(authResult) {
     if (authResult) {
         if (authResult['status']['signed_in']) {
 
+            $.cookie("access_token", authResult['access_token'], {
+                expires: 1
+            });
+
             togglePage('signedIn');
-            fetchContacts(authResult['access_token']);
+            fetchContacts();
             updateProfileInfo(authResult['code']);
 
         } else if (authResult['status']['immediate_failed']) {
@@ -61,25 +65,29 @@ function updateProfileInfo(code) {
                 belowOrigin: true
             });
 
-            $('*[id*=email]').each(function () {
-                $(this).val(response.emails[0].value);
+//            $('*[id*=email]').each(function () {
+//                $(this).val(response.emails[0].value);
+//            });
+
+            $.cookie("email", response.emails[0].value, {
+                expires: 1
             });
 
-            servletCall(code, response.emails[0].value);
+            servletCall(code);
         });
     });
 }
 
-function servletCall(code, email) {
+function servletCall(code) {
 
     var json = {
         auth_code: code,
-        user_email: email
+        user_email: $.cookie("email")
     };
 
     $.post("Auth2Servlet", {json: json}, function (response, statusText, xhr) {
         if (xhr.status === 200) {
-            loadCards(email, response.schemes);
+            loadCards(response.schemes);
             $('#spinnerContainer').attr('style', 'display: none');
         }
     });

@@ -32,10 +32,11 @@ public class GNMServlet extends HttpServlet {
 
         switch (request.getParameter("json[type]")) {
             case "ADD":
+                
                 break;
             case "DELETE":
                 try {
-                    GoogleSpreadsheet.getInstance().deleteScheme(request.getParameter("json[uuid]"), request.getParameter("json[user_email]"));
+                    GoogleSpreadsheet.getInstance().deleteScheme(request.getParameter("json[id]"), request.getParameter("json[user_email]"));
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }

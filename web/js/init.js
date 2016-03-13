@@ -4,12 +4,16 @@ function checkTime(i) {
 
 function updateTime() {
     var today = new Date();
-    var date = today.toISOString().substring(0, 10);
+
+    var day = today.getDate();
+    var monthIndex = today.getMonth() + 1;
+    var year = today.getFullYear();
+
     var time = checkTime(today.getHours()) + ':'
             + checkTime(today.getMinutes());
 
     if ($('#addModal #now').is(':checked')) {
-        $('#addModal #date').val(date);
+        $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
         $('#addModal #time').val(time);
     }
 }
@@ -41,7 +45,7 @@ $(function () {
         default: 'now'
     });
 
-    picker.set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
+    picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
 
     updateTime();
 

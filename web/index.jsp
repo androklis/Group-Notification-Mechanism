@@ -37,6 +37,7 @@
 
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/jquery.validate.js"></script>
+        <script src="js/jquery.cookie.js"></script>
         <!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
@@ -57,7 +58,7 @@
             </div>
             <input type="hidden" id="rcpts" name="rcpts" value=""/>
         </div>
-
+        <input type="hidden" id="uuid" name="uuid" />
         <div class="fixed-action-btn" style="bottom: 45px; right: 24px; display:none;">
             <a id="addBtn" class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#addModal">
                 <i class="large material-icons">add</i>
@@ -77,8 +78,6 @@
         <div id="deleteModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;">Delete Scheme?</h4>
-                <input type="hidden" id="uuid" name="uuid" />
-                <input type="hidden" id="email" name="email" /> 
                 <div class="viewContent" style="font-size: 1.5rem;">
                 </div>
             </div>
@@ -95,8 +94,6 @@
                 <div class="viewContent" style="font-size: 1.5rem;">
                 </div>
                 <form id="deleteForm" class="col s12" action="GNMServlet" method="POST">
-                    <input type="hidden" id="email" name="email" /> 
-                    <input type="hidden" id="type" name="type" value="COPY"/>
                     <!--                    <div class="row input-field">
                                             <div class="col s4 m4 l2">
                                                 <input type="checkbox" id="now" checked="checked" />
@@ -131,52 +128,41 @@
         <div id="addModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 style="text-align: center;">Add new Scheme</h4>
-                <form id="addForm" class="col s12" action="/GNMServlet" method="POST">
-                    <input type="hidden" id="from" name="from" /> 
-                    <input type="hidden" id="type" name="type" value="ADD"/>
-                    <input type="hidden" id="uuid" name="uuid" />
-
-                    <div class="row input-field">
-                        <select multiple id="contacts" class="icons" name="contacts" required="required">
-                            <option value="" disabled selected>Choose contacts</option>
+                <div class="row input-field">
+                    <select multiple id="contacts" class="icons" name="contacts" required="required">
+                        <option value="" disabled selected>Choose contacts</option>
+                    </select>
+                    <label for="contacts">Google Contacts</label>
+                </div>
+                <div class="row input-field">
+                    <input id="subject" type="text" required="required">
+                    <label for="subject">Subject</label>
+                </div>
+                <div class="row input-field">
+                    <div class="col s4 m4 l2">
+                        <input type="checkbox" id="now" checked="checked" />
+                        <label for="now">now</label>
+                    </div>
+                    <div class="col s8 m8 l4">
+                        <select id="calendars">
+                            <option value="0" selected>Do not add to calendar</option>
                         </select>
-                        <label for="contacts">Google Contacts</label>
+                    </div>
+                    <div class="col s6 m6 l3">
+                        <input id="date" class="datepicker" type="date">
+                    </div>
+                    <div class="col s6 m6 l3">
+                        <input id="time" class="timepicker" type="text">
                     </div>
 
-                    <div class="row input-field">
-                        <input id="subject" type="text" required="required">
-                        <label for="subject">Subject</label>
-                    </div>
-                    <div class="row input-field">
-                        <div class="col s4 m4 l2">
-                            <input type="checkbox" id="now" checked="checked" />
-                            <label for="now">now</label>
-                        </div>
-
-                        <div class="col s8 m8 l4">
-                            <select id="calendars">
-                                <option value="0" selected>Do not add to calendar</option>
-                            </select>
-                        </div>
-
-                        <div class="col s6 m6 l3">
-                            <input id="date" class="datepicker" type="date">
-                        </div>
-
-                        <div class="col s6 m6 l3">
-                            <input id="time" class="timepicker" type="text">
-                        </div>
-
-                    </div>
-
-                    <div class="row input-field">
-                        <textarea id="message" class="materialize-textarea" required="required"></textarea>
-                        <label for="message">Message</label>
-                    </div>
-                </form>
+                </div>
+                <div class="row input-field">
+                    <textarea id="message" class="materialize-textarea" required="required"></textarea>
+                    <label for="message">Message</label>
+                </div>
             </div>
             <div class="modal-footer">
-                <a id="addBtn" href="#!" class="waves-effect btn-flat">Add</a>
+                <a id="addBtn" href="#!" class="waves-effect btn-flat" onclick="addCard();">Add</a>
             </div>
         </div>
 
@@ -270,7 +256,6 @@
         </footer>
 
         <!--  Scripts-->
-        <script src="js/isotope.pkgd.min.js"></script>
         <script src="js/oauth.js"></script>
         <script src="js/init.js"></script>
         <script src="js/modal-actions.js"></script>
