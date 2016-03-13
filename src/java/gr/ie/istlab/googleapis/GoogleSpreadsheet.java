@@ -86,7 +86,7 @@ public class GoogleSpreadsheet {
 
     }
 
-    public String addScheme(String userEmail, String to, String subject, String message,
+    public String addScheme(String id, String userEmail, String to, String subject, String message,
             String timestamp) throws MalformedURLException, IOException,
             ServiceException {
 
@@ -96,20 +96,22 @@ public class GoogleSpreadsheet {
 
         ListEntry row = new ListEntry();
 
-        String uuid = UUID.randomUUID().toString();
-
-        row.getCustomElements().setValueLocal("UUID", uuid);
-
         row.getCustomElements().setValueLocal("Recipients", to);
         row.getCustomElements().setValueLocal("Subject", subject);
-
         row.getCustomElements().setValueLocal("Message", message);
         row.getCustomElements().setValueLocal("Timestamp", "'" + timestamp);
-        row.getCustomElements().setValueLocal("Status", "Pending");
+        row.getCustomElements().setValueLocal("Status", "PENDING");
 
-        spreadsheetService.insert(listFeedUrl, row);
-
-        return uuid;
+        if (!"0".equals(id)) {
+            row.getCustomElements().setValueLocal("UUID", id);
+            spreadsheetService.insert(listFeedUrl, row);
+            return id;
+        } else {
+            String uuid = UUID.randomUUID().toString();
+            row.getCustomElements().setValueLocal("UUID", uuid);
+            spreadsheetService.insert(listFeedUrl, row);
+            return uuid;
+        }
 
     }
 

@@ -204,7 +204,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
             element.find("#adr_type").html('<i class="material-icons">cake</i>');
             element.find("#rcpts").val(recipients);
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
-            element.find("#adr_badge").html(status).css('color', color);
+            element.find("#adr_badge").html(status.toUpperCase()).css('color', color);
             element.prependTo("#schemes .row").slideDown(1000);
             break;
         case "calendar":
@@ -221,7 +221,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
             element.find("#adr_type").html('<i class="material-icons">event</i>');
             element.find("#rcpts").val(guests);
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
-            element.find("#adr_badge").html(status).css('color', color);
+            element.find("#adr_badge").html(status.toUpperCase()).css('color', color);
             element.prependTo("#schemes .row").slideDown(1000);
             break;
     }

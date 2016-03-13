@@ -68,6 +68,7 @@ $(function () {
             $("#addModal #message").val('');
             updateTime();
         }, ready: function () {
+            $('#uuid').val('0');
             $('#addModal #date, #addModal #time').prop('disabled',
                     $('#addModal #now').is(':checked'));
         }

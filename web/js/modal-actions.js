@@ -28,18 +28,33 @@ function addCard() {
     console.log('#now', $('#addModal #now').is(':checked'));
     console.log('#calendars', $('#addModal #calendars').val());
 
-//    window.scrollTo(0, 0);
-//    $('.progress').toggle();
-//
-//    var json = {
-//        id: $('#uuid').val(),
-//        user_email: $.cookie("email"),
-//        type: 'ADD'
-//    };
-//
-//    $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
-//        if (xhr.status === 200) {
-//        }
-//        $('.progress').toggle();
-//    });
+    window.scrollTo(0, 0);
+    $('.progress').toggle();
+
+    var json = {
+        id: $('#uuid').val(),
+        user_email: $.cookie("email"),
+        contacts: $('#addModal #contacts').val().toString(),
+        subject: $('#addModal #subject').val(),
+        message: $('#addModal #message').val(),
+        now: $('#addModal #now').is(':checked'),
+        calendars: $('#addModal #calendars').val(),
+        date: $('#addModal #date').val(),
+        time: $('#addModal #time').val(),
+        type: 'ADD'
+    };
+
+    $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
+        if (xhr.status === 200) {
+            if (json.id !== "0") {
+                $("div[id=" + $('#uuid').val() + "]").remove();
+            }
+            if (response.status === "Error Sending") {
+                createCard(json.id, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ff0000');
+            } else {
+                createCard(json.id, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ffab40');
+            }
+        }
+        $('.progress').toggle();
+    });
 }

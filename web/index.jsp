@@ -38,7 +38,6 @@
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.cookie.js"></script>
-        <!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
     </head>
@@ -58,7 +57,7 @@
             </div>
             <input type="hidden" id="rcpts" name="rcpts" value=""/>
         </div>
-        <input type="hidden" id="uuid" name="uuid" />
+        <input type="hidden" id="uuid" />
         <div class="fixed-action-btn" style="bottom: 45px; right: 24px; display:none;">
             <a id="addBtn" class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#addModal">
                 <i class="large material-icons">add</i>
@@ -162,7 +161,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a id="addBtn" href="#!" class="waves-effect btn-flat" onclick="addCard();">Add</a>
+                <a id="addBtn" href="#!" class="modal-action modal-close waves-effect btn-flat" onclick="addCard();">Add</a>
             </div>
         </div>
 
@@ -258,8 +257,8 @@
         <!--  Scripts-->
         <script src="js/oauth.js"></script>
         <script src="js/init.js"></script>
-        <script src="js/modal-actions.js"></script>
         <script src="js/google.contacts-v3.js"></script>
         <script src="js/google.calendar-v3.js"></script>
+        <script src="js/modal-actions.js"></script>
     </body>
 </html>
