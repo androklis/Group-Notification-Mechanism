@@ -144,7 +144,7 @@
                     </div>
                     <div class="col s8 m8 l4">
                         <select id="calendars">
-                            <option value="0" selected>Do not add to calendar</option>
+                            <option value="0" selected>DO NOT ADD TO CALENDAR</option>
                         </select>
                     </div>
                     <div class="col s6 m6 l3">

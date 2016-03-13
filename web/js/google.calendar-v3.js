@@ -19,9 +19,9 @@ function loadCards(schemes) {
         request.execute(function (resp) {
             $.each(resp.items, function (index, value) {
                 if (value.primary) {
-                    $('select#calendars').append('<option value="' + value.id + '">Primary Calendar</option>');
+                    $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
-                    $('select#calendars').append('<option value="' + value.id + '">' + value.summary + ' Calendar</option>');
+                    $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                 }
                 listUpcomingEvents(schemeIds, value.id, value.summary, value.backgroundColor);
             });
@@ -61,107 +61,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                         createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
                     }
                 }
-                $('.tooltipped').tooltip();
             }
-        });
-
-        $('a#addSuggestion').unbind("click").click(function () {
-            var card = $(this).parents('.adr_schema');
-            var datepicker = $('.datepicker').pickadate({});
-            var picker = datepicker.pickadate('picker');
-            $('#addModal').openModal({
-                complete: function () {
-                    $('#addModal #contacts').val('');
-                    $('#addModal #contacts').material_select();
-                    $("#addModal #now").prop("checked", true);
-                    picker.set('max', '');
-                    picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-                    $('select#calendars').prop('disabled', false);
-                    $("#addModal #calendars").val('0');
-                    $('#addModal #calendars').material_select();
-                    $("#addModal #subject").val('');
-                    $("#addModal #message").val('');
-                    updateTime();
-                },
-                ready: function () {
-                    $('#uuid').val(card.attr('id'));
-                    $('select#contacts').val(card.find('#rcpts').val().split(','));
-                    $('select#contacts').material_select();
-                    $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
-                    $('select#calendars').prop('disabled', true);
-                    $('select#calendars').material_select();
-                    picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
-                    $('#addModal #date, #addModal #time').prop('disabled',
-                            $('#addModal #now').is(':checked'));
-                    $('#addModal #subject').val(card.find('#adr_title').text()).change();
-                    $('#addModal #message').val(card.find('#adr_description').text()).change();
-                }
-            });
-        });
-
-        $('a#editScheme').unbind("click").click(function () {
-            var card = $(this).parents('.adr_schema');
-            $('#editModal').openModal({
-                complete: function () {
-                    $('#editModal #contacts').val('');
-                    $('#editModal #contacts').material_select();
-                    $("#editModal #calendars").val('0');
-                    $('#editModal #calendars').material_select();
-                    $("#editModal #subject").val('');
-                    $("#editModal #message").val('');
-//                    updateTime();
-                },
-                ready: function () {
-                    $("#editModal #now").prop("checked", false);
-                    $('#editModal #subject').val(card.find('#adr_title').text()).change();
-                    $('#editModal #message').val(card.find('#adr_description').text()).change();
-                }
-            });
-        });
-
-        $('a#duplicateScheme').unbind("click").click(function () {
-            var card = $(this).parents('.adr_schema');
-            $('#copyModal').openModal({
-                complete: function () {
-                    $("#copyModal #now").prop("checked", true);
-                    $("#copyModal #calendars").val('0');
-                    $('#copyModal #calendars').material_select();
-//                    updateTime();
-                },
-                ready: function () {
-                    $('#copyModal #date, #copyModal #time').prop('disabled',
-                            $('#addModal #now').is(':checked'));
-                }
-            });
-        });
-
-        $('a#viewCard').unbind("click").click(function () {
-            var card = $(this).parents('.adr_schema');
-            var rcpts = card.find('#rcpts').val();
-            var rcptsNames = '<br/><ul id="guestsView" class="collection">';
-            $.each(rcpts.split(','), function (index, value) {
-                rcptsNames += '<li class="collection-item avatar"> <img src="' + $('select#contacts option[value="' + value + '"]').attr("data-icon") + '" alt="" class="circle"> <span class="title">' + $('select#contacts option[value="' + value + '"]').text() + '</span> <p>' + value + '</p></li>';
-            });
-            rcptsNames += '</ul>';
-            $('#viewModal #viewTitle').text(card.find('#adr_title').text());
-            $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong> " + rcptsNames);
-            $('#viewModal').openModal({
-                complete: function () {
-                    $('#viewModal #viewTitle').empty();
-                    $('#viewModal .viewContent').empty();
-                }
-            });
-        });
-
-        $('a#deleteScheme').unbind("click").click(function () {
-            var card = $(this).parents('.adr_schema');
-            $('#uuid').val(card.attr('id'));
-            $('#deleteModal .viewContent').append("Scheme subject:<br/><br/><strong>" + card.find('#adr_title').text() + "</strong><br/><br/>Are you sure you want to delete this scheme?");
-            $('#deleteModal').openModal({
-                complete: function () {
-                    $('#deleteModal .viewContent').empty();
-                }
-            });
         });
     });
 
@@ -180,13 +80,13 @@ function createCard(id, className, title, content, recipients, timestamp, status
         case "scheme":
             var guests = [];
             var i = 0;
-            $.each(recipients.split(', '), function (index, attendee) {
+            $.each(recipients.split(','), function (index, attendee) {
                 guests.push(attendee);
                 i++;
             });
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="' + i + '">people</i>');
             element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
-            if (status === "Pending") {
+            if (status === "PENDING") {
                 element.find(".card-action").append('<a href="javascript:void(0);" id="editScheme"><i class="material-icons waves-effect waves-light right black-text">mode_edit</i></a>');
                 element.find("#adr_type").html('<i class="material-icons">notifications_active</i>');
             } else {
@@ -225,4 +125,104 @@ function createCard(id, className, title, content, recipients, timestamp, status
             element.prependTo("#schemes .row").slideDown(1000);
             break;
     }
+
+    $('a#addSuggestion').unbind("click").click(function () {
+        var card = $(this).parents('.adr_schema');
+        var datepicker = $('.datepicker').pickadate({});
+        var picker = datepicker.pickadate('picker');
+        $('#addModal').openModal({
+            complete: function () {
+                $('#addModal #contacts').val('');
+                $('#addModal #contacts').material_select();
+                $("#addModal #now").prop("checked", true);
+                picker.set('max', '');
+                picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
+                $('select#calendars').prop('disabled', false);
+                $("#addModal #calendars").val('0');
+                $('#addModal #calendars').material_select();
+                $("#addModal #subject").val('');
+                $("#addModal #message").val('');
+                updateTime();
+            },
+            ready: function () {
+                $('#uuid').val(card.attr('id'));
+                $('select#contacts').val(card.find('#rcpts').val().split(','));
+                $('select#contacts').material_select();
+                $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
+                $('select#calendars').prop('disabled', true);
+                $('select#calendars').material_select();
+                picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
+                $('#addModal #date, #addModal #time').prop('disabled',
+                        $('#addModal #now').is(':checked'));
+                $('#addModal #subject').val(card.find('#adr_title').text()).change();
+                $('#addModal #message').val(card.find('#adr_description').text()).change();
+            }
+        });
+    });
+
+    $('a#editScheme').unbind("click").click(function () {
+        var card = $(this).parents('.adr_schema');
+        $('#editModal').openModal({
+            complete: function () {
+                $('#editModal #contacts').val('');
+                $('#editModal #contacts').material_select();
+                $("#editModal #calendars").val('0');
+                $('#editModal #calendars').material_select();
+                $("#editModal #subject").val('');
+                $("#editModal #message").val('');
+//                    updateTime();
+            },
+            ready: function () {
+                $("#editModal #now").prop("checked", false);
+                $('#editModal #subject').val(card.find('#adr_title').text()).change();
+                $('#editModal #message').val(card.find('#adr_description').text()).change();
+            }
+        });
+    });
+
+    $('a#duplicateScheme').unbind("click").click(function () {
+        var card = $(this).parents('.adr_schema');
+        $('#copyModal').openModal({
+            complete: function () {
+                $("#copyModal #now").prop("checked", true);
+                $("#copyModal #calendars").val('0');
+                $('#copyModal #calendars').material_select();
+//                    updateTime();
+            },
+            ready: function () {
+                $('#copyModal #date, #copyModal #time').prop('disabled',
+                        $('#addModal #now').is(':checked'));
+            }
+        });
+    });
+
+    $('a#viewCard').unbind("click").click(function () {
+        var card = $(this).parents('.adr_schema');
+        var rcpts = card.find('#rcpts').val();
+        var rcptsNames = '<br/><ul id="guestsView" class="collection">';
+        $.each(rcpts.split(','), function (index, value) {
+            rcptsNames += '<li class="collection-item avatar"> <img src="' + $('select#contacts option[value="' + value + '"]').attr("data-icon") + '" alt="" class="circle"> <span class="title">' + $('select#contacts option[value="' + value + '"]').text() + '</span> <p>' + value + '</p></li>';
+        });
+        rcptsNames += '</ul>';
+        $('#viewModal #viewTitle').text(card.find('#adr_title').text());
+        $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong> " + rcptsNames);
+        $('#viewModal').openModal({
+            complete: function () {
+                $('#viewModal #viewTitle').empty();
+                $('#viewModal .viewContent').empty();
+            }
+        });
+    });
+
+    $('a#deleteScheme').unbind("click").click(function () {
+        var card = $(this).parents('.adr_schema');
+        $('#uuid').val(card.attr('id'));
+        $('#deleteModal .viewContent').append("Scheme subject:<br/><br/><strong>" + card.find('#adr_title').text() + "</strong><br/><br/>Are you sure you want to delete this scheme?");
+        $('#deleteModal').openModal({
+            complete: function () {
+                $('#deleteModal .viewContent').empty();
+            }
+        });
+    });
+    $('.tooltipped').tooltip();
 }

@@ -39,16 +39,7 @@ public class GNMServlet extends HttpServlet {
                 String id = request.getParameter("json[id]");
 
                 json.addProperty("status", "");
-                System.out.println("id: " + request.getParameter("json[id]"));
-                System.out.println("user_email: " + request.getParameter("json[user_email]"));
-                System.out.println("contacts: " + request.getParameter("json[contacts]"));
-                System.out.println("subject: " + request.getParameter("json[subject]"));
-                System.out.println("message: " + request.getParameter("json[message]"));
-                System.out.println("now: " + request.getParameter("json[now]"));
-                System.out.println("calendars: " + request.getParameter("json[calendars]"));
-                System.out.println("date: " + request.getParameter("json[date]"));
-                System.out.println("time: " + request.getParameter("json[time]"));
-
+             
                 if (("0".equals(request.getParameter("json[id]"))) && (!"0".equals(request.getParameter("json[calendars]")))) {
                     // TODO: Insert to Google calendar   
                 }
@@ -71,6 +62,8 @@ public class GNMServlet extends HttpServlet {
                     } catch (MessagingException | MalformedURLException | ServiceException ex) {
                         Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                } else {
+                    json.addProperty("status", "PENDING");
                 }
 
                 response.setContentType("application/json");
