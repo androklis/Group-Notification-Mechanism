@@ -95,6 +95,8 @@ function servletCall(code) {
 
 function signOut() {
     gapi.auth.signOut();
+    $.removeCookie("email");
+    $.removeCookie("access_token");
     $('.button-collapse').sideNav('hide');
     togglePage('signedOut');
 }
