@@ -24,6 +24,10 @@ function fetchGroupContacts(groupId) {
     $.get("https://www.google.com/m8/feeds/contacts/default/full/?alt=json&access_token=" + $.cookie("access_token") + "&group=" + groupId + "&max-results=100",
             function (response) {
                 $.each(response.feed.entry, function (index, value) {
+                    var contacts = $('select#contacts').val();
+                    contacts.push(value.gd$email[0].address);
+                    $('select#contacts').val(contacts);
+                    $('select#contacts').material_select();
                     console.log(value.gd$email[0].address);
                 });
             });

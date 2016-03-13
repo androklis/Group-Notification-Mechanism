@@ -86,7 +86,6 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                 ready: function () {
                     $('#uuid').val(card.attr('id'));
                     $('select#contacts').val(card.find('#rcpts').val().split(','));
-                    console.log(fetchGroupContacts('http://www.google.com/m8/feeds/groups/test1.gnm%40gmail.com/base/6e8a7dfc8cc76dba'));
                     $('select#contacts').material_select();
                     $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
                     $('select#calendars').prop('disabled', true);

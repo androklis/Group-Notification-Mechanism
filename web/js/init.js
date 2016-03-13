@@ -51,13 +51,19 @@ $(function () {
 
     setInterval(updateTime, 1000 * 60 * 1);
 
+    $('select#contacts').on('change', function () {
+        if (($('select#contacts').val()[$('select#contacts').val().length - 1]).indexOf("@") < 0) {
+            console.log($('select#contacts').val()[$('select#contacts').val().length - 1]);
+        }
+    });
+
     $('#addBtn.modal-trigger').leanModal({
         complete: function () {
-            $('#addModal #contacts').val('');
-            $('#addModal #contacts').material_select();
+            $('select#contacts').val('');
+            $('select#contacts').material_select();
             $("#addModal #now").prop("checked", true);
-            $("#addModal #calendars").val('0');
-            $('#addModal #calendars').material_select();
+            $("select#calendars").val('0');
+            $('select#calendars').material_select();
             $("#addModal #subject").val('');
             $("#addModal #message").val('');
             updateTime();
