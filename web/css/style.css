@@ -51,7 +51,8 @@
 }
 
 span#adr_type{
-    right: -8px;
+    right: -6px;
+    padding-left: 0px;
 }
 
 .card-content{
