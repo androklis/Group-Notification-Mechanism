@@ -21,7 +21,11 @@ function loadCards(schemes) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
-                    $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                    if (value.summary === "Birthdays") {
+                        $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                    } else {
+                        $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                    }
                 }
                 listUpcomingEvents(schemeIds, value.id, value.summary, value.backgroundColor);
             });

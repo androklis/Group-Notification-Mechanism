@@ -7849,7 +7849,6 @@ small {
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
     color: #ffab40;
-    margin-right: 10px;
     transition: color .3s ease;
     text-transform: uppercase;
 }

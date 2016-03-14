@@ -164,7 +164,7 @@ public class Auth2Servlet extends HttpServlet {
                     jacksonFactory,
                     clientSecrets.getDetails().getClientId(),
                     clientSecrets.getDetails().getClientSecret(),
-                    Lists.newArrayList("https://mail.google.com/"))
+                    Arrays.asList("https://mail.google.com/", "https://www.googleapis.com/auth/calendar"))
                     .setApprovalPrompt("force").setAccessType("offline").build();
 
             GoogleAuthorizationCodeTokenRequest tokenRequest = authorizationFlow

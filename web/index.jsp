@@ -87,6 +87,34 @@
             </div>
         </div>
 
+        <div id="calendarModal" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4 style="text-align: center;">Event Settings</h4>
+                <div class="row">
+                    <p>Event Starts</p>
+                    <div class="col s12 m6 l6">
+                        <input id="startDate" class="datepicker" type="date">
+                    </div>
+                    <div class="col s12 m6 l6">
+                        <input id="startTime" class="timepicker" type="text">
+                    </div>
+                </div>
+                <div class="row">
+                    <p>Event Ends</p>
+                    <div class="col s12 m6 l6">
+                        <input id="endDate" class="datepicker" type="date">
+                    </div>
+                    <div class="col s12 m6 l6">
+                        <input id="endTime" class="timepicker" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect btn-flat" onclick=""> Save </a>
+                <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            </div>
+        </div>
+
         <div id="copyModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;">Repeat Scheme</h4>
@@ -161,6 +189,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <a id="eventSettings" class="waves-effect btn-flat left disabled"><i class="material-icons">date_range</i></a>
                 <a id="addBtn" href="#!" class="modal-action modal-close waves-effect btn-flat" onclick="addCard();">Add</a>
             </div>
         </div>

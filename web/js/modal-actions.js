@@ -41,6 +41,8 @@ function addCard() {
         calendars: $('#addModal #calendars').val(),
         date: $('#addModal #date').val(),
         time: $('#addModal #time').val(),
+        eventStart: $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val(),
+        eventEnd: $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(),
         type: 'ADD'
     };
 

@@ -45,15 +45,35 @@ $(function () {
         default: 'now'
     });
 
-    picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-
     updateTime();
+    picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
 
     setInterval(updateTime, 1000 * 60 * 1);
 
     $('select#contacts').on('change', function () {
         if (($('select#contacts').val()[$('select#contacts').val().length - 1]).indexOf("@") < 0) {
             console.log($('select#contacts').val()[$('select#contacts').val().length - 1]);
+        }
+    });
+
+    $('select#calendars').on('change', function () {
+        if ($('select#calendars').val().length > 1) {
+            $('#eventSettings').removeClass('disabled');
+            $('#calendarModal').openModal({
+                complete: function () {
+                }
+            });
+        } else {
+            $('#eventSettings').addClass('disabled');
+        }
+    });
+
+    $('#eventSettings').on('click', function () {
+        if (!$('#eventSettings').hasClass('disabled')) {
+            $('#calendarModal').openModal({
+                complete: function () {
+                }
+            });
         }
     });
 

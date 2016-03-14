@@ -2,6 +2,7 @@ package gr.ie.istlab;
 
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonObject;
+import gr.ie.istlab.googleapis.GoogleCalendar;
 import gr.ie.istlab.googleapis.GoogleMail;
 import gr.ie.istlab.googleapis.GoogleSpreadsheet;
 import java.io.IOException;
@@ -39,9 +40,9 @@ public class GNMServlet extends HttpServlet {
                 String id = request.getParameter("json[id]");
 
                 json.addProperty("status", "");
-             
+
                 if (("0".equals(request.getParameter("json[id]"))) && (!"0".equals(request.getParameter("json[calendars]")))) {
-                    // TODO: Insert to Google calendar   
+                    GoogleCalendar.getInstance().addEvent(request.getParameter("json[calendars]"), request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"));
                 }
 
                 try {
