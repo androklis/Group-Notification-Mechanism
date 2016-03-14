@@ -16,8 +16,8 @@ function loadCards(schemes) {
 
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
-        request.execute(function (resp) {
-            $.each(resp.items, function (index, value) {
+        request.execute(function (response) {
+            $.each(response.items, function (index, value) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
@@ -48,27 +48,36 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
         'maxResults': 10,
         'orderBy': 'startTime'
     });
-    request.execute(function (resp) {
-        var events = resp.items;
+    request.execute(function (response) {
+        var events = response.items;
         $.each(events, function (index, event) {
             var when = event.start.dateTime;
             if (!when) {
                 when = event.start.date;
             }
             if ($.inArray(event.id, schemeIds) < 0) {
-                if (((event.id).indexOf('BIRTHDAY') > -1) && (index < events.length / 2)) {
-                    createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], when, summary + ' Calendar', color);
-                } else if ((event.id).indexOf('BIRTHDAY') < 0) {
-                    if (calendarID.indexOf('@gmail.com') > -1) {
-                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                if ((event.id).indexOf('BIRTHDAY') > -1) {
+                    if (event.summary.indexOf('Happy birthday!') < 0) {
+                        createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], when, summary + ' Calendar', color);
+                    }
+                } else if (calendarID.indexOf('#holiday@') < 0) {
+                    if (calendarID.indexOf($.cookie("email")) > -1) {
+                        if (event.attendees) {
+                            createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                        } else {
+                            createCard(event.id, 'calendar', event.summary, event.description, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                        }
                     } else {
-                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                        if (event.attendees) {
+                            createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                        } else {
+                            createCard(event.id, 'calendar', event.summary, event.description, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                        }
                     }
                 }
             }
         });
     });
-
 }
 
 function createCard(id, className, title, content, recipients, timestamp, status, color) {
