@@ -52,9 +52,9 @@ function addCard() {
                 $("div[id=" + $('#uuid').val() + "]").remove();
             }
             if (response.status === "Error Sending") {
-                createCard(json.id, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ff0000');
+                createCard(response.id, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ff0000');
             } else {
-                createCard(json.id, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ffab40');
+                createCard(response.id, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ffab40');
             }
         }
         $('.progress').toggle();

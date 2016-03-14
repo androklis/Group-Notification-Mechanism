@@ -40,7 +40,7 @@ public class GoogleCalendar {
         return instance;
     }
 
-    public void addEvent(String calendarId, String userEmail, String summary, String description, String guests, String start, String end) {
+    public String addEvent(String calendarId, String userEmail, String summary, String description, String guests, String start, String end) {
 
         calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
 
@@ -59,11 +59,11 @@ public class GoogleCalendar {
 
         try {
             event = calendarService.events().insert(calendarId, event).execute();
+            return event.getId();
         } catch (IOException ex) {
             Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
+            return "0";
         }
-        System.out.println("id:" + event.getId());
-        System.out.printf("Event created: %s\n", event.getHtmlLink());
 
     }
 

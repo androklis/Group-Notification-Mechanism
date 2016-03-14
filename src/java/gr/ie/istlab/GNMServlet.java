@@ -38,18 +38,21 @@ public class GNMServlet extends HttpServlet {
             case "ADD":
                 JsonObject json = new JsonObject();
                 String id = request.getParameter("json[id]");
+                String uuid = null;
 
                 json.addProperty("status", "");
 
                 if (("0".equals(request.getParameter("json[id]"))) && (!"0".equals(request.getParameter("json[calendars]")))) {
-                    GoogleCalendar.getInstance().addEvent(request.getParameter("json[calendars]"), request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"));
+                    id = GoogleCalendar.getInstance().addEvent(request.getParameter("json[calendars]"), request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), "2016-03-22 15:30", "2016-03-25 15:30");
                 }
 
                 try {
-                    id = GoogleSpreadsheet.getInstance().addScheme(request.getParameter("json[id]"), request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    uuid = GoogleSpreadsheet.getInstance().addScheme(id, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+                json.addProperty("id", uuid);
 
                 if ("true".equals(request.getParameter("json[now]"))) {
                     try {
@@ -59,7 +62,7 @@ public class GNMServlet extends HttpServlet {
                                         request.getParameter("json[contacts]").split(","),
                                         request.getParameter("json[subject]"),
                                         request.getParameter("json[message]")),
-                                request.getParameter("json[user_email]"), id));
+                                request.getParameter("json[user_email]"), uuid));
                     } catch (MessagingException | MalformedURLException | ServiceException ex) {
                         Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
