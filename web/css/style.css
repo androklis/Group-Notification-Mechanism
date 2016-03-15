@@ -5,6 +5,9 @@
  *
  * Made By MaterializeCSS.com
  */
+.container{
+    width: 95% !important;
+}
 
 #footer {
     width:100%;
@@ -50,11 +53,39 @@
     width: auto;
 }
 
-span#adr_type{
-    right: -6px;
-    padding-left: 0px;
+span#adr_badge{
+    position: inherit;
+    width: 70%;
+    white-space: nowrap;
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+    text-align: right;
+}
+
+span#adr_type {
+    position: inherit;
+}
+
+span#timestamp {
+    position: relative;
+}
+
+p#adr_description {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
 }
 
 .card-content{
     position: absolute;
+}
+
+.card-action .material-icons {
+    margin-left: 3px;
+}
+
+.card a{
+    margin-right: 0px !important;
 }

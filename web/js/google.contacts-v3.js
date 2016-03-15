@@ -36,7 +36,7 @@ function fetchContacts() {
 function searchContact(searchQuery) {
     $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + searchQuery + "&max-results=100&v=3.0",
             function (response) {
-                console.log('SEARCH', JSON.stringify(response));
+//                console.log('SEARCH', JSON.stringify(response));
 //                $.each(response.feed.entry, function (index, value) {
 //                });
                 return response;
