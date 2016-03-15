@@ -2,6 +2,7 @@ function fetchContacts() {
 
     $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&v=3.0",
             function (response) {
+                console.log('GROUPS', response);
                 $.each(response.feed.entry, function (index, value) {
                     $('select#contacts').append($('<option value="' + value.id.$t + '" data-icon="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50" class="left circle">' + value.title.$t + '</option>'));
                 });
@@ -9,6 +10,7 @@ function fetchContacts() {
             });
     $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&max-results=100&v=3.0",
             function (response) {
+                console.log('CONTACTS', response);
                 $.each(response.feed.entry, function (index, value) {
                     if (value.gd$email) {
                         if (value.title.$t.length > 0) {
@@ -24,10 +26,20 @@ function fetchContacts() {
                                 $('select#contacts').append($('<option value="' + value.gd$email[0].address + '" data-icon="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50" class="left circle">' + value.gd$email[0].address + '</option>'));
                             }
                         }
-
                     }
                 });
                 $('select#contacts').material_select();
+            });
+    searchContact('larios_v@hotmail.com');
+}
+
+function searchContact(searchQuery) {
+    $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + searchQuery + "&max-results=100&v=3.0",
+            function (response) {
+                console.log('SEARCH', JSON.stringify(response));
+//                $.each(response.feed.entry, function (index, value) {
+//                });
+                return response;
             });
 }
 

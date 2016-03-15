@@ -17,11 +17,12 @@ function loadCards(schemes) {
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
         request.execute(function (response) {
+            console.log('CALENDARS', response);
             $.each(response.items, function (index, value) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
-                    if (value.summary === "Birthdays") {
+                    if ((value.summary === "Birthdays") || (value.id.indexOf('#holiday@') > -1)) {
                         $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
                     } else {
                         $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
@@ -49,6 +50,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
         'orderBy': 'startTime'
     });
     request.execute(function (response) {
+        console.log('EVENTS', response);
         var events = response.items;
         $.each(events, function (index, event) {
             var when = event.start.dateTime;
@@ -58,20 +60,44 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
             if ($.inArray(event.id, schemeIds) < 0) {
                 if ((event.id).indexOf('BIRTHDAY') > -1) {
                     if (event.summary.indexOf('Happy birthday!') < 0) {
-                        createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], when, summary + ' Calendar', color);
+                        createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], event.start.date, summary + ' Calendar', color);
                     }
-                } else if (calendarID.indexOf('#holiday@') < 0) {
-                    if (calendarID.indexOf($.cookie("email")) > -1) {
+                } else if (calendarID.indexOf('#holiday@') > -1) {
+                    createCard(event.id, 'holiday', event.summary, event.summary, "", event.start.date, 'Holidays Calendar', color);
+                } else if (calendarID.indexOf($.cookie("email")) > -1) {
+                    if (event.attendees) {
+                        createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                    } else {
+                        createCard(event.id, 'calendar', event.summary, event.description, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                    }
+                } else {
+                    if (event.start.dateTime) {
                         if (event.attendees) {
-                            createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                            if (event.description) {
+                                createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                            } else {
+                                createCard(event.id, 'calendar', event.summary, event.summary, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                            }
                         } else {
-                            createCard(event.id, 'calendar', event.summary, event.description, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), 'Primary Calendar', color);
+                            if (event.description) {
+                                createCard(event.id, 'calendar', event.summary, event.description, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                            } else {
+                                createCard(event.id, 'calendar', event.summary, event.summary, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                            }
                         }
                     } else {
                         if (event.attendees) {
-                            createCard(event.id, 'calendar', event.summary, event.description, event.attendees, (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                            if (event.description) {
+                                createCard(event.id, 'calendar', event.summary, event.description, event.attendees, event.start.date, summary + ' Calendar', color);
+                            } else {
+                                createCard(event.id, 'calendar', event.summary, event.summary, event.attendees, event.start.date, summary + ' Calendar', color);
+                            }
                         } else {
-                            createCard(event.id, 'calendar', event.summary, event.description, "", (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5), summary + ' Calendar', color);
+                            if (event.description) {
+                                createCard(event.id, 'calendar', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
+                            } else {
+                                createCard(event.id, 'calendar', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
+                            }
                         }
                     }
                 }
@@ -115,6 +141,15 @@ function createCard(id, className, title, content, recipients, timestamp, status
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="1">people</i>');
             element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
             element.find("#adr_type").html('<i class="material-icons">cake</i>');
+            element.find("#rcpts").val(recipients);
+            element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
+            element.find("#adr_badge").html(status.toUpperCase()).css('color', color);
+            element.prependTo("#schemes .row").slideDown(1000);
+            break;
+        case "holiday":
+            element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped left orange-text" data-position="right" data-delay="50" data-tooltip="0">people</i>');
+            element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
+            element.find("#adr_type").html('<i class="material-icons">airplanemode_active</i>');
             element.find("#rcpts").val(recipients);
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
             element.find("#adr_badge").html(status.toUpperCase()).css('color', color);
@@ -212,13 +247,34 @@ function createCard(id, className, title, content, recipients, timestamp, status
     $('a#viewCard').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         var rcpts = card.find('#rcpts').val();
-        var rcptsNames = '<br/><ul id="guestsView" class="collection">';
+        var rcptsNames = $('<ul></ul>');
+        rcptsNames.attr('id', 'guestsView');
+        rcptsNames.addClass('collection');
         $.each(rcpts.split(','), function (index, value) {
-            rcptsNames += '<li class="collection-item avatar"> <img src="' + $('select#contacts option[value="' + value + '"]').attr("data-icon") + '" alt="" class="circle"> <span class="title">' + $('select#contacts option[value="' + value + '"]').text() + '</span> <p>' + value + '</p></li>';
+            var img = "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50";
+            var title = "NO GUESTS";
+            if (value !== "") {
+                $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=1&v=3.0",
+                        function (response) {
+                            if (response.feed.entry) {
+                                if (response.feed.entry[0].title.$t.length > 0) {
+                                    title = response.feed.entry[0].title.$t;
+                                }
+                                if (response.feed.entry[0].link[0].gd$etag) {
+                                    img = (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token");
+                                }
+                            } else {
+                                title = "NOT FOUND";
+                            }
+                            rcptsNames.append('<li class="collection-item avatar"> <img src="' + img + '" alt="" class="circle"> <span class="title">' + title + '</span> <p>' + value + '</p></li>');
+                        });
+            } else {
+                rcptsNames.append('<li class="collection-item avatar"> <img src="' + img + '" alt="" class="circle"> <span class="title">' + title + '</span> <p>' + value + '<br/></p></li>');
+            }
         });
-        rcptsNames += '</ul>';
         $('#viewModal #viewTitle').text(card.find('#adr_title').text());
-        $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong> " + rcptsNames);
+        $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong><br/>");
+        $('#viewModal .viewContent').append(rcptsNames);
         $('#viewModal').openModal({
             complete: function () {
                 $('#viewModal #viewTitle').empty();
@@ -226,7 +282,6 @@ function createCard(id, className, title, content, recipients, timestamp, status
             }
         });
     });
-
     $('a#deleteScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         $('#uuid').val(card.attr('id'));
