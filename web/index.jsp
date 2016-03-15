@@ -156,6 +156,10 @@
             <div class="modal-content">
                 <h4 style="text-align: center;">Add new Scheme</h4>
                 <div class="row input-field">
+                    <input type="text" id="autocomplete" class="autocomplete" data-array='[{"value": "example","path": "http://www.sense-lang.org/trial/images/img-test.jpg","class": "left circle"},{"value": "example 2","path": "http://www.sense-lang.org/trial/images/img-test.jpg","class": "right circle"},{"value": "test","path": "http://www.sense-lang.org/trial/images/img-test.jpg","class": "right circle"}]'>
+                    <label for="autocomplete">Autocomplete</label>
+                </div>
+                <div class="row input-field">
                     <select multiple id="contacts" class="icons" name="contacts" required="required">
                         <option value="" disabled selected>Choose contacts</option>
                     </select>
