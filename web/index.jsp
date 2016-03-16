@@ -38,6 +38,8 @@
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.cookie.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
     </head>
@@ -46,7 +48,7 @@
             <div class="card hoverable small">
                 <div style="padding-top: 5px;">
                     <span id="adr_type" class="badge left">Lorem ipsum</span>
-                    <span id="adr_badge" class="badge right">Lorem ipsum</span>
+                    <span id="adr_badge" class="badge right truncate">Lorem ipsum</span>
                 </div>
                 <div class="card-content">
                     <span id="adr_title" class="card-title">Lorem ipsum dolor sit amet</span>
@@ -91,21 +93,36 @@
             <div class="modal-content">
                 <h4 style="text-align: center;">Event Settings</h4>
                 <div class="row">
-                    <p>Event Starts</p>
                     <div class="col s12 m6 l6">
+                        <label for="startDate">Start Date</label>
                         <input id="startDate" class="datepicker" type="date">
                     </div>
                     <div class="col s12 m6 l6">
+                        <label for="startTime">Start Time</label>
                         <input id="startTime" class="timepicker" type="text">
                     </div>
                 </div>
                 <div class="row">
-                    <p>Event Ends</p>
                     <div class="col s12 m6 l6">
+                        <label for="endDate">End Date</label>
                         <input id="endDate" class="datepicker" type="date">
                     </div>
                     <div class="col s12 m6 l6">
+                        <label for="endTime">End Time</label>
                         <input id="endTime" class="timepicker" type="text">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 m6 l6">
+                        <label for="mapSwitch">Location</label>
+                        <div id="mapSwitch" class="switch">
+                            <label>
+                                Off
+                                <input type="checkbox">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,14 +173,16 @@
             <div class="modal-content">
                 <h4 style="text-align: center;">Add new Scheme</h4>
                 <div class="row input-field">
-                    <input type="text" id="autocomplete" class="autocomplete" data-array='[{"value": "example","path": "http://www.sense-lang.org/trial/images/img-test.jpg","class": "left circle"},{"value": "example 2","path": "http://www.sense-lang.org/trial/images/img-test.jpg","class": "right circle"},{"value": "test","path": "http://www.sense-lang.org/trial/images/img-test.jpg","class": "right circle"}]'>
-                    <label for="autocomplete">Autocomplete</label>
+                    <div class="ui-widget">
+                        <input id="autocomplete" type="text"/>
+                        <label for="autocomplete">Autocomplete</label>
+                    </div>
                 </div>
                 <div class="row input-field">
                     <select multiple id="contacts" class="icons" name="contacts" required="required">
                         <option value="" disabled selected>Choose contacts</option>
                     </select>
-                    <label for="contacts">Google Contacts</label>
+                    <label for="contacts">Google Groups</label>
                 </div>
                 <div class="row input-field">
                     <input id="subject" type="text" required="required">
@@ -188,7 +207,7 @@
 
                 </div>
                 <div class="row input-field">
-                    <textarea id="message" class="materialize-textarea" required="required"></textarea>
+                    <textarea id="message" class="materialize-textarea" length="500" required="required"></textarea>
                     <label for="message">Message</label>
                 </div>
             </div>

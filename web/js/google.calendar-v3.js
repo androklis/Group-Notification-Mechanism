@@ -163,7 +163,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
 
     $('a#addSuggestion').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
-        var datepicker = $('.datepicker').pickadate({});
+        var datepicker = $('#date').pickadate({});
         var picker = datepicker.pickadate('picker');
         $('#addModal').openModal({
             complete: function () {
@@ -177,7 +177,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
                 $('#addModal #calendars').material_select();
                 $("#addModal #subject").val('');
                 $("#addModal #message").val('');
-                updateTime();
+//                updateTime();
             },
             ready: function () {
                 $('#uuid').val(card.attr('id'));

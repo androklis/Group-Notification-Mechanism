@@ -5,8 +5,9 @@
  *
  * Made By MaterializeCSS.com
  */
-.container{
+.container {
     width: 95% !important;
+    max-width: inherit;
 }
 
 #footer {
@@ -56,9 +57,6 @@
 span#adr_badge{
     position: inherit;
     width: 70%;
-    white-space: nowrap;
-    overflow:hidden !important;
-    text-overflow: ellipsis;
     text-align: right;
 }
 
