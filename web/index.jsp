@@ -38,8 +38,7 @@
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.cookie.js"></script>
-        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script src="js/jquery.autocomplete.js"></script>
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
     </head>

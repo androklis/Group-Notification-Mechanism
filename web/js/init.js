@@ -156,38 +156,27 @@ $(function () {
 //    setInterval(updateTime, 1000 * 60 * 1);
     }
 
-    $("#birds").autocomplete({
-        source: "search.php",
-        minLength: 2,
-        select: function (event, ui) {
-            log(ui.item ?
-                    "Selected: " + ui.item.value + " aka " + ui.item.id :
-                    "Nothing selected, input was " + this.value);
-        }
-    });
-
     $("#autocomplete").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: "https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + request.term + "&max-results=100&v=3.0",
-                dataType: "jsonp",
-                success: function (data) {
-                    console.log('data', data.feed.entry);
-                    response(data.feed.entry);
-                }
-            });
+        lookup: function (query, done) {
+            var result = {suggestions: []};
+            $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0",
+                    function (response) {
+                        $.each(response.feed.entry, function (index, value) {
+                            if (value.gd$email) {
+                                if (value.title.$t.length > 0) {
+                                    if ((value.title.$t).indexOf('Google+') < 0) {
+                                        result.suggestions.push({"value": value.title.$t, "data": value.gd$email[0].address});
+                                    }
+                                } else {
+                                    result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address});
+                                }
+                            }
+                        });
+                        done(result);
+                    });
         },
-        minLength: 3,
-        select: function (event, ui) {
-            console.log(ui.item ?
-                    "Selected: " + ui.item.label :
-                    "Nothing selected, input was " + this.value);
-        },
-        open: function () {
-            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-        },
-        close: function () {
-            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+        onSelect: function (suggestion) {
+            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
         }
     });
 });
