@@ -161,18 +161,23 @@ $(function () {
             var result = {suggestions: []};
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0",
                     function (response) {
-                        $.each(response.feed.entry, function (index, value) {
-                            if (value.gd$email) {
-                                if (value.title.$t.length > 0) {
-                                    if ((value.title.$t).indexOf('Google+') < 0) {
-                                        result.suggestions.push({"value": value.title.$t, "data": value.gd$email[0].address});
+                        try {
+                            $.each(response.feed.entry, function (index, value) {
+                                if (value.gd$email) {
+                                    if (value.title.$t.length > 0) {
+                                        if ((value.title.$t).indexOf('Google+') < 0) {
+                                            result.suggestions.push({"value": value.title.$t, "data": value.gd$email[0].address});
+                                        }
+                                    } else {
+                                        result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address});
                                     }
-                                } else {
-                                    result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address});
                                 }
-                            }
-                        });
-                        done(result);
+                            });
+                        } catch (error) {
+                            console.lof('Contact not found');
+                        } finally {
+                            done(result);
+                        }
                     });
         },
         onSelect: function (suggestion) {

@@ -55,10 +55,14 @@ function updateProfileInfo(code) {
             }
 
             $('#user').append('<ul id="userDropdown" class="dropdown-content waves-effect waves-light" style="position: fixed;"><li><a href="#!" class="light-blue-text" onclick="signOut();">Sign Out</a></li></ul>');
-            $('#user').append('<li><a href="javascript:void(0);" id="" class="waves-effect waves-light"><i class="material-icons">settings</i></a></li>');
+
+            $('#user').append('<li><a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a></li>');
+            $('#user').append('<li><a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a></li>');
+
+            $('#user').append('<li><a href="javascript:void(0);" class="waves-effect waves-light"><i class="material-icons">settings</i></a></li>');
             $('#user').append('<li><a class="dropdown-button waves-effect waves-light" href="#!" data-activates="userDropdown"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/>&nbsp;&nbsp;' + name + '<i class="material-icons right">arrow_drop_down</i></a></li>');
 
-            $('#nav-mobile').append('<li style="text-align: center;"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/></li><li style="color: black; text-align: center;"><strong>' + name + '</strong></li><li style="text-align: center;"><a href="javascript:void(0);" id="" class="waves-effect waves-light">Settings</a></li><li style="text-align: center;"><a href="#!" class="waves-effect waves-light light-blue-text" onclick="signOut();">Sign Out</a></li>');
+            $('#nav-mobile').append('<li style="text-align: center;"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/></li><li style="color: black; text-align: center;"><strong>' + name + '</strong></li><li style="text-align: center;"><a href="javascript:void(0);" id="" class="waves-effect waves-light">Settings</a></li><li style="text-align: center;"><a href="#!" class="waves-effect waves-light light-blue-text" onclick="signOut();">Sign Out</a></li><li><a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a></li><li><a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a></li>');
 
             $(".dropdown-button").dropdown({
                 hover: true,
@@ -94,7 +98,9 @@ function servletCall(code) {
 }
 
 function signOut() {
-    gapi.auth.signOut();
+
+    document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8081/";
+
     $.removeCookie("email");
     $.removeCookie("access_token");
     $('.button-collapse').sideNav('hide');
