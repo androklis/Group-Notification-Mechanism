@@ -22,12 +22,22 @@ function loadCards(schemes) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
-                    if (value.accessRole.indexOf('reader') > -1) {
-                        $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
-                    } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
-                        $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
-                    } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {
-                        return;
+                    if (!/calendar/i.test(value.summary.toUpperCase())) {
+                        if (value.accessRole.indexOf('reader') > -1) {
+                            $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                        } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
+                            $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                        } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {
+                            return;
+                        }
+                    } else {
+                        if (value.accessRole.indexOf('reader') > -1) {
+                            $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + '</option>');
+                        } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
+                            $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + '</option>');
+                        } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {
+                            return;
+                        }
                     }
                 }
                 listUpcomingEvents(schemeIds, value.id, value.summary, value.backgroundColor);
@@ -62,14 +72,14 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
             if ($.inArray(event.id, schemeIds) < 0) {
                 if ((event.id).indexOf('BIRTHDAY') > -1) {
                     if (event.gadget.preferences["goo.contactsEmail"]) {
-                        createCard(event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], event.start.date, summary + ' Calendar', color);
+                        createCard(event.id, 'birthday calendar', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], event.start.date, summary + ' Calendar', color);
                     } else {
-                        createCard(event.id, 'birthday', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
+                        createCard(event.id, 'birthday calendar', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
                     }
                 } else if (calendarID.indexOf('#holiday@') > -1) {
-                    createCard(event.id, 'holiday', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
+                    createCard(event.id, 'holiday calendar', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
                 } else if (calendarID.indexOf('#weather@') > -1) {
-                    createCard(event.id, 'weather', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color + '@' + event.gadget.iconLink);
+                    createCard(event.id, 'weather calendar', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color + '@' + event.gadget.iconLink);
                 } else {
 
                     var attendees = [];
@@ -98,10 +108,14 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                     if (calendarID.indexOf($.cookie("email")) > -1) {
                         resource = "Primary Calendar";
                     } else {
-                        resource = summary + ' Calendar';
+                        if (/calendar/i.test(summary)) {
+                            resource = summary;
+                        } else {
+                            resource = summary + ' Calendar';
+                        }
                     }
 
-                    createCard(event.id, 'calendar', event.summary, description, attendees.join(','), start, resource, color);
+                    createCard(event.id, 'calendar calendar', event.summary, description, attendees.join(','), start, resource, color);
 
                 }
             }

@@ -79,10 +79,22 @@
         <div id="settingsModal" class="modal bottom-sheet">
             <div class="modal-content">
                 <h4>Group Notification Mechanism Settings</h4>
-                <p>A bunch of text</p>
+                <div class="row">
+                    <div class="col s12 m6 l6">
+                        <label for="suggestionsSwitch">Suggestions</label>
+                        <div id="suggestionsSwitch" class="switch">
+                            <label>
+                                Off
+                                <input type="checkbox" id="suggChk" checked>
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect btn-flat" onclick="">Save</a>
+                <a class="modal-action modal-close waves-effect btn-flat" onclick="saveSettings();">Save</a>
                 <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
             </div>
         </div>

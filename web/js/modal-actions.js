@@ -1,3 +1,27 @@
+function saveSettings() {
+    var a = "sadsadsa sadsa calendar";
+    var b = "sfdsjdhfjl afa rg fhl Calendar";
+    console.log(/CALENDAR/i.test(a));
+    console.log(/calendar/i.test(a));
+    console.log(/cALENDAR/i.test(b));
+    console.log(/Calendar/i.test(b));
+
+}
+
+$('#suggChk').change(function () {
+    console.log($(this).is(':checked'));
+
+    if ($(this).is(':checked')) {
+        $('*[class*=calendar]').each(function () {
+            $(this).slideDown(1000);
+        });
+    } else {
+        $('*[class*=calendar]').each(function () {
+            $(this).slideUp(1000);
+        });
+    }
+});
+
 function delCard() {
     window.scrollTo(0, 0);
     $('.progress').toggle();
