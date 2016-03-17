@@ -22,10 +22,12 @@ function loadCards(schemes) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
-                    if ((value.summary === "Birthdays") || (value.id.indexOf('#holiday@') > -1)) {
+                    if (value.accessRole.indexOf('reader') > -1) {
                         $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
-                    } else {
+                    } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
                         $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                    } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {
+                        return;
                     }
                 }
                 listUpcomingEvents(schemeIds, value.id, value.summary, value.backgroundColor);
@@ -65,7 +67,9 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                         createCard(event.id, 'birthday', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
                     }
                 } else if (calendarID.indexOf('#holiday@') > -1) {
-                    createCard(event.id, 'holiday', event.summary, event.summary, "", event.start.date, 'Holidays Calendar', color);
+                    createCard(event.id, 'holiday', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
+                } else if (calendarID.indexOf('#weather@') > -1) {
+                    createCard(event.id, 'weather', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color + '@' + event.gadget.iconLink);
                 } else {
 
                     var attendees = [];
@@ -147,12 +151,14 @@ function createCard(id, className, title, content, recipients, timestamp, status
             element.find("#rcpts").val(guests);
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped right orange-text" data-position="left" data-delay="50" data-tooltip="' + i + '">people</i>');
-            element.find("#adr_badge").html(status.toUpperCase()).css('color', color);
+            element.find("#adr_badge").html(status.toUpperCase()).css('color', color.split("@")[0]);
 
             if (className === "birthday") {
                 element.find("#adr_type").html('<i class="material-icons">cake</i>');
             } else if (className === "holiday") {
                 element.find("#adr_type").html('<i class="material-icons">airplanemode_active</i>');
+            } else if (className === "weather") {
+                element.find("#adr_type").html('<img src="' + color.split("@")[1] + '" class="material-icons" width="24" heigth="24"/>');
             } else {
                 element.find("#adr_type").html('<i class="material-icons">event</i>');
             }

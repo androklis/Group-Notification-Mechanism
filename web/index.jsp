@@ -75,6 +75,18 @@
             </div>
         </div>
 
+        <!-- Settings Modal Structure -->
+        <div id="settingsModal" class="modal bottom-sheet">
+            <div class="modal-content">
+                <h4>Group Notification Mechanism Settings</h4>
+                <p>A bunch of text</p>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect btn-flat" onclick="">Save</a>
+                <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            </div>
+        </div>
+
         <div id="deleteModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;">Delete Scheme?</h4>

@@ -1,20 +1,3 @@
-function checkTime(i) {
-    return (i < 10) ? "0" + i : i;
-}
-
-function updateTime() {
-    var today = new Date();
-    var day = today.getDate();
-    var monthIndex = today.getMonth() + 1;
-    var year = today.getFullYear();
-    var time = checkTime(today.getHours()) + ':'
-            + checkTime(today.getMinutes());
-    if ($('#addModal #now').is(':checked')) {
-        $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
-        $('#addModal #time').val(time);
-    }
-}
-
 $(function () {
     var po = document.createElement('script');
     po.type = 'text/javascript';
@@ -185,3 +168,24 @@ $(function () {
         }
     });
 });
+
+function appSettings() {
+    $('#settingsModal').openModal();
+}
+
+function checkTime(i) {
+    return (i < 10) ? "0" + i : i;
+}
+
+function updateTime() {
+    var today = new Date();
+    var day = today.getDate();
+    var monthIndex = today.getMonth() + 1;
+    var year = today.getFullYear();
+    var time = checkTime(today.getHours()) + ':'
+            + checkTime(today.getMinutes());
+    if ($('#addModal #now').is(':checked')) {
+        $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
+        $('#addModal #time').val(time);
+    }
+}
