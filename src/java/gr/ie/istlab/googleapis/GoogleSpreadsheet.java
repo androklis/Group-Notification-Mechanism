@@ -69,15 +69,19 @@ public class GoogleSpreadsheet {
 
         CellEntry cellEntry = new CellEntry(1, 1, "UUID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 2, "Recipients");
+        cellEntry = new CellEntry(1, 1, "CALENDAR_ID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 3, "Subject");
+        cellEntry = new CellEntry(1, 1, "EVENT_ID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 4, "Message");
+        cellEntry = new CellEntry(1, 2, "RECIPIENTS");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 5, "Timestamp");
+        cellEntry = new CellEntry(1, 3, "SUBJECT");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 6, "Status");
+        cellEntry = new CellEntry(1, 4, "MESSAGE");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 5, "TIMESTAMP");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 6, "STATUS");
         cellFeed.insert(cellEntry);
 
         worksheet.setEtag("*");
@@ -86,7 +90,7 @@ public class GoogleSpreadsheet {
 
     }
 
-    public String addScheme(String id, String userEmail, String to, String subject, String message,
+    public String addScheme(String calendarId, String eventId, String userEmail, String to, String subject, String message,
             String timestamp) throws MalformedURLException, IOException,
             ServiceException {
 
@@ -95,23 +99,18 @@ public class GoogleSpreadsheet {
         URL listFeedUrl = worksheet.getListFeedUrl();
 
         ListEntry row = new ListEntry();
+        String uuid = UUID.randomUUID().toString();
+        row.getCustomElements().setValueLocal("UUID", uuid);
+        row.getCustomElements().setValueLocal("CALENDARID", calendarId);
+        row.getCustomElements().setValueLocal("EVENTID", eventId);
+        row.getCustomElements().setValueLocal("RECIPIENTS", to);
+        row.getCustomElements().setValueLocal("SUBJECT", subject);
+        row.getCustomElements().setValueLocal("MESSAGE", message);
+        row.getCustomElements().setValueLocal("TIMESTAMP", "'" + timestamp);
+        row.getCustomElements().setValueLocal("STATUS", "PENDING");
 
-        row.getCustomElements().setValueLocal("Recipients", to);
-        row.getCustomElements().setValueLocal("Subject", subject);
-        row.getCustomElements().setValueLocal("Message", message);
-        row.getCustomElements().setValueLocal("Timestamp", "'" + timestamp);
-        row.getCustomElements().setValueLocal("Status", "PENDING");
-
-        if (!"0".equals(id)) {
-            row.getCustomElements().setValueLocal("UUID", id);
-            spreadsheetService.insert(listFeedUrl, row);
-            return id;
-        } else {
-            String uuid = UUID.randomUUID().toString();
-            row.getCustomElements().setValueLocal("UUID", uuid);
-            spreadsheetService.insert(listFeedUrl, row);
-            return uuid;
-        }
+        spreadsheetService.insert(listFeedUrl, row);
+        return uuid;
 
     }
 
@@ -130,12 +129,14 @@ public class GoogleSpreadsheet {
             }
         }
         return null;
+
     }
 
     private List<WorksheetEntry> getAllWorksheets()
             throws MalformedURLException, IOException, ServiceException {
 
-        spreadsheet = spreadsheetService.getEntry(new URL("https://spreadsheets.google.com/feeds/spreadsheets/1N8H9qP5eNKHwwr3tIWxHv8cD19nc1mhQ_zRcEZt20sE"), SpreadsheetEntry.class);
+        spreadsheet = spreadsheetService.getEntry(new URL("https://spreadsheets.google.com/feeds/spreadsheets/1N8H9qP5eNKHwwr3tIWxHv8cD19nc1mhQ_zRcEZt20sE"), SpreadsheetEntry.class
+        );
 
         return spreadsheet.getWorksheets();
 
@@ -186,7 +187,8 @@ public class GoogleSpreadsheet {
         JsonArray jsonArray = new JsonArray();
 
         ListFeed feed = spreadsheetService.getFeed(getWorksheet(userEmail)
-                .getListFeedUrl(), ListFeed.class);
+                .getListFeedUrl(), ListFeed.class
+        );
 
         for (ListEntry entry : feed.getEntries()) {
 
@@ -208,7 +210,8 @@ public class GoogleSpreadsheet {
 
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class);
+                ListFeed.class
+        );
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
@@ -231,7 +234,8 @@ public class GoogleSpreadsheet {
 
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class);
+                ListFeed.class
+        );
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
@@ -249,7 +253,8 @@ public class GoogleSpreadsheet {
 
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class);
+                ListFeed.class
+        );
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {

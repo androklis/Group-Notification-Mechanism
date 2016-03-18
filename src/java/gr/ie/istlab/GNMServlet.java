@@ -33,26 +33,36 @@ public class GNMServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
         switch (request.getParameter("json[type]")) {
             case "ADD":
                 JsonObject json = new JsonObject();
-                String id = request.getParameter("json[id]");
-                String uuid = null;
-
+                String uuid = request.getParameter("json[id]");
+                String eventId = request.getParameter("json[eventId]");
+                String calendarId = request.getParameter("json[calendarId]");
                 json.addProperty("status", "");
 
-                if (("0".equals(request.getParameter("json[id]"))) && (!"0".equals(request.getParameter("json[calendars]")))) {
-                    id = GoogleCalendar.getInstance().addEvent(request.getParameter("json[calendars]"), request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), "2016-03-22 15:30", "2016-03-25 15:30");
-                }
+                System.out.println(uuid);
+                System.out.println(calendarId);
+                System.out.println(eventId);
 
                 try {
-                    uuid = GoogleSpreadsheet.getInstance().addScheme(id, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    if ((!"0".equals(eventId)) && (!"0".equals(calendarId))) {
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    } else if (("0".equals(eventId)) && (!"0".equals(calendarId))) {
+                        eventId = GoogleCalendar.getInstance().addEvent(calendarId, request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"));
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    } else if (("0".equals(eventId)) && ("0".equals(calendarId))) {
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    }
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 json.addProperty("id", uuid);
+                json.addProperty("calendarId", calendarId);
+                json.addProperty("eventId", eventId);
 
                 if ("true".equals(request.getParameter("json[now]"))) {
                     try {

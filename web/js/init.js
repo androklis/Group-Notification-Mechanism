@@ -5,14 +5,8 @@ $(function () {
     po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(po, s);
-
     initComponents();
 
-    $('select#contacts').on('change', function () {
-        if (($('select#contacts').val()[$('select#contacts').val().length - 1]).indexOf("@") < 0) {
-            console.log($('select#contacts').val()[$('select#contacts').val().length - 1]);
-        }
-    });
     $('select#calendars').on('change', function () {
         if ($('select#calendars').val().length > 1) {
             $('#eventSettings').removeClass('disabled');
@@ -32,17 +26,13 @@ $(function () {
             });
         }
     });
-
     $('#addBtn.modal-trigger').leanModal({
         complete: function () {
-            $('select#contacts').val('');
-            $('select#contacts').material_select();
             $("#addModal #now").prop("checked", true);
             $("select#calendars").val('0');
             $('select#calendars').material_select();
             $("#addModal #subject").val('');
             $("#addModal #message").val('');
-//            updateTime();
         }, ready: function () {
             $('#uuid').val('0');
             $('#addModal #date, #addModal #time').prop('disabled',
@@ -53,9 +43,8 @@ $(function () {
         $('#addModal #date, #addModal #time').prop('disabled',
                 $('#addModal #now').is(':checked'));
         if ($('#addModal #now').is(':checked')) {
-            picker.set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
+            $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
         }
-//        updateTime();
     });
     $('#addModal #addBtn').click(function () {
         $('#addModal #addForm').validate();
@@ -70,7 +59,16 @@ $(function () {
             }
         });
     });
-
+    $('#schemes .chip').click(function () {
+        var filter = $(this).data("value");
+        $("#schemes .row .adr_schema").each(function (index) {
+            if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
+                $(this).fadeOut();
+            } else {
+                $(this).fadeIn("slow");
+            }
+        });
+    });
     function initComponents() {
 
         var today = new Date();
@@ -79,15 +77,11 @@ $(function () {
         var year = today.getFullYear();
         var time = checkTime(today.getHours()) + ':'
                 + checkTime(today.getMinutes());
-
-
         $('.button-collapse').sideNav();
-
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
-
 //        $('div#welcomeScreen').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 
-        var datepicker_1 = $('#date').pickadate({
+        $('#date').pickadate({
             selectMonths: true,
             selectYears: 15,
             min: true,
@@ -96,11 +90,8 @@ $(function () {
             clear: '',
             close: 'DONE'
         });
-
-        var picker_1 = datepicker_1.pickadate('picker');
-        picker_1.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-
-        var datepicker_2 = $('#startDate').pickadate({
+        $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
+        $('#startDate').pickadate({
             selectMonths: true,
             selectYears: 15,
             min: true,
@@ -109,11 +100,8 @@ $(function () {
             clear: '',
             close: 'DONE'
         });
-
-        var picker_2 = datepicker_2.pickadate('picker');
-        picker_2.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-
-        var datepicker_3 = $('#endDate').pickadate({
+        $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
+        $('#endDate').pickadate({
             selectMonths: true,
             selectYears: 15,
             min: true,
@@ -122,26 +110,21 @@ $(function () {
             clear: '',
             close: 'DONE'
         });
-
-        var picker_3 = datepicker_3.pickadate('picker');
-        picker_3.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-
+        $('#endDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
         $('#time, #startTime, #endTime').pickatime({
             twelvehour: false,
             default: 'now'
         });
-
         updateTime();
-
         $('#calendarModal #startTime').val(time);
         $('#calendarModal #endTime').val(time);
-
 //    setInterval(updateTime, 1000 * 60 * 1);
     }
 
-    $("#autocomplete").autocomplete({
+    $("#contacts").autocomplete({
         lookup: function (query, done) {
             var result = {suggestions: []};
+
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0",
                     function (response) {
                         try {
@@ -149,26 +132,34 @@ $(function () {
                                 if (value.gd$email) {
                                     if (value.title.$t.length > 0) {
                                         if ((value.title.$t).indexOf('Google+') < 0) {
-                                            result.suggestions.push({"value": value.title.$t, "data": value.gd$email[0].address});
+                                            if (value.link[0].gd$etag) {
+                                                result.suggestions.push({"value": value.title.$t, "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
+                                            } else {
+                                                result.suggestions.push({"value": value.title.$t, "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
+                                            }
                                         }
                                     } else {
-                                        result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address});
+                                        if (value.link[0].gd$etag) {
+                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
+                                        } else {
+                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
+                                        }
                                     }
                                 }
                             });
                         } catch (error) {
-                            console.lof('Contact not found');
+                            console.error('ERROR', error);
                         } finally {
                             done(result);
                         }
                     });
         },
         onSelect: function (suggestion) {
-            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+//            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
         }
     });
-});
 
+});
 function appSettings() {
     $('#settingsModal').openModal();
 }

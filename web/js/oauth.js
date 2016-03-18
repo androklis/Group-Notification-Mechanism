@@ -19,7 +19,6 @@ function signinCallback(authResult) {
             });
 
             togglePage('signedIn');
-            fetchContacts();
             updateProfileInfo(authResult['code']);
 
         } else if (authResult['status']['immediate_failed']) {
@@ -68,10 +67,6 @@ function updateProfileInfo(code) {
                 hover: true,
                 belowOrigin: true
             });
-
-//            $('*[id*=email]').each(function () {
-//                $(this).val(response.emails[0].value);
-//            });
 
             $.cookie("email", response.emails[0].value, {
                 expires: 1

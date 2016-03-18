@@ -5,15 +5,13 @@
  * is loaded.
  */
 function loadCards(schemes) {
-    $.each(schemes, function (index, value) {
-        createCard(value.uuid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
-    });
-
+    console.log(schemes);
     var schemeIds = [];
-    $("#schemes .row .adr_schema").each(function () {
-        schemeIds.push($(this).attr('id'));
+    $.each(schemes, function (index, value) {
+        createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
+        schemeIds.push(value.eventid);
     });
-
+    
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
         request.execute(function (response) {
@@ -72,14 +70,14 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
             if ($.inArray(event.id, schemeIds) < 0) {
                 if ((event.id).indexOf('BIRTHDAY') > -1) {
                     if (event.gadget.preferences["goo.contactsEmail"]) {
-                        createCard(event.id, 'birthday calendar', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], event.start.date, summary + ' Calendar', color);
+                        createCard('', calendarID, event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], event.start.date, summary + ' Calendar', color);
                     } else {
-                        createCard(event.id, 'birthday calendar', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
+                        createCard('', calendarID, event.id, 'birthday', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
                     }
                 } else if (calendarID.indexOf('#holiday@') > -1) {
-                    createCard(event.id, 'holiday calendar', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
+                    createCard('', calendarID, event.id, 'holiday', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
                 } else if (calendarID.indexOf('#weather@') > -1) {
-                    createCard(event.id, 'weather calendar', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color + '@' + event.gadget.iconLink);
+                    createCard('', calendarID, event.id, 'weather', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color + '@' + event.gadget.iconLink);
                 } else {
 
                     var attendees = [];
@@ -115,7 +113,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                         }
                     }
 
-                    createCard(event.id, 'calendar calendar', event.summary, description, attendees.join(','), start, resource, color);
+                    createCard('', calendarID, event.id, 'calendar', event.summary, description, attendees.join(','), start, resource, color);
 
                 }
             }
@@ -123,10 +121,11 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
     });
 }
 
-function createCard(id, className, title, content, recipients, timestamp, status, color) {
+function createCard(uuid, calendarId, eventId, className, title, content, recipients, timestamp, status, color) {
 
     var element = jQuery(".adr_schema:first").clone();
-    element.attr('id', id);
+    element.find("#calendarId").val(calendarId);
+    element.find("#eventId").val(eventId);
     element.addClass(className);
     element.find("#adr_title").html(title);
     element.find("#adr_description").html(content);
@@ -146,6 +145,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
 
     switch (className) {
         case "scheme":
+            element.attr('id', uuid);
             element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
             if (status === "PENDING") {
                 element.find(".card-action").append('<a href="javascript:void(0);" id="editScheme"><i class="material-icons waves-effect waves-light right black-text">mode_edit</i></a>');
@@ -158,9 +158,10 @@ function createCard(id, className, title, content, recipients, timestamp, status
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped right orange-text" data-position="left" data-delay="50" data-tooltip="' + i + '">people</i>');
             element.find("#adr_badge").html(status).css('color', color);
-            element.appendTo("#schemes .row").slideDown(1000);
+            element.appendTo("#schemes #schemesContainer.row").slideDown(1000);
             break;
         default:
+            element.attr('id', eventId);
             element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
             element.find("#rcpts").val(guests);
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
@@ -169,15 +170,18 @@ function createCard(id, className, title, content, recipients, timestamp, status
 
             if (className === "birthday") {
                 element.find("#adr_type").html('<i class="material-icons">cake</i>');
+                element.addClass('calendar');
             } else if (className === "holiday") {
                 element.find("#adr_type").html('<i class="material-icons">airplanemode_active</i>');
+                element.addClass('calendar');
             } else if (className === "weather") {
                 element.find("#adr_type").html('<img src="' + color.split("@")[1] + '" class="material-icons" width="24" heigth="24"/>');
+                element.addClass('calendar');
             } else {
                 element.find("#adr_type").html('<i class="material-icons">event</i>');
             }
 
-            element.prependTo("#schemes .row").slideDown(1000);
+            element.prependTo("#schemes #schemesContainer.row").slideDown(1000);
             break;
     }
 
@@ -187,8 +191,6 @@ function createCard(id, className, title, content, recipients, timestamp, status
         var picker = datepicker.pickadate('picker');
         $('#addModal').openModal({
             complete: function () {
-                $('#addModal #contacts').val('');
-                $('#addModal #contacts').material_select();
                 $("#addModal #now").prop("checked", true);
                 picker.set('max', '');
                 picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
@@ -197,12 +199,9 @@ function createCard(id, className, title, content, recipients, timestamp, status
                 $('#addModal #calendars').material_select();
                 $("#addModal #subject").val('');
                 $("#addModal #message").val('');
-//                updateTime();
+                $('#addModal #eventId').val('0');
             },
             ready: function () {
-                $('#uuid').val(card.attr('id'));
-                $('select#contacts').val(card.find('#rcpts').val().split(','));
-                $('select#contacts').material_select();
                 $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
                 $('select#calendars').prop('disabled', true);
                 $('select#calendars').material_select();
@@ -211,6 +210,7 @@ function createCard(id, className, title, content, recipients, timestamp, status
                         $('#addModal #now').is(':checked'));
                 $('#addModal #subject').val(card.find('#adr_title').text()).change();
                 $('#addModal #message').val(card.find('#adr_description').text()).change();
+                $('#addModal #eventId').val(card.attr('id'));
             }
         });
     });
@@ -219,18 +219,10 @@ function createCard(id, className, title, content, recipients, timestamp, status
         var card = $(this).parents('.adr_schema');
         $('#editModal').openModal({
             complete: function () {
-                $('#editModal #contacts').val('');
-                $('#editModal #contacts').material_select();
-                $("#editModal #calendars").val('0');
-                $('#editModal #calendars').material_select();
-                $("#editModal #subject").val('');
-                $("#editModal #message").val('');
-//                    updateTime();
+
             },
             ready: function () {
-                $("#editModal #now").prop("checked", false);
-                $('#editModal #subject').val(card.find('#adr_title').text()).change();
-                $('#editModal #message').val(card.find('#adr_description').text()).change();
+
             }
         });
     });
@@ -239,14 +231,10 @@ function createCard(id, className, title, content, recipients, timestamp, status
         var card = $(this).parents('.adr_schema');
         $('#copyModal').openModal({
             complete: function () {
-                $("#copyModal #now").prop("checked", true);
-                $("#copyModal #calendars").val('0');
-                $('#copyModal #calendars').material_select();
-//                    updateTime();
+
             },
             ready: function () {
-                $('#copyModal #date, #copyModal #time').prop('disabled',
-                        $('#addModal #now').is(':checked'));
+
             }
         });
     });

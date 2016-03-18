@@ -57,8 +57,9 @@
                 </div>
             </div>
             <input type="hidden" id="rcpts" name="rcpts" value=""/>
+            <input type="hidden" id="calendarId" name="calendarID" value=""/>
         </div>
-        <input type="hidden" id="uuid" />
+        <input type="hidden" id="uuid" value="0"/>
         <div class="fixed-action-btn" style="bottom: 45px; right: 24px; display:none;">
             <a id="addBtn" class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#addModal">
                 <i class="large material-icons">add</i>
@@ -195,17 +196,13 @@
         <div id="addModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 style="text-align: center;">Add new Scheme</h4>
+                <input type="hidden" id="eventId" name="eventID" value="0"/>
                 <div class="row input-field">
+                    <div class="contactsList"></div>
                     <div class="ui-widget">
-                        <input id="autocomplete" type="text"/>
-                        <label for="autocomplete">Autocomplete</label>
+                        <input id="contacts" type="text"/>
+                        <label for="contacts">Choose contacts</label>
                     </div>
-                </div>
-                <div class="row input-field">
-                    <select multiple id="contacts" class="icons" name="contacts" required="required">
-                        <option value="" disabled selected>Choose contacts</option>
-                    </select>
-                    <label for="contacts">Google Groups</label>
                 </div>
                 <div class="row input-field">
                     <input id="subject" type="text" required="required">
@@ -264,14 +261,22 @@
                     <button id="customBtn" class="waves-effect waves-light btn red">Sign in with Google</button>
                     <br><br>
                 </div>
-                <div id="schemes" style="display:none;">
+                <div id="schemes" class="grid" style="display:none;">
                     <form>
                         <div class="input-field">
                             <input id="search" type="search" required>
                             <label for="search"><i class="material-icons">search</i></label>
                         </div>
+                        <div class="row">
+                            <label for="">Filter:</label>
+                            <div class="chip" data-value="all">All</div>
+                            <div class="chip" data-value="suggestion">Suggestions</div>
+                            <div class="chip" data-value="scheme">Schemes</div>
+                            <div class="chip" data-value="pending">Pending</div>
+                            <div class="chip" data-value="sent">Sent</div>
+                        </div>
                     </form>
-                    <div class="row">
+                    <div id="schemesContainer" class="row">
                     </div>
                 </div>
 

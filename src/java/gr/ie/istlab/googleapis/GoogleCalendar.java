@@ -64,7 +64,15 @@ public class GoogleCalendar {
             Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
             return "0";
         }
+    }
 
+    public void deleteEvent(String userEmail, String calendarId, String eventId) {
+        calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
+        try {
+            calendarService.events().delete(calendarId, eventId).execute();
+        } catch (IOException ex) {
+            Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

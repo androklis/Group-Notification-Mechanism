@@ -6,7 +6,6 @@ function fetchContacts() {
                 $.each(response.feed.entry, function (index, value) {
                     $('select#contacts').append($('<option value="' + value.id.$t + '" data-icon="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50" class="left circle">' + value.title.$t + '</option>'));
                 });
-                $('select#contacts').material_select();
             });
     $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&max-results=100&v=3.0",
             function (response) {
@@ -28,18 +27,6 @@ function fetchContacts() {
                         }
                     }
                 });
-                $('select#contacts').material_select();
-            });
-    searchContact('larios_v@hotmail.com');
-}
-
-function searchContact(searchQuery) {
-    $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + searchQuery + "&max-results=100&v=3.0",
-            function (response) {
-//                console.log('SEARCH', JSON.stringify(response));
-//                $.each(response.feed.entry, function (index, value) {
-//                });
-                return response;
             });
 }
 
@@ -49,9 +36,6 @@ function fetchGroupContacts(groupId) {
                 $.each(response.feed.entry, function (index, value) {
                     var contacts = $('select#contacts').val();
                     contacts.push(value.gd$email[0].address);
-                    $('select#contacts').val(contacts);
-                    $('select#contacts').material_select();
-                    console.log(value.gd$email[0].address);
                 });
             });
 }
