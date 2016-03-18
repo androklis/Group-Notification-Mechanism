@@ -72,12 +72,17 @@ p#adr_description {
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 7;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
+}
+
+.card.small {
+    height: 250px;
 }
 
 .card-content{
     position: absolute;
+    width: 100%
 }
 
 .card-action .material-icons {

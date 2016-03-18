@@ -53,21 +53,29 @@ $(function () {
         var filter = $("#search").val();
         $("#schemes .row .adr_schema").each(function (index) {
             if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
-                $(this).fadeOut();
+                $(this).fadeOut(1000);
             } else {
-                $(this).fadeIn("slow");
+                $(this).fadeIn(1000);
             }
         });
     });
     $('#schemes .chip').click(function () {
-        var filter = $(this).data("value");
-        $("#schemes .row .adr_schema").each(function (index) {
-            if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
-                $(this).fadeOut();
-            } else {
-                $(this).fadeIn("slow");
-            }
+        $('#schemes .chip').each(function (index) {
+            $(this).css('background-color', 'rgb(228, 228, 228)');
         });
+        $(this).css('background-color', 'rgb(41, 182, 246)');
+        var filter = $(this).data("value");
+        if (filter === 'all') {
+            $("#schemes .row .adr_schema").filter(':hidden').fadeIn(1000);
+        } else {
+            $("#schemes .row .adr_schema").each(function (index) {
+                if (!$(this).hasClass(filter)) {
+                    $(this).fadeOut(1000);
+                } else {
+                    $(this).fadeIn(1000);
+                }
+            });
+        }
     });
     function initComponents() {
 

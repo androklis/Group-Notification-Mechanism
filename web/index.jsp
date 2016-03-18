@@ -50,7 +50,7 @@
                     <span id="adr_badge" class="badge right truncate">Lorem ipsum</span>
                 </div>
                 <div class="card-content">
-                    <span id="adr_title" class="card-title">Lorem ipsum dolor sit amet</span>
+                    <span id="adr_title" class="card-title truncate">Lorem ipsum dolor sit amet</span>
                     <p id="adr_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                 </div>
                 <div class="card-action">
@@ -100,14 +100,14 @@
             </div>
         </div>
 
-        <div id="deleteModal" class="modal modal-fixed-footer">
+        <div id="deleteModal" class="modal bottom-sheet">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;">Delete Scheme?</h4>
-                <div class="viewContent" style="font-size: 1.5rem;">
+                <div class="viewContent">
                 </div>
             </div>
             <div class="modal-footer">
-                <strong class="btn-flat left" style="cursor: default;"><font color='red'>THIS PROCEDURE IS IRREVERSIBLE</font></strong>
+                <i><strong class="btn-flat left" style="cursor: initial;"><font color='red'>THIS PROCEDURE IS IRREVERSIBLE</font></strong></i>
                 <a id="delBtn" class="modal-action modal-close waves-effect btn-flat red-text" onclick="delCard();"> Delete </a>
                 <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
             </div>
@@ -269,11 +269,11 @@
                         </div>
                         <div class="row">
                             <label for="">Filter:</label>
-                            <div class="chip" data-value="all">All</div>
-                            <div class="chip" data-value="suggestion">Suggestions</div>
-                            <div class="chip" data-value="scheme">Schemes</div>
-                            <div class="chip" data-value="pending">Pending</div>
-                            <div class="chip" data-value="sent">Sent</div>
+                            <div class="chip waves-effect" data-value="all">All</div>
+                            <div class="chip waves-effect" data-value="suggestion">Suggestions</div>
+                            <div class="chip waves-effect" data-value="scheme">Schemes</div>
+                            <div class="chip waves-effect" data-value="pending">Pending</div>
+                            <div class="chip waves-effect" data-value="sent">Sent</div>
                         </div>
                     </form>
                     <div id="schemesContainer" class="row">

@@ -11,7 +11,7 @@ function loadCards(schemes) {
         createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
         schemeIds.push(value.eventid);
     });
-    
+
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
         request.execute(function (response) {
@@ -113,7 +113,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                         }
                     }
 
-                    createCard('', calendarID, event.id, 'calendar', event.summary, description, attendees.join(','), start, resource, color);
+                    createCard('', calendarID, event.id, 'suggestion', event.summary, description, attendees.join(','), start, resource, color);
 
                 }
             }
@@ -148,8 +148,13 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             element.attr('id', uuid);
             element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
             if (status === "PENDING") {
+                element.addClass('pending');
                 element.find(".card-action").append('<a href="javascript:void(0);" id="editScheme"><i class="material-icons waves-effect waves-light right black-text">mode_edit</i></a>');
                 element.find("#adr_type").html('<i class="material-icons">notifications_active</i>');
+            } else if (status === "SENT") {
+                element.addClass('sent');
+                element.find(".card-action").append('<a href="javascript:void(0);" id="duplicateScheme"><i class="material-icons waves-effect waves-light right black-text">content_copy</i></a>');
+                element.find("#adr_type").html('<i class="material-icons">notifications_off</i>');
             } else {
                 element.find(".card-action").append('<a href="javascript:void(0);" id="duplicateScheme"><i class="material-icons waves-effect waves-light right black-text">content_copy</i></a>');
                 element.find("#adr_type").html('<i class="material-icons">notifications_off</i>');
@@ -170,13 +175,13 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 
             if (className === "birthday") {
                 element.find("#adr_type").html('<i class="material-icons">cake</i>');
-                element.addClass('calendar');
+                element.addClass('suggestion');
             } else if (className === "holiday") {
                 element.find("#adr_type").html('<i class="material-icons">airplanemode_active</i>');
-                element.addClass('calendar');
+                element.addClass('suggestion');
             } else if (className === "weather") {
                 element.find("#adr_type").html('<img src="' + color.split("@")[1] + '" class="material-icons" width="24" heigth="24"/>');
-                element.addClass('calendar');
+                element.addClass('suggestion');
             } else {
                 element.find("#adr_type").html('<i class="material-icons">event</i>');
             }
@@ -280,7 +285,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     $('a#deleteScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         $('#uuid').val(card.attr('id'));
-        $('#deleteModal .viewContent').append("Scheme subject:<br/><br/><strong>" + card.find('#adr_title').text() + "</strong><br/><br/>Are you sure you want to delete this scheme?");
+        $('#deleteModal .viewContent').append("Scheme subject:&nbsp;&nbsp;<strong>\"" + card.find('#adr_title').text() + "\"</strong><br/><br/>Are you sure you want to delete this scheme?");
         $('#deleteModal').openModal({
             complete: function () {
                 $('#deleteModal .viewContent').empty();
