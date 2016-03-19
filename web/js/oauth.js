@@ -94,7 +94,7 @@ function servletCall(code) {
 
 function signOut() {
 
-    document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8081/";
+    document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://group-notification-mechanism.appspot.com/";
 
     $.removeCookie("email");
     $.removeCookie("access_token");

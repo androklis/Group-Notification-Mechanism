@@ -43,18 +43,14 @@ public class GNMServlet extends HttpServlet {
                 String calendarId = request.getParameter("json[calendarId]");
                 json.addProperty("status", "");
 
-                System.out.println(uuid);
-                System.out.println(calendarId);
-                System.out.println(eventId);
-
                 try {
                     if ((!"0".equals(eventId)) && (!"0".equals(calendarId))) {
-                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, "0", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
                     } else if (("0".equals(eventId)) && (!"0".equals(calendarId))) {
                         eventId = GoogleCalendar.getInstance().addEvent(calendarId, request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"));
-                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId,  "1", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
                     } else if (("0".equals(eventId)) && ("0".equals(calendarId))) {
-                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId,  "0", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
                     }
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);

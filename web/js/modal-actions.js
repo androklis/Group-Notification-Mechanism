@@ -3,14 +3,12 @@ function saveSettings() {
 }
 
 $('#suggChk').change(function () {
-    console.log($(this).is(':checked'));
-
     if ($(this).is(':checked')) {
-        $('*[class*=calendar]').each(function () {
+        $('*[class*=suggestion]').each(function () {
             $(this).slideDown(1000);
         });
     } else {
-        $('*[class*=calendar]').each(function () {
+        $('*[class*=suggestion]').each(function () {
             $(this).slideUp(1000);
         });
     }
@@ -19,8 +17,6 @@ $('#suggChk').change(function () {
 function delCard() {
     window.scrollTo(0, 0);
     $('.progress').toggle();
-
-    console.log($(this).parent('#adr_schema').find('#calendarId').val());
 
     var json = {
         id: $('#uuid').val(),

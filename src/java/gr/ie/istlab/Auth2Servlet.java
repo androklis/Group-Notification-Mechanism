@@ -64,9 +64,8 @@ public class Auth2Servlet extends HttpServlet {
 
             if (GoogleSpreadsheet.getInstance().getWorksheet(request.getParameter("json[user_email]")) == null) {
                 GoogleSpreadsheet.getInstance().addWorksheet(request.getParameter("json[user_email]"));
-            } else {
-                json.add("schemes", GoogleSpreadsheet.getInstance().getSchemes(request.getParameter("json[user_email]")));
             }
+            json.add("schemes", GoogleSpreadsheet.getInstance().getSchemes(request.getParameter("json[user_email]")));
 
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
