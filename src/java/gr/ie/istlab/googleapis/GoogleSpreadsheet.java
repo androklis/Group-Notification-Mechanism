@@ -255,9 +255,7 @@ public class GoogleSpreadsheet {
         WorksheetEntry worksheet = getWorksheet(userEmail);
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class
-        );
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {

@@ -39,6 +39,7 @@
         <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
+        <script src="js/jquery.mixitup.min.js"></script>
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
     </head>
@@ -269,11 +270,11 @@
                         </div>
                         <div class="row">
                             <label for="">Filter:</label>
-                            <div class="chip waves-effect selected" data-value="all">All</div>
-                            <div class="chip waves-effect" data-value="suggestion">Suggestions</div>
-                            <div class="chip waves-effect" data-value="scheme">Schemes</div>
-                            <div class="chip waves-effect" data-value="pending">Pending</div>
-                            <div class="chip waves-effect" data-value="sent">Sent</div>
+                            <div class="chip waves-effect filter" data-filter="all">All</div>
+                            <div class="chip waves-effect filter" data-filter=".suggestion">Suggestions</div>
+                            <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
+                            <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
+                            <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
                         </div>
                     </form>
                     <div id="schemesContainer" class="row">

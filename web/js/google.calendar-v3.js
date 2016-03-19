@@ -127,6 +127,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     element.find("#calendarId").val(calendarId);
     element.find("#eventId").val(eventId);
     element.addClass(className);
+    element.addClass('mix');
     element.find("#adr_title").html(title);
     element.find("#adr_description").html(content);
     element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + timestamp + '</span>');

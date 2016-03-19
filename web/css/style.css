@@ -98,7 +98,11 @@ p#adr_description {
     background-color: lightblue;
 }
 
-.chip.selected{
+#schemesContainer .mix{
+  display: none;
+}
+
+.chip.active{
     background-color: #29b6f6;
 }
 
