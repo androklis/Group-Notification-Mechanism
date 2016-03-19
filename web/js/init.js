@@ -5,6 +5,7 @@ $(function () {
     po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(po, s);
+
     initComponents();
 
     $('select#calendars').on('change', function () {
@@ -59,7 +60,6 @@ $(function () {
             }
         });
     });
-
     function initComponents() {
 
         var today = new Date();
@@ -72,7 +72,11 @@ $(function () {
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 //        $('div#welcomeScreen').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 
-        $('#schemesContainer').mixItUp();
+        $('#schemesContainer').mixItUp({
+            load: {
+                filter: 'all'
+            }
+        });
 
         $('#date').pickadate({
             selectMonths: true,
@@ -117,7 +121,6 @@ $(function () {
     $("#contacts").autocomplete({
         lookup: function (query, done) {
             var result = {suggestions: []};
-
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0",
                     function (response) {
                         try {
@@ -151,10 +154,15 @@ $(function () {
 //            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
         }
     });
-
 });
 function appSettings() {
     $('#settingsModal').openModal();
+}
+
+function toggleSuggestions() {
+    if (!$('#suggChk').is(':checked')) {
+        $('#suggChk').prop('checked', true);
+    }
 }
 
 function checkTime(i) {

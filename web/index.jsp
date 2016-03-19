@@ -268,18 +268,24 @@
                             <input id="search" type="search" required>
                             <label for="search"><i class="material-icons">search</i></label>
                         </div>
-                        <div class="row">
-                            <label for="">Filter:</label>
-                            <div class="chip waves-effect filter" data-filter="all">All</div>
-                            <div class="chip waves-effect filter" data-filter=".suggestion">Suggestions</div>
-                            <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
-                            <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
-                            <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
-                        </div>
-                        <div class="row">
-                            <label for="">Sort:</label>
-                            <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
-                            <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                        <div>
+                            <div class="row">
+                                <div class="col s12 m4 l4">
+                                    <label for="">Filter:</label>
+                                    <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
+                                    <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
+                                    <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
+                                    <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
+                                    <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 m4 l4">
+                                    <label for="">Sort:</label>
+                                    <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
+                                    <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                     <div id="schemesContainer" class="row">

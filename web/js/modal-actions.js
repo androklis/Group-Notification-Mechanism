@@ -4,13 +4,9 @@ function saveSettings() {
 
 $('#suggChk').change(function () {
     if ($(this).is(':checked')) {
-        $('*[class*=suggestion]').each(function () {
-            $(this).slideDown(1000);
-        });
+        $('#schemes').find("div[data-filter='all']").click();
     } else {
-        $('*[class*=suggestion]').each(function () {
-            $(this).slideUp(1000);
-        });
+        $('#schemes').find("div[data-filter='.scheme']").click();
     }
 });
 
