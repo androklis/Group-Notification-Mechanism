@@ -60,10 +60,8 @@ $(function () {
         });
     });
     $('#schemes .chip').click(function () {
-        $('#schemes .chip').each(function (index) {
-            $(this).css('background-color', 'rgb(228, 228, 228)');
-        });
-        $(this).css('background-color', 'rgb(41, 182, 246)');
+        $(this).siblings(".chip").removeClass("selected");
+        $(this).toggleClass("selected");
         var filter = $(this).data("value");
         if (filter === 'all') {
             $("#schemes .row .adr_schema").filter(':hidden').fadeIn(1000);

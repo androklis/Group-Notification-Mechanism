@@ -93,9 +93,13 @@ p#adr_description {
     margin-right: 0px !important;
 }
 
-#schemes .chip:hover {
+#schemes .chip.waves-effect:hover {
     cursor: pointer;
     background-color: lightblue;
+}
+
+.chip.selected{
+    background-color: #29b6f6;
 }
 
 .autocomplete-suggestions { 
