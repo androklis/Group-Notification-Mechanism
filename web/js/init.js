@@ -59,24 +59,7 @@ $(function () {
             }
         });
     });
-//    $('#schemes .chip').click(function () {
-//        if (!$(this).hasClass('selected')) {
-//            $(this).siblings(".chip").removeClass("selected");
-//            $(this).toggleClass("selected");
-//        }
-//        var filter = $(this).data("value");
-//        if (filter === 'all') {
-//            $("#schemes .row .adr_schema").filter(':hidden').fadeIn(1000);
-//        } else {
-//            $("#schemes .row .adr_schema").each(function (index) {
-//                if (!$(this).hasClass(filter)) {
-//                    $(this).fadeOut(1000);
-//                } else {
-//                    $(this).fadeIn(1000);
-//                }
-//            });
-//        }
-//    });
+
     function initComponents() {
 
         var today = new Date();

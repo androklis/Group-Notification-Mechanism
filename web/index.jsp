@@ -44,7 +44,7 @@
         <script src="js/materialize.clockpicker.js"></script>
     </head>
     <body>
-        <div class="adr_schema col s12 m6 l3" style="display:none;">
+        <div class="adr_schema col s12 m6 l3 mix" style="display:none;">
             <div class="card hoverable small">
                 <div style="padding-top: 5px;">
                     <span id="adr_type" class="badge left">Lorem ipsum</span>
@@ -275,6 +275,11 @@
                             <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
                             <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
                             <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                        </div>
+                        <div class="row">
+                            <label for="">Sort:</label>
+                            <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
+                            <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
                         </div>
                     </form>
                     <div id="schemesContainer" class="row">
