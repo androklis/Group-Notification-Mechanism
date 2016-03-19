@@ -269,7 +269,7 @@
                         </div>
                         <div class="row">
                             <label for="">Filter:</label>
-                            <div class="chip waves-effect" data-value="all">All</div>
+                            <div class="chip waves-effect selected" data-value="all">All</div>
                             <div class="chip waves-effect" data-value="suggestion">Suggestions</div>
                             <div class="chip waves-effect" data-value="scheme">Schemes</div>
                             <div class="chip waves-effect" data-value="pending">Pending</div>
