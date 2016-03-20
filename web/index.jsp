@@ -198,43 +198,45 @@
             <div class="modal-content">
                 <h4 style="text-align: center;">Add new Scheme</h4>
                 <input type="hidden" id="eventId" name="eventID" value="0"/>
-                <div class="row input-field">
-                    <div class="contactsList"></div>
-                    <div class="ui-widget">
-                        <input id="contacts" type="text"/>
-                        <label for="contacts">Choose contacts</label>
+                <form id="addForm"> 
+                    <div class="row input-field">
+                        <div class="contactsList"></div>
+                        <div class="ui-widget">
+                            <input id="contacts" name="contacts" type="text" required="required"/>
+                            <label for="contacts">Choose contacts</label>
+                        </div>
                     </div>
-                </div>
-                <div class="row input-field">
-                    <input id="subject" type="text" required="required">
-                    <label for="subject">Subject</label>
-                </div>
-                <div class="row input-field">
-                    <div class="col s4 m4 l2">
-                        <input type="checkbox" id="now" checked="checked" />
-                        <label for="now">now</label>
+                    <div class="row input-field">
+                        <input id="subject" name="subject" type="text" required="required">
+                        <label for="subject">Subject</label>
                     </div>
-                    <div class="col s8 m8 l4">
-                        <select id="calendars">
-                            <option value="0" selected>DO NOT ADD TO CALENDAR</option>
-                        </select>
-                    </div>
-                    <div class="col s6 m6 l3">
-                        <input id="date" class="datepicker" type="date">
-                    </div>
-                    <div class="col s6 m6 l3">
-                        <input id="time" class="timepicker" type="text">
-                    </div>
+                    <div class="row input-field">
+                        <div class="col s4 m4 l2">
+                            <input type="checkbox" id="now" checked="checked" />
+                            <label for="now">now</label>
+                        </div>
+                        <div class="col s8 m8 l4">
+                            <select id="calendars">
+                                <option value="0" selected>DO NOT ADD TO CALENDAR</option>
+                            </select>
+                        </div>
+                        <div class="col s6 m6 l3">
+                            <input id="date" class="datepicker" type="date">
+                        </div>
+                        <div class="col s6 m6 l3">
+                            <input id="time" class="timepicker" type="text">
+                        </div>
 
-                </div>
-                <div class="row input-field">
-                    <textarea id="message" class="materialize-textarea" length="500" required="required"></textarea>
-                    <label for="message">Message</label>
-                </div>
+                    </div>
+                    <div class="row input-field">
+                        <textarea id="message" name="message" class="materialize-textarea" length="500" required="required"></textarea>
+                        <label for="message">Message</label>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <a id="eventSettings" class="waves-effect btn-flat left disabled"><i class="material-icons">date_range</i></a>
-                <a id="addBtn" href="#!" class="modal-action modal-close waves-effect btn-flat" onclick="addCard();">Add</a>
+                <a id="addBtn" href="#!" class="waves-effect btn-flat" onclick="addCard();">Add</a>
             </div>
         </div>
 

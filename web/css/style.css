@@ -99,7 +99,7 @@ p#adr_description {
 }
 
 #schemesContainer .mix{
-  display: none;
+    display: none;
 }
 
 .chip.active{
@@ -129,4 +129,13 @@ p#adr_description {
 .autocomplete-group strong { 
     display: block; 
     border-bottom: 1px solid #000; 
+}
+
+#addForm input, #addForm textarea {
+    margin: 0px;
+}
+
+div.error {
+    color: red;
+    text-align: right;
 }

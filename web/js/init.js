@@ -34,6 +34,7 @@ $(function () {
             $('select#calendars').material_select();
             $("#addModal #subject").val('');
             $("#addModal #message").val('');
+            $("#addForm").validate().resetForm();
         }, ready: function () {
             $('#uuid').val('0');
             $('#addModal #date, #addModal #time').prop('disabled',
@@ -47,9 +48,29 @@ $(function () {
             $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
         }
     });
-    $('#addModal #addBtn').click(function () {
-        $('#addModal #addForm').validate();
+
+    $("#addForm").validate({
+        rules: {
+            contacs: "required",
+            subject: "required",
+            message: "required"
+        },
+        messages: {
+            contacts: "Select at least one contact",
+            subject: "Specify a subject",
+            message: "Enter a message to send"
+        },
+        errorElement: 'div',
+        errorPlacement: function (error, element) {
+            var placement = $(element).data('error');
+            if (placement) {
+                $(placement).append(error);
+            } else {
+                error.insertAfter(element);
+            }
+        }
     });
+
     $('#search').keyup(function () {
         var filter = $("#search").val();
         $("#schemes .row .adr_schema").each(function (index) {
