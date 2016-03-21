@@ -14,8 +14,11 @@ function signinCallback(authResult) {
     if (authResult) {
         if (authResult['status']['signed_in']) {
 
+            $.cookie("access_token", authResult['access_token'], {
+                expires: 1
+            });
+
             togglePage('signedIn');
-            fetchContacts(authResult['access_token']);
             updateProfileInfo(authResult['code']);
 
         } else if (authResult['status']['immediate_failed']) {
@@ -50,52 +53,51 @@ function updateProfileInfo(code) {
                 img = response.image.url;
             }
 
-            $('#user').append('<ul id="userDropdown" class="dropdown-content waves-effect waves-light"><li><a href="#!" class="light-blue-text" onclick="signOut();">Sign Out</a></li></ul>');
-            $('#user').append('<li><a href="javascript:void(0);" id="" class="waves-effect waves-light"><i class="material-icons">settings</i></a></li>');
+            $('#user').append('<ul id="userDropdown" class="dropdown-content waves-effect waves-light" style="position: fixed;"><li><a href="#!" class="light-blue-text" onclick="signOut();">Sign Out</a></li></ul>');
+
+            $('#user').append('<li><a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a></li>');
+            $('#user').append('<li><a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a></li>');
+
+            $('#user').append('<li><a href="javascript:void(0);" class="waves-effect waves-light" onclick="appSettings();"><i class="material-icons">settings</i></a></li>');
             $('#user').append('<li><a class="dropdown-button waves-effect waves-light" href="#!" data-activates="userDropdown"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/>&nbsp;&nbsp;' + name + '<i class="material-icons right">arrow_drop_down</i></a></li>');
 
-            $('#nav-mobile').append('<li style="text-align: center;"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/></li><li style="color: black; text-align: center;"><strong>' + name + '</strong></li><li style="text-align: center;"><a href="javascript:void(0);" id="" class="waves-effect waves-light">Settings</a></li><li style="text-align: center;"><a href="#!" class="waves-effect waves-light light-blue-text" onclick="signOut();">Sign Out</a></li>');
+            $('#nav-mobile').append('<li style="text-align: center;"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/></li><li style="color: black; text-align: center;"><strong>' + name + '</strong></li><li style="text-align: center;"><a href="javascript:void(0);" class="waves-effect waves-light" onclick="appSettings();">Settings</a></li><li style="text-align: center;"><a href="#!" class="waves-effect waves-light light-blue-text" onclick="signOut();">Sign Out</a></li><li><a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a></li><li><a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a></li>');
 
             $(".dropdown-button").dropdown({
                 hover: true,
                 belowOrigin: true
             });
 
-            $('*[id*=email]').each(function () {
-                $(this).val(response.emails[0].value);
+            $.cookie("email", response.emails[0].value, {
+                expires: 1
             });
 
-            servletCall(code, response.emails[0].value);
+            servletCall(code);
         });
     });
 }
 
-function servletCall(code, email) {
+function servletCall(code) {
 
     var json = {
         auth_code: code,
-        user_email: email
+        user_email: $.cookie("email")
     };
 
-    $.ajax({
-        url: "Auth2Servlet",
-        type: "POST",
-        dataType: 'json',
-        data: {
-            json: json
-        },
-        success: function (data) {
-            loadCards(email, data.schemes);
+    $.post("Auth2Servlet", {json: json}, function (response, statusText, xhr) {
+        if (xhr.status === 200) {
+            loadCards(response.schemes);
             $('#spinnerContainer').attr('style', 'display: none');
-        },
-        error: function (error) {
-            console.error('ERROR:', error);
         }
     });
 }
 
 function signOut() {
-    gapi.auth.signOut();
+
+    document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://group-notification-mechanism.appspot.com/";
+
+    $.removeCookie("email");
+    $.removeCookie("access_token");
     $('.button-collapse').sideNav('hide');
     togglePage('signedOut');
 }

@@ -11,7 +11,7 @@ public class GNMConstants {
 
     public static GoogleCredential SERVICE_GOOGLE_CREDENTIAL = null;
 
-    public static HashMap<String, GoogleCredential> GOOGLE_CREDENTIALS = null;
+    public static HashMap<String, GoogleCredential> GOOGLE_CREDENTIALS = new HashMap<>();
 
 //    public static void main(String[] args) {
 //

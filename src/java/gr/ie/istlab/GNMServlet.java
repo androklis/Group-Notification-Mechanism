@@ -1,11 +1,15 @@
 package gr.ie.istlab;
 
 import com.google.gdata.util.ServiceException;
+import com.google.gson.JsonObject;
+import gr.ie.istlab.googleapis.GoogleCalendar;
+import gr.ie.istlab.googleapis.GoogleMail;
 import gr.ie.istlab.googleapis.GoogleSpreadsheet;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,13 +33,55 @@ public class GNMServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
-        switch (request.getParameter("type")) {
+        switch (request.getParameter("json[type]")) {
             case "ADD":
+                JsonObject json = new JsonObject();
+                String uuid = request.getParameter("json[id]");
+                String eventId = request.getParameter("json[eventId]");
+                String calendarId = request.getParameter("json[calendarId]");
+                json.addProperty("status", "");
+
+                try {
+                    if ((!"0".equals(eventId)) && (!"0".equals(calendarId))) {
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, "0", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    } else if (("0".equals(eventId)) && (!"0".equals(calendarId))) {
+                        eventId = GoogleCalendar.getInstance().addEvent(calendarId, request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"));
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId,  "1", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    } else if (("0".equals(eventId)) && ("0".equals(calendarId))) {
+                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId,  "0", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    }
+                } catch (MalformedURLException | ServiceException ex) {
+                    Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                json.addProperty("id", uuid);
+                json.addProperty("calendarId", calendarId);
+                json.addProperty("eventId", eventId);
+
+                if ("true".equals(request.getParameter("json[now]"))) {
+                    try {
+                        json.addProperty("status", GoogleMail.getInstance().sendMessage(
+                                GoogleMail.getInstance().createEmail(
+                                        request.getParameter("json[user_email]"),
+                                        request.getParameter("json[contacts]").split(","),
+                                        request.getParameter("json[subject]"),
+                                        request.getParameter("json[message]")),
+                                request.getParameter("json[user_email]"), uuid));
+                    } catch (MessagingException | MalformedURLException | ServiceException ex) {
+                        Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    json.addProperty("status", "PENDING");
+                }
+
+                response.setContentType("application/json");
+                response.getWriter().write(json.toString());
                 break;
             case "DELETE":
                 try {
-                    GoogleSpreadsheet.getInstance().deleteScheme(request.getParameter("uuid"), request.getParameter("email"));
+                    GoogleSpreadsheet.getInstance().deleteScheme(request.getParameter("json[id]"), request.getParameter("json[user_email]"));
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -45,8 +91,13 @@ public class GNMServlet extends HttpServlet {
             default:
                 break;
         }
-        response.sendRedirect("index.jsp");
-        response.setHeader("REFRESH", "0");
+//        response.sendRedirect("index.jsp");
+//        response.setHeader("REFRESH", "0");
+    }
+
+    @Override
+    public void init() throws ServletException {
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

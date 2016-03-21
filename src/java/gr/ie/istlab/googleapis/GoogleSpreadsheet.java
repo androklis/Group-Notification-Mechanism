@@ -48,7 +48,7 @@ public class GoogleSpreadsheet {
 
         WorksheetEntry worksheet = new WorksheetEntry();
         worksheet.setTitle(new PlainTextConstruct(userEmail));
-        worksheet.setColCount(6);
+        worksheet.setColCount(9);
         worksheet.setRowCount(1);
 
         URL worksheetFeedUrl = spreadsheet.getWorksheetFeedUrl();
@@ -69,15 +69,21 @@ public class GoogleSpreadsheet {
 
         CellEntry cellEntry = new CellEntry(1, 1, "UUID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 2, "Recipients");
+        cellEntry = new CellEntry(1, 2, "CALENDAR_ID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 3, "Subject");
+        cellEntry = new CellEntry(1, 3, "EVENT_ID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 4, "Message");
+        cellEntry = new CellEntry(1, 4, "ACCESS_ROLE");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 5, "Timestamp");
+        cellEntry = new CellEntry(1, 5, "RECIPIENTS");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 6, "Status");
+        cellEntry = new CellEntry(1, 6, "SUBJECT");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 7, "MESSAGE");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 8, "TIMESTAMP");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 9, "STATUS");
         cellFeed.insert(cellEntry);
 
         worksheet.setEtag("*");
@@ -86,7 +92,7 @@ public class GoogleSpreadsheet {
 
     }
 
-    public String addScheme(String userEmail, String to, String subject, String message,
+    public String addScheme(String calendarId, String eventId, String accessRole, String userEmail, String to, String subject, String message,
             String timestamp) throws MalformedURLException, IOException,
             ServiceException {
 
@@ -95,20 +101,18 @@ public class GoogleSpreadsheet {
         URL listFeedUrl = worksheet.getListFeedUrl();
 
         ListEntry row = new ListEntry();
-
         String uuid = UUID.randomUUID().toString();
-
         row.getCustomElements().setValueLocal("UUID", uuid);
-
-        row.getCustomElements().setValueLocal("Recipients", to);
-        row.getCustomElements().setValueLocal("Subject", subject);
-
-        row.getCustomElements().setValueLocal("Message", message);
-        row.getCustomElements().setValueLocal("Timestamp", "'" + timestamp);
-        row.getCustomElements().setValueLocal("Status", "Pending");
+        row.getCustomElements().setValueLocal("CALENDARID", calendarId);
+        row.getCustomElements().setValueLocal("EVENTID", eventId);
+        row.getCustomElements().setValueLocal("ACCESSROLE", accessRole);
+        row.getCustomElements().setValueLocal("RECIPIENTS", to);
+        row.getCustomElements().setValueLocal("SUBJECT", subject);
+        row.getCustomElements().setValueLocal("MESSAGE", message);
+        row.getCustomElements().setValueLocal("TIMESTAMP", "'" + timestamp);
+        row.getCustomElements().setValueLocal("STATUS", "PENDING");
 
         spreadsheetService.insert(listFeedUrl, row);
-
         return uuid;
 
     }
@@ -128,12 +132,14 @@ public class GoogleSpreadsheet {
             }
         }
         return null;
+
     }
 
     private List<WorksheetEntry> getAllWorksheets()
             throws MalformedURLException, IOException, ServiceException {
 
-        spreadsheet = spreadsheetService.getEntry(new URL("https://spreadsheets.google.com/feeds/spreadsheets/1N8H9qP5eNKHwwr3tIWxHv8cD19nc1mhQ_zRcEZt20sE"), SpreadsheetEntry.class);
+        spreadsheet = spreadsheetService.getEntry(new URL("https://spreadsheets.google.com/feeds/spreadsheets/1N8H9qP5eNKHwwr3tIWxHv8cD19nc1mhQ_zRcEZt20sE"), SpreadsheetEntry.class
+        );
 
         return spreadsheet.getWorksheets();
 
@@ -184,7 +190,8 @@ public class GoogleSpreadsheet {
         JsonArray jsonArray = new JsonArray();
 
         ListFeed feed = spreadsheetService.getFeed(getWorksheet(userEmail)
-                .getListFeedUrl(), ListFeed.class);
+                .getListFeedUrl(), ListFeed.class
+        );
 
         for (ListEntry entry : feed.getEntries()) {
 
@@ -206,7 +213,8 @@ public class GoogleSpreadsheet {
 
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class);
+                ListFeed.class
+        );
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
@@ -222,14 +230,32 @@ public class GoogleSpreadsheet {
         }
     }
 
-    public void deleteScheme(String uuid, String userEmail) throws MalformedURLException,
-            IOException, ServiceException {
+    private void getScheme(String uuid, String userEmail)
+            throws MalformedURLException, IOException, ServiceException {
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class);
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
+
+        for (ListEntry listEntry : listFeed.getEntries()) {
+            if (uuid.equals(listEntry.getTitle().getPlainText())) {
+                if ("1".equals(listEntry.getCustomElements().getValue("ACCESSROLE"))) {
+                    GoogleCalendar.getInstance().deleteEvent(userEmail, listEntry.getCustomElements().getValue("CALENDARID"), listEntry.getCustomElements().getValue("EVENTID"));
+                }
+            }
+        }
+    }
+
+    public void deleteScheme(String uuid, String userEmail) throws MalformedURLException,
+            IOException, ServiceException {
+
+        getScheme(uuid, userEmail);
+
+        WorksheetEntry worksheet = getWorksheet(userEmail);
+
+        URL listFeedUrl = worksheet.getListFeedUrl();
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
@@ -247,7 +273,8 @@ public class GoogleSpreadsheet {
 
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class);
+                ListFeed.class
+        );
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {

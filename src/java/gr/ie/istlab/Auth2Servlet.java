@@ -60,13 +60,12 @@ public class Auth2Servlet extends HttpServlet {
 
             json = new JsonObject();
 
-            getGoogleCredential(request.getParameter("json[auth_code]"));
+            GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
 
             if (GoogleSpreadsheet.getInstance().getWorksheet(request.getParameter("json[user_email]")) == null) {
                 GoogleSpreadsheet.getInstance().addWorksheet(request.getParameter("json[user_email]"));
-            } else {
-                json.add("schemes", GoogleSpreadsheet.getInstance().getSchemes(request.getParameter("json[user_email]")));
             }
+            json.add("schemes", GoogleSpreadsheet.getInstance().getSchemes(request.getParameter("json[user_email]")));
 
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
@@ -121,9 +120,6 @@ public class Auth2Servlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-        GOOGLE_CREDENTIALS = new HashMap<>();
-
         try {
             SERVICE_GOOGLE_CREDENTIAL = new GoogleCredential.Builder()
                     .setTransport(new NetHttpTransport())
@@ -167,7 +163,7 @@ public class Auth2Servlet extends HttpServlet {
                     jacksonFactory,
                     clientSecrets.getDetails().getClientId(),
                     clientSecrets.getDetails().getClientSecret(),
-                    Lists.newArrayList("https://mail.google.com/"))
+                    Arrays.asList("https://mail.google.com/", "https://www.googleapis.com/auth/calendar"))
                     .setApprovalPrompt("force").setAccessType("offline").build();
 
             GoogleAuthorizationCodeTokenRequest tokenRequest = authorizationFlow
@@ -197,10 +193,7 @@ public class Auth2Servlet extends HttpServlet {
 
         } catch (IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            return credential;
         }
-
+        return credential;
     }
-
 }

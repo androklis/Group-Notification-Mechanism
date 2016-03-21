@@ -5,10 +5,32 @@
  *
  * Made By MaterializeCSS.com
  */
+.container {
+    width: 95% !important;
+    max-width: inherit;
+}
 
 #footer {
     width:100%;
     bottom:0;
+}
+
+input:focus, textarea:focus{
+    border-bottom: 1px solid #29b6f6 !important;
+    box-shadow: 0 1px 0 0 #29b6f6 !important;
+}
+
+label.active{
+    color: #29b6f6 !important;
+}
+
+.dropdown-content li:not(.disabled) > a, .dropdown-content li:not(.disabled) > span {
+    color: #29b6f6 !important;
+}
+
+[type="checkbox"]:checked + label:before {
+    border-right: 2px solid #29b6f6 !important;
+    border-bottom: 2px solid #29b6f6 !important;
 }
 
 .icon-block {
@@ -50,7 +72,88 @@
     width: auto;
 }
 
-div#deleteModal {
-    height: 35%;
-    width: 30%;
+span#adr_badge{
+    position: inherit;
+    width: 70%;
+    text-align: right;
+}
+
+span#adr_type {
+    position: inherit;
+}
+
+span#timestamp {
+    position: relative;
+}
+
+p#adr_description {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.card.small {
+    height: 250px;
+}
+
+.card-content{
+    position: absolute;
+    width: 100%
+}
+
+.card-action .material-icons {
+    margin-left: 3px;
+}
+
+.card a{
+    margin-right: 0px !important;
+}
+
+#schemes .chip.waves-effect:hover {
+    cursor: pointer;
+    background-color: lightblue;
+}
+
+#schemesContainer .mix{
+    display: none;
+}
+
+.chip.active{
+    background-color: #29b6f6;
+}
+
+.autocomplete-suggestions { 
+    border: 1px solid #999; 
+    background: #FFF; 
+    overflow: auto; 
+}
+.autocomplete-suggestion { 
+    padding: 2px 5px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+}
+.autocomplete-selected {
+    background: #F0F0F0; 
+}
+.autocomplete-suggestions strong { 
+    font-weight: normal; 
+    color: #3399FF; 
+}
+.autocomplete-group { 
+    padding: 2px 5px; 
+}
+.autocomplete-group strong { 
+    display: block; 
+    border-bottom: 1px solid #000; 
+}
+
+#addForm input, #addForm textarea {
+    margin: 0px;
+}
+
+div.error {
+    color: red;
+    text-align: right;
 }
