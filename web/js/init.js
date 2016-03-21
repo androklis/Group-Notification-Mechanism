@@ -8,6 +8,8 @@ $(function () {
 
     initComponents();
 
+    addFormRules();
+
     $('select#calendars').on('change', function () {
         if ($('select#calendars').val().length > 1) {
             $('#eventSettings').removeClass('disabled');
@@ -46,28 +48,6 @@ $(function () {
                 $('#addModal #now').is(':checked'));
         if ($('#addModal #now').is(':checked')) {
             $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
-        }
-    });
-
-    $("#addForm").validate({
-        rules: {
-            contacs: "required",
-            subject: "required",
-            message: "required"
-        },
-        messages: {
-            contacts: "Select at least one contact",
-            subject: "Specify a subject",
-            message: "Enter a message to send"
-        },
-        errorElement: 'div',
-        errorPlacement: function (error, element) {
-            var placement = $(element).data('error');
-            if (placement) {
-                $(placement).append(error);
-            } else {
-                error.insertAfter(element);
-            }
         }
     });
 
@@ -136,7 +116,6 @@ $(function () {
         updateTime();
         $('#calendarModal #startTime').val(time);
         $('#calendarModal #endTime').val(time);
-//    setInterval(updateTime, 1000 * 60 * 1);
     }
 
     $("#contacts").autocomplete({
@@ -172,7 +151,6 @@ $(function () {
                     });
         },
         onSelect: function (suggestion) {
-//            alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
         }
     });
 });
@@ -184,6 +162,30 @@ function toggleSuggestions() {
     if (!$('#suggChk').is(':checked')) {
         $('#suggChk').prop('checked', true);
     }
+}
+
+function addFormRules() {
+    $("#addForm").validate({
+        rules: {
+            contacs: "required",
+            subject: "required",
+            message: "required"
+        },
+        messages: {
+            contacts: "Select at least one contact",
+            subject: "Specify a subject",
+            message: "Enter a message to send"
+        },
+        errorElement: 'div',
+        errorPlacement: function (error, element) {
+            var placement = $(element).data('error');
+            if (placement) {
+                $(placement).append(error);
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
 }
 
 function checkTime(i) {

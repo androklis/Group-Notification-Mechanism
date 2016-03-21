@@ -219,6 +219,7 @@
                             <select id="calendars">
                                 <option value="0" selected>DO NOT ADD TO CALENDAR</option>
                             </select>
+                            <label for="calendars">Calendars</label>
                         </div>
                         <div class="col s6 m6 l3">
                             <input id="date" class="datepicker" type="date">

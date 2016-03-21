@@ -208,6 +208,38 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 $('#addModal #eventId').val('0');
             },
             ready: function () {
+                var rcpts = card.find('#rcpts').val();
+//                $.each(rcpts.split(','), function (index, value) {
+//                    console.log("Results for:", value);
+//                    $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
+//                        if (value.gd$email) {
+//                            console.log("Results for:", value);
+//                            if (value.title.$t.length > 0) {
+//                                if ((value.title.$t).indexOf('Google+') < 0) {
+//                                    if (value.link[0].gd$etag) {
+//                                        console.log("value", value.title.$t);
+//                                        console.log("data", value.gd$email[0].address);
+//                                        console.log("img", (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token"));
+//                                    } else {
+//                                        console.log("value", value.title.$t);
+//                                        console.log("data", value.gd$email[0].address);
+//                                        console.log("img", "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50");
+//                                    }
+//                                }
+//                            } else {
+//                                if (value.link[0].gd$etag) {
+//                                    console.log("value", value.gd$email[0].address);
+//                                    console.log("data", value.gd$email[0].address);
+//                                    console.log("img", (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token"));
+//                                } else {
+//                                    console.log("value", value.gd$email[0].address);
+//                                    console.log("data", value.gd$email[0].address);
+//                                    console.log("img", "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50");
+//                                }
+//                            }
+//                        }
+//                    });
+//                });
                 $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
                 $('select#calendars').prop('disabled', true);
                 $('select#calendars').material_select();
