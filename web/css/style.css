@@ -33,6 +33,26 @@ label.active{
     border-bottom: 2px solid #29b6f6 !important;
 }
 
+.picker__date-display, .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected{
+    background-color: #29b6f6 !important;
+}
+
+.picker__weekday-display {
+    background-color: #11aef5 !important;    
+}
+
+.picker__day.picker__day--today {
+    color: #29b6f6;
+}
+
+.picker__day.picker__day--today.picker__day--selected {
+    color: #ffffff;
+}
+
+.picker__close, .picker__today {
+    color: #29b6f6 !important;
+}
+
 .icon-block {
     padding: 0 15px;
 }
