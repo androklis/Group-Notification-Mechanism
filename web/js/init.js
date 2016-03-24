@@ -70,7 +70,7 @@ $(function () {
         var time = checkTime(today.getHours()) + ':'
                 + checkTime(today.getMinutes());
         $('.button-collapse').sideNav();
-        
+
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 //        $('div#welcomeScreen').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 
@@ -156,6 +156,22 @@ $(function () {
                     });
         },
         onSelect: function (suggestion) {
+            if (!document.getElementById(suggestion.data)) {
+                $('.contactsList').append('<div id="' + suggestion.data + '" class="chip"><img src="' + suggestion.img + '">' + suggestion.value + '<i class="material-icons">close</i></div>');
+            }
+            $("#contacts").val('');
+            if (!$(".contactsList").is(':empty')) {
+
+            }
+        }
+    });
+
+    $("#contacts").keyup(function (e) {
+        if (e.keyCode === 8) {
+            $('.contactsList div.chip:last-child').remove();
+            if (!$(".contactsList").is(':empty')) {
+
+            }
         }
     });
 });
@@ -172,7 +188,7 @@ function toggleSuggestions() {
 function addFormRules() {
     $("#addForm").validate({
         rules: {
-            contacs: "required",
+            contacts: "required",
             subject: "required",
             message: "required"
         },

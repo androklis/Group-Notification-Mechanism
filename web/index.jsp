@@ -201,13 +201,15 @@
                 <form id="addForm"> 
                     <div class="row input-field">
                         <div class="contactsList"></div>
+                    </div>
+                    <div class="row input-field">
                         <div class="ui-widget">
-                            <input id="contacts" name="contacts" type="text" required="required"/>
+                            <input id="contacts" name="contacts" type="text" required="required">
                             <label for="contacts">Choose contacts</label>
                         </div>
                     </div>
                     <div class="row input-field">
-                        <input id="subject" name="subject" type="text" required="required">
+                        <input id="subject" name="subject" type="text">
                         <label for="subject">Subject</label>
                     </div>
                     <div class="row input-field">
@@ -215,17 +217,19 @@
                             <input type="checkbox" id="now" checked="checked" />
                             <label for="now">now</label>
                         </div>
-                        <div class="col s8 m8 l4">
+                        <div class="col s8 m8 l4" style="position: relative;">
                             <select id="calendars">
                                 <option value="0" selected>DO NOT ADD TO CALENDAR</option>
                             </select>
                             <label for="calendars">Calendars</label>
                         </div>
-                        <div class="col s6 m6 l3">
+                        <div class="col s6 m6 l3" style="position: relative;">
                             <input id="date" class="datepicker" type="date">
+                            <label for="date">Date</label>
                         </div>
-                        <div class="col s6 m6 l3">
+                        <div class="col s6 m6 l3" style="position: relative;">
                             <input id="time" class="timepicker" type="text">
+                            <label for="time">Time</label>
                         </div>
 
                     </div>
