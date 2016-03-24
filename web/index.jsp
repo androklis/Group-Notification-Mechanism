@@ -108,7 +108,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <i><strong class="btn-flat left" style="cursor: initial;"><font color='red'>THIS PROCEDURE IS IRREVERSIBLE</font></strong></i>
+                <em><strong class="btn-flat left red-text" style="cursor: initial;">THIS PROCEDURE IS IRREVERSIBLE</strong></em>
                 <a id="delBtn" class="modal-action modal-close waves-effect btn-flat red-text" onclick="delCard();"> Delete </a>
                 <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
             </div>
@@ -257,6 +257,34 @@
         </div>
         <div class="section no-pad-bot" id="index-banner">
             <div class="container">
+                <div id="schemes" style="display:none;">
+                    <form>
+                        <div class="input-field">
+                            <input id="search" type="search" required>
+                            <label for="search"><i class="material-icons">search</i></label>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m4 l4">
+                                <label for="">Filter:</label>
+                                <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
+                                <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
+                                <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
+                                <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
+                                <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m4 l4">
+                                <label for="">Sort:</label>
+                                <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
+                                <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="schemesContainer" class="row">
+                    </div>
+                </div>
+
                 <div id="welcomeScreen" class="row center" style="display:none;">
                     <br><br>
                     <img id="logo-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
@@ -264,35 +292,6 @@
                     <h5 class="header col s12 light">A mashup web application mechanism to manage group notification schemes</h5><br/><br/><br/><br/>
                     <button id="customBtn" class="waves-effect waves-light btn red">Sign in with Google</button>
                     <br><br>
-                </div>
-                <div id="schemes" class="grid" style="display:none;">
-                    <form>
-                        <div class="input-field">
-                            <input id="search" type="search" required>
-                            <label for="search"><i class="material-icons">search</i></label>
-                        </div>
-                        <div>
-                            <div class="row">
-                                <div class="col s12 m4 l4">
-                                    <label for="">Filter:</label>
-                                    <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
-                                    <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
-                                    <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
-                                    <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
-                                    <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col s12 m4 l4">
-                                    <label for="">Sort:</label>
-                                    <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
-                                    <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div id="schemesContainer" class="row">
-                    </div>
                 </div>
 
                 <div id="spinnerContainer" class="row center" style="display:none;">

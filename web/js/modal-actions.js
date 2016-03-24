@@ -77,6 +77,7 @@ function addCard() {
                 }
             }
             $('.progress').toggle();
+            $('#addModal').closeModal();
         });
     }
 }

@@ -70,6 +70,7 @@ $(function () {
         var time = checkTime(today.getHours()) + ':'
                 + checkTime(today.getMinutes());
         $('.button-collapse').sideNav();
+        
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 //        $('div#welcomeScreen').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 
@@ -117,6 +118,10 @@ $(function () {
         $('#calendarModal #startTime').val(time);
         $('#calendarModal #endTime').val(time);
     }
+
+    $(window).resize(function () {
+        $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
+    });
 
     $("#contacts").autocomplete({
         lookup: function (query, done) {

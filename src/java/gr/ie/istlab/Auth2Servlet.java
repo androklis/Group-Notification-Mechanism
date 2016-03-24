@@ -56,8 +56,6 @@ public class Auth2Servlet extends HttpServlet {
             throws ServletException, IOException {
         json = null;
         try {
-            response.setContentType("text/html;charset=UTF-8");
-
             json = new JsonObject();
 
             GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
