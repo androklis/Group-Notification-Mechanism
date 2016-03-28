@@ -7,7 +7,6 @@ $(function () {
     s.parentNode.insertBefore(po, s);
 
     initComponents();
-
     addFormRules();
 
     $('select#calendars').on('change', function () {
@@ -34,9 +33,13 @@ $(function () {
             $("#addModal #now").prop("checked", true);
             $("select#calendars").val('0');
             $('select#calendars').material_select();
+            $('#addModal .contactsList').empty();
+            $("#addModal #contacts").val('');
             $("#addModal #subject").val('');
             $("#addModal #message").val('');
-            $("#addForm").validate().resetForm();
+            $("label[for='contacts']").removeClass('active');
+            $("label[for='subject']").removeClass('active');
+            $("label[for='message']").removeClass('active');
         }, ready: function () {
             $('#uuid').val('0');
             $('#addModal #date, #addModal #time').prop('disabled',
@@ -160,18 +163,18 @@ $(function () {
                 $('.contactsList').append('<div id="' + suggestion.data + '" class="chip"><img src="' + suggestion.img + '">' + suggestion.value + '<i class="material-icons">close</i></div>');
             }
             $("#contacts").val('');
-            if (!$(".contactsList").is(':empty')) {
 
-            }
         }
     });
 
     $("#contacts").keyup(function (e) {
         if (e.keyCode === 8) {
             $('.contactsList div.chip:last-child').remove();
-            if (!$(".contactsList").is(':empty')) {
-
-            }
+        }
+        if (!$('#addForm .contactsList').is(':empty')) {
+            $('#addForm .con').css('display', 'none');
+        } else {
+            $('#addForm .con').css('display', 'block');
         }
     });
 });
@@ -186,25 +189,20 @@ function toggleSuggestions() {
 }
 
 function addFormRules() {
-    $("#addForm").validate({
-        rules: {
-            contacts: "required",
-            subject: "required",
-            message: "required"
-        },
-        messages: {
-            contacts: "Select at least one contact",
-            subject: "Specify a subject",
-            message: "Enter a message to send"
-        },
-        errorElement: 'div',
-        errorPlacement: function (error, element) {
-            var placement = $(element).data('error');
-            if (placement) {
-                $(placement).append(error);
-            } else {
-                error.insertAfter(element);
-            }
+
+    $('#addForm #subject').on('input', function () {
+        if ($.trim($(this).val())) {
+            $('#addForm .sub').css('display', 'none');
+        } else {
+            $('#addForm .sub').css('display', 'block');
+        }
+    });
+
+    $('#addForm #message').on('keyup', function () {
+        if ($.trim($(this).val())) {
+            $('#addForm .msg').css('display', 'none');
+        } else {
+            $('#addForm .msg').css('display', 'block');
         }
     });
 }

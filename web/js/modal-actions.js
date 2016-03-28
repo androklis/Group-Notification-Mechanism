@@ -30,11 +30,34 @@ function delCard() {
 
 function addCard() {
 
-    if ($('#addForm').valid()) {
+    if ($('#addForm .contactsList').is(':empty') && $('#addForm .error.con').css('display') === 'none') {
+        $('#addForm .con').css('display', 'block');
+    } else if (!$('#addForm .contactsList').is(':empty') && $('#addForm .error.con').css('display') !== 'none') {
+        $('#addForm .con').css('display', 'none');
+    }
+    if (!$('#addForm #subject').val() && $('#addForm .error.sub').css('display') === 'none') {
+        $('#addForm .sub').css('display', 'block');
+    } else if ($('#addForm #subject').value && $('#addForm .error.sub').css('display') !== 'none') {
+        $('#addForm .sub').css('display', 'none');
+    }
+    if (!$.trim($("#addForm #message").val()) && $('#addForm .error.msg').css('display') === 'none') {
+        $('#addForm .msg').css('display', 'block');
+    } else if ($.trim($("#addForm #message").val()) && $('#addForm .error.msg').css('display') !== 'none') {
+        $('#addForm .msg').css('display', 'none');
+    }
+
+
+    if ((!$('#addForm .contactsList').is(':empty')) && ($.trim($('#addForm #subject').val())) && ($.trim($("#addForm #message").val()))) {
+        var rcpts = [];
+
+        $("#addModal .contactsList").children(".chip").each(function () {
+            rcpts.push($(this).attr('id'));
+        });
+
         console.log('#uuid', $('#uuid').val());
         console.log('#eventId', $('#addModal #eventId').val());
         console.log('#email', $.cookie("email"));
-        console.log('#contacts', $('#addModal #contacts').data().autocomplete.selection.data);
+        console.log('#contacts', rcpts.join(','));
         console.log('#subject', $('#addModal #subject').val());
         console.log('#message', $('#addModal #message').val());
         console.log('#date', $('#addModal #date').val());
@@ -53,7 +76,7 @@ function addCard() {
             id: $('#uuid').val(),
             eventId: $('#addModal #eventId').val(),
             user_email: $.cookie("email"),
-            contacts: $('#addModal #contacts').data().autocomplete.selection.data,
+            contacts: rcpts.join(','),
             subject: $('#addModal #subject').val(),
             message: $('#addModal #message').val(),
             now: $('#addModal #now').is(':checked'),

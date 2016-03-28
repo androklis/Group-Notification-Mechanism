@@ -80,7 +80,7 @@ public class GoogleMail {
             email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipient));
         }
 
-        email.setSubject(subject);
+        email.setSubject(subject, "UTF-8");
         
         email.setContent(bodyText, "text/html; charset=utf-8");
 

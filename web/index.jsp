@@ -36,7 +36,6 @@
         <link rel="manifest" href="/manifest.json">
 
         <script src="js/jquery-2.1.1.min.js"></script>
-        <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
         <script src="js/jquery.mixitup.min.js"></script>
@@ -206,11 +205,17 @@
                         <div class="ui-widget">
                             <input id="contacts" name="contacts" type="text" required="required">
                             <label for="contacts">Choose contacts</label>
+                            <div class="error con" style="display: none;">
+                                <label>Select at least one contact</label>
+                            </div>
                         </div>
                     </div>
                     <div class="row input-field">
                         <input id="subject" name="subject" type="text">
                         <label for="subject">Subject</label>
+                        <div class="error sub" style="display: none;">
+                            <label>Enter a Subject</label>
+                        </div>
                     </div>
                     <div class="row input-field">
                         <div class="col s4 m4 l2">
@@ -236,6 +241,9 @@
                     <div class="row input-field">
                         <textarea id="message" name="message" class="materialize-textarea" length="500" required="required"></textarea>
                         <label for="message">Message</label>
+                        <div class="error msg" style="display: none;">
+                            <label>Enter a Message</label>
+                        </div>
                     </div>
                 </form>
             </div>
