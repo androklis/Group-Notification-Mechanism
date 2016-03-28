@@ -195,69 +195,90 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         var card = $(this).parents('.adr_schema');
         var datepicker = $('#date').pickadate({});
         var picker = datepicker.pickadate('picker');
+        var rcpts = card.find('#rcpts').val();
+        $.each(rcpts.split(','), function (index, value) {
+            $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
+                if (response.feed.entry[0].gd$email) {
+                    if (response.feed.entry[0].title.$t.length > 0) {
+                        if ((response.feed.entry[0].title.$t).indexOf('Google+') < 0) {
+                            if (response.feed.entry[0].link[0].gd$etag) {
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                            } else {
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                            }
+                        }
+                    } else {
+                        if (response.feed.entry[0].link[0].gd$etag) {
+                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
+                        } else {
+                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
+                        }
+                    }
+                }
+            });
+        });
+        $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
+        $('select#calendars').prop('disabled', true);
+        $('select#calendars').material_select();
+        picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
+        $('#addModal #date, #addModal #time').prop('disabled',
+                $('#addModal #now').is(':checked'));
+        $('#addModal #subject').val(card.find('#adr_title').text()).change();
+        $('#addModal #message').val(card.find('#adr_description').text()).change();
+        $('#addModal #eventId').val(card.attr('id'));
         $('#addModal').openModal({
             complete: function () {
-                $("#addModal #now").prop("checked", true);
-                picker.set('max', '');
-                picker.set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-                $('select#calendars').prop('disabled', false);
-                $("#addModal #calendars").val('0');
-                $('#addModal #calendars').material_select();
-                $("#addModal #subject").val('');
-                $("#addModal #message").val('');
-                $('#addModal #eventId').val('0');
+                onModalComplete();
             },
             ready: function () {
-                var rcpts = card.find('#rcpts').val();
-//                $.each(rcpts.split(','), function (index, value) {
-//                    console.log("Results for:", value);
-//                    $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
-//                        if (value.gd$email) {
-//                            console.log("Results for:", value);
-//                            if (value.title.$t.length > 0) {
-//                                if ((value.title.$t).indexOf('Google+') < 0) {
-//                                    if (value.link[0].gd$etag) {
-//                                        console.log("value", value.title.$t);
-//                                        console.log("data", value.gd$email[0].address);
-//                                        console.log("img", (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token"));
-//                                    } else {
-//                                        console.log("value", value.title.$t);
-//                                        console.log("data", value.gd$email[0].address);
-//                                        console.log("img", "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50");
-//                                    }
-//                                }
-//                            } else {
-//                                if (value.link[0].gd$etag) {
-//                                    console.log("value", value.gd$email[0].address);
-//                                    console.log("data", value.gd$email[0].address);
-//                                    console.log("img", (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token"));
-//                                } else {
-//                                    console.log("value", value.gd$email[0].address);
-//                                    console.log("data", value.gd$email[0].address);
-//                                    console.log("img", "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50");
-//                                }
-//                            }
-//                        }
-//                    });
-//                });
-                $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
-                $('select#calendars').prop('disabled', true);
-                $('select#calendars').material_select();
-                picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
-                $('#addModal #date, #addModal #time').prop('disabled',
-                        $('#addModal #now').is(':checked'));
-                $('#addModal #subject').val(card.find('#adr_title').text()).change();
-                $('#addModal #message').val(card.find('#adr_description').text()).change();
-                $('#addModal #eventId').val(card.attr('id'));
             }
         });
     });
 
     $('a#editScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
-        $('#editModal').openModal({
+        $('#addModal #addBtn').attr('onclick', 'updateCard();');
+        $('#addModal #addBtn').text('Update');
+        $('#addModal #schemeTitle').text(card.find('#adr_title').text());
+        var datepicker = $('#date').pickadate({});
+        var picker = datepicker.pickadate('picker');
+        var rcpts = card.find('#rcpts').val();
+        $.each(rcpts.split(','), function (index, value) {
+            $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
+                if (response.feed.entry[0].gd$email) {
+                    if (response.feed.entry[0].title.$t.length > 0) {
+                        if ((response.feed.entry[0].title.$t).indexOf('Google+') < 0) {
+                            if (response.feed.entry[0].link[0].gd$etag) {
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                            } else {
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                            }
+                        }
+                    } else {
+                        if (response.feed.entry[0].link[0].gd$etag) {
+                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
+                        } else {
+                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
+                        }
+                    }
+                }
+            });
+        });
+        $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
+        $('select#calendars').prop('disabled', true);
+        $('select#calendars').material_select();
+        picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
+        $('#addModal #date, #addModal #time').prop('disabled',
+                $('#addModal #now').is(':checked'));
+        $('#addModal #subject').val(card.find('#adr_title').text()).change();
+        $('#addModal #message').val(card.find('#adr_description').text()).change();
+        $('#addModal #eventId').val(card.attr('id'));
+        $('#addModal').openModal({
             complete: function () {
-
+                $('#addModal #addBtn').attr('onclick', 'addCard();');
+                $('#addModal #addBtn').text('Add');
+                $('#addModal #schemeTitle').text('Add new Scheme');
+                onModalComplete();
             },
             ready: function () {
 

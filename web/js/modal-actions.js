@@ -63,7 +63,7 @@ function addCard() {
         console.log('#date', $('#addModal #date').val());
         console.log('#time', $('#addModal #time').val());
         console.log('#now', $('#addModal #now').is(':checked'));
-        console.log('#calendars', $('#addModal #calendars').val());
+        console.log('#calendars', $('#addModal #calendars option:selected').val());
         console.log('#startDate', $('#calendarModal #startDate').val());
         console.log('#startTime', $('#calendarModal #startTime').val());
         console.log('#endDate', $('#calendarModal #endDate').val());
@@ -80,7 +80,7 @@ function addCard() {
             subject: $('#addModal #subject').val(),
             message: $('#addModal #message').val(),
             now: $('#addModal #now').is(':checked'),
-            calendarId: $('#addModal #calendars').val(),
+            calendarId: $('#addModal #calendars option:selected').val(),
             date: $('#addModal #date').val(),
             time: $('#addModal #time').val(),
             eventStart: $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val(),
@@ -103,4 +103,8 @@ function addCard() {
             $('#addModal').closeModal();
         });
     }
+}
+
+function updateCard() {
+    console.log('clicked');
 }

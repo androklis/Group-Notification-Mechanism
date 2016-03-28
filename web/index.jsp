@@ -195,7 +195,7 @@
 
         <div id="addModal" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4 style="text-align: center;">Add new Scheme</h4>
+                <h4 id="schemeTitle" style="text-align: center;">Add new Scheme</h4>
                 <input type="hidden" id="eventId" name="eventID" value="0"/>
                 <form id="addForm"> 
                     <div class="row input-field">

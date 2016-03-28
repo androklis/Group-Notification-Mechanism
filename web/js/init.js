@@ -30,16 +30,7 @@ $(function () {
     });
     $('#addBtn.modal-trigger').leanModal({
         complete: function () {
-            $("#addModal #now").prop("checked", true);
-            $("select#calendars").val('0');
-            $('select#calendars').material_select();
-            $('#addModal .contactsList').empty();
-            $("#addModal #contacts").val('');
-            $("#addModal #subject").val('');
-            $("#addModal #message").val('');
-            $("label[for='contacts']").removeClass('active');
-            $("label[for='subject']").removeClass('active');
-            $("label[for='message']").removeClass('active');
+            onModalComplete();
         }, ready: function () {
             $('#uuid').val('0');
             $('#addModal #date, #addModal #time').prop('disabled',
@@ -164,17 +155,11 @@ $(function () {
             }
             $("#contacts").val('');
 
-        }
-    });
-
-    $("#contacts").keyup(function (e) {
-        if (e.keyCode === 8) {
-            $('.contactsList div.chip:last-child').remove();
-        }
-        if (!$('#addForm .contactsList').is(':empty')) {
-            $('#addForm .con').css('display', 'none');
-        } else {
-            $('#addForm .con').css('display', 'block');
+            if (!$('#addForm .contactsList').is(':empty')) {
+                $('#addForm .con').css('display', 'none');
+            } else {
+                $('#addForm .con').css('display', 'block');
+            }
         }
     });
 });
@@ -189,6 +174,14 @@ function toggleSuggestions() {
 }
 
 function addFormRules() {
+
+    $("#contacts").keyup(function (e) {
+        if (!$('#addForm .contactsList').is(':empty')) {
+            $('#addForm .con').css('display', 'none');
+        } else {
+            $('#addForm .con').css('display', 'block');
+        }
+    });
 
     $('#addForm #subject').on('input', function () {
         if ($.trim($(this).val())) {
@@ -205,6 +198,25 @@ function addFormRules() {
             $('#addForm .msg').css('display', 'block');
         }
     });
+}
+
+function onModalComplete() {
+    var datepicker = $('#addModal #date').pickadate({});
+    var picker = datepicker.pickadate('picker');
+    picker.set('max', false);
+    picker.set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
+    $("#addModal #now").prop("checked", true);
+    $("select#calendars").val('0');
+    $('select#calendars').material_select();
+    $('#addModal .contactsList').empty();
+    $("#addModal #contacts").val('');
+    $("#addModal #subject").val('');
+    $("#addModal #message").val('');
+    $("#addModal #eventId").val('0');
+    $("label[for='contacts']").removeClass('active');
+    $("label[for='subject']").removeClass('active');
+    $("label[for='message']").removeClass('active');
+    $('select#calendars').prop('disabled', false);
 }
 
 function checkTime(i) {
