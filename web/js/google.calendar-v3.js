@@ -240,8 +240,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         $('#addModal #addBtn').attr('onclick', 'updateCard();');
         $('#addModal #addBtn').text('Update');
         $('#addModal #schemeTitle').text(card.find('#adr_title').text());
-        var datepicker = $('#date').pickadate({});
-        var picker = datepicker.pickadate('picker');
+
         var rcpts = card.find('#rcpts').val();
         $.each(rcpts.split(','), function (index, value) {
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
@@ -264,10 +263,15 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 }
             });
         });
-        $('select#calendars').val($('select#calendars option:contains("' + card.find('#adr_badge').text() + '")').val());
-        $('select#calendars').prop('disabled', true);
+        $('select#calendars').val(card.find('#calendarId').val());
+        if (card.find('#calendarId').val() !== '0') {
+            var datepicker = $('#date').pickadate({});
+            var picker = datepicker.pickadate('picker');
+            picker.set('max', (card.find('#timestamp').text()).split(' ')[0], {format: 'yyyy-mm-dd'});
+            $('select#calendars').prop('disabled', true);
+        }
         $('select#calendars').material_select();
-        picker.set('max', card.find('#timestamp').text(), {format: 'yyyy-mm-dd'});
+
         $('#addModal #date, #addModal #time').prop('disabled',
                 $('#addModal #now').is(':checked'));
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
@@ -333,8 +337,14 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             complete: function () {
                 $('#viewModal #viewTitle').empty();
                 $('#viewModal .viewContent').empty();
+            },
+            ready: function () {
+                $('.collapsible').collapsible({
+                    accordion: false
+                });
             }
         });
+
     });
     $('a#deleteScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');

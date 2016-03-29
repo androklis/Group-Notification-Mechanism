@@ -230,7 +230,7 @@ public class GoogleSpreadsheet {
         }
     }
 
-    private void getScheme(String uuid, String userEmail)
+    private void getSchemeWithEvent(String uuid, String userEmail)
             throws MalformedURLException, IOException, ServiceException {
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
@@ -250,7 +250,7 @@ public class GoogleSpreadsheet {
     public void deleteScheme(String uuid, String userEmail) throws MalformedURLException,
             IOException, ServiceException {
 
-        getScheme(uuid, userEmail);
+        getSchemeWithEvent(uuid, userEmail);
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
 

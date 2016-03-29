@@ -40,14 +40,14 @@ public class GoogleCalendar {
         return instance;
     }
 
-    public String addEvent(String calendarId, String userEmail, String summary, String description, String guests, String start, String end) {
+    public String addEvent(String calendarId, String userEmail, String summary, String description, String guests, String start, String end, String timeZoneOffset) {
 
         calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
 
         Event event = new Event().setSummary(summary).setDescription(description);
 
-        event.setStart(new EventDateTime().setDateTime(new DateTime(start.split(" ")[0] + "T" + start.split(" ")[1] + ":00")));
-        event.setEnd(new EventDateTime().setDateTime(new DateTime(end.split(" ")[0] + "T" + end.split(" ")[1] + ":00")));
+        event.setStart(new EventDateTime().setDateTime(new DateTime(start.split(" ")[0] + "T" + start.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
+        event.setEnd(new EventDateTime().setDateTime(new DateTime(end.split(" ")[0] + "T" + end.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
 
         ArrayList<EventAttendee> attendees = new ArrayList<>();
 

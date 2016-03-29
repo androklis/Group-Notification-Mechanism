@@ -46,8 +46,8 @@ function addCard() {
         $('#addForm .msg').css('display', 'none');
     }
 
-
     if ((!$('#addForm .contactsList').is(':empty')) && ($.trim($('#addForm #subject').val())) && ($.trim($("#addForm #message").val()))) {
+        $('#addForm #addBtn').toggleClass('disabled');
         var rcpts = [];
 
         $("#addModal .contactsList").children(".chip").each(function () {
@@ -69,6 +69,22 @@ function addCard() {
         console.log('#endDate', $('#calendarModal #endDate').val());
         console.log('#endTime', $('#calendarModal #endTime').val());
 
+        var tz = new Date().getTimezoneOffset() / 60;
+        var timeZoneOffset = '';
+        if (tz > -10 && tz < 10) {
+            if (tz <= 0) {
+                timeZoneOffset = '+0' + Math.abs(tz);
+            } else if (tz > 0) {
+                timeZoneOffset = '-0' + Math.abs(tz);
+            }
+        } else {
+            if (tz <= 0) {
+                timeZoneOffset = '+' + Math.abs(tz);
+            } else if (tz > 0) {
+                timeZoneOffset = '-' + Math.abs(tz);
+            }
+        }
+
         window.scrollTo(0, 0);
         $('.progress').toggle();
 
@@ -85,6 +101,7 @@ function addCard() {
             time: $('#addModal #time').val(),
             eventStart: $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val(),
             eventEnd: $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(),
+            timeZoneOffset: timeZoneOffset,
             type: 'ADD'
         };
 
@@ -100,7 +117,9 @@ function addCard() {
                 }
             }
             $('.progress').toggle();
+            $('#addForm #addBtn').toggleClass('disabled');
             $('#addModal').closeModal();
+            onModalComplete();
         });
     }
 }
