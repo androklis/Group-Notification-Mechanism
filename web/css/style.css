@@ -187,3 +187,11 @@ div.error label{
 .progress .indeterminate {
     background-color: #bbe8fc;
 }
+
+#suggestionsSwitch.switch label input[type=checkbox]:checked + .lever, #mapSwitch.switch label input[type=checkbox]:checked + .lever {
+    background-color: lightblue;
+}
+
+#suggestionsSwitch.switch label input[type=checkbox]:checked + .lever:after, #mapSwitch.switch label input[type=checkbox]:checked + .lever:after {
+    background-color: #29b6f6;
+}
