@@ -125,7 +125,6 @@ public class GoogleSpreadsheet {
         if (worksheets.size() > 0) {
 
             for (WorksheetEntry worksheet : worksheets) {
-
                 if (userEmail.equals(worksheet.getTitle().getPlainText())) {
                     return worksheet;
                 }
@@ -138,8 +137,7 @@ public class GoogleSpreadsheet {
     private List<WorksheetEntry> getAllWorksheets()
             throws MalformedURLException, IOException, ServiceException {
 
-        spreadsheet = spreadsheetService.getEntry(new URL("https://spreadsheets.google.com/feeds/spreadsheets/1N8H9qP5eNKHwwr3tIWxHv8cD19nc1mhQ_zRcEZt20sE"), SpreadsheetEntry.class
-        );
+        spreadsheet = spreadsheetService.getEntry(new URL("https://spreadsheets.google.com/feeds/spreadsheets/1N8H9qP5eNKHwwr3tIWxHv8cD19nc1mhQ_zRcEZt20sE"), SpreadsheetEntry.class);
 
         return spreadsheet.getWorksheets();
 

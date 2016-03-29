@@ -219,6 +219,19 @@ function onModalComplete() {
     $('select#calendars').prop('disabled', false);
 }
 
+function expandAll() {
+    $("#attPeople .collapsible-header").addClass("active");
+    $("#attPeople.collapsible").collapsible({accordion: false});
+}
+
+function collapseAll() {
+    $("#attPeople .collapsible-header").removeClass(function () {
+        return "active";
+    });
+    $("#attPeople.collapsible").collapsible({accordion: true});
+    $("#attPeople.collapsible").collapsible({accordion: false});
+}
+
 function checkTime(i) {
     return (i < 10) ? "0" + i : i;
 }

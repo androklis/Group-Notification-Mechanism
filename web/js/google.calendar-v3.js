@@ -305,43 +305,51 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     $('a#viewCard').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         var rcpts = card.find('#rcpts').val();
-        var rcptsNames = $('<ul></ul>');
-        rcptsNames.attr('id', 'guestsView');
-        rcptsNames.addClass('collection');
+        $('#viewModal #viewTitle').text(card.find('#adr_title').text());
+        $('#viewModal .viewContent .resource').append(card.find('#adr_badge').text());
+        $('#viewModal .viewContent .dateRange').append(card.find('#timestamp').text());
+        $('#viewModal .viewContent .desc').append(card.find('#adr_description').text());
+        $('#viewModal .viewContent #attendeesCnt').html(card.find('.card-action i.tooltipped').data('tooltip'));
         $.each(rcpts.split(','), function (index, value) {
-            var img = "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50";
-            var title = "NO GUESTS";
             if (value !== "") {
+              
                 $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=1&v=3.0",
                         function (response) {
                             if (response.feed.entry) {
                                 if (response.feed.entry[0].title.$t.length > 0) {
-                                    title = response.feed.entry[0].title.$t;
-                                }
-                                if (response.feed.entry[0].link[0].gd$etag) {
-                                    img = (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token");
+                                    if (response.feed.entry[0].link[0].gd$etag) {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                    } else {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                    }
+                                } else {
+                                    if (response.feed.entry[0].link[0].gd$etag) {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + value + "</div>");
+                                    } else {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+                                    }
                                 }
                             } else {
-                                title = "NOT FOUND";
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
                             }
-                            rcptsNames.append('<li class="collection-item avatar"> <img src="' + img + '" alt="" class="circle"> <span class="title">' + title + '</span> <p>' + value + '</p></li>');
-                        });
+                        }, "jsonp");
             } else {
-                rcptsNames.append('<li class="collection-item avatar"> <img src="' + img + '" alt="" class="circle"> <span class="title">' + title + '</span> <p>' + value + '<br/></p></li>');
+                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
             }
         });
-        $('#viewModal #viewTitle').text(card.find('#adr_title').text());
-        $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong><br/>");
-        $('#viewModal .viewContent').append(rcptsNames);
+
         $('#viewModal').openModal({
             complete: function () {
                 $('#viewModal #viewTitle').empty();
-                $('#viewModal .viewContent').empty();
+                $('#viewModal .viewContent .resource').empty();
+                $('#viewModal .viewContent .dateRange').empty();
+                $('#viewModal .viewContent .desc').empty();
+                $('#viewModal .viewContent .attendees').empty();
+                $('#viewModal .viewContent #attendeesCnt').html('0');
+                collapseAll();
             },
             ready: function () {
-                $('.collapsible').collapsible({
-                    accordion: false
-                });
+                $('#attPeople.collapsible').collapsible({});
             }
         });
 

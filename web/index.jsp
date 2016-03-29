@@ -69,9 +69,51 @@
         <div id="viewModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;"></h4>
-                <div class="viewContent"></div>
+                <div class="viewContent">
+                    <ul id="attPeople" class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">cast</i>
+                                Resource
+                            </div>
+                            <div class="collapsible-body">
+                                <p class="resource"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">date_range</i>
+                                Timestamp
+                            </div>
+                            <div class="collapsible-body">
+                                <p class="dateRange"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">description</i>
+                                Description
+                            </div>
+                            <div class="collapsible-body">
+                                <p class="desc"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">contacts</i>
+                                Attendees<span id="attendeesCnt" class="badge right"></span>
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="attendees">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="modal-footer">
+                <a class="waves-effect btn left" onClick="expandAll();"><i class="material-icons left">fullscreen</i>Expand All</a>
+                <a class="waves-effect btn left" onClick="collapseAll();" style="margin-left: 5px;"><i class="material-icons left">fullscreen_exit</i>Collapse All</a>
                 <a href="#!" class=" modal-action modal-close waves-effect btn-flat">Close</a>
             </div>
         </div>
