@@ -30,21 +30,60 @@ function delCard() {
 
 function addCard() {
 
-    if ($('#addForm').valid()) {
+    if ($('#addForm .contactsList').is(':empty') && $('#addForm .error.con').css('display') === 'none') {
+        $('#addForm .con').css('display', 'block');
+    } else if (!$('#addForm .contactsList').is(':empty') && $('#addForm .error.con').css('display') !== 'none') {
+        $('#addForm .con').css('display', 'none');
+    }
+    if (!$('#addForm #subject').val() && $('#addForm .error.sub').css('display') === 'none') {
+        $('#addForm .sub').css('display', 'block');
+    } else if ($('#addForm #subject').value && $('#addForm .error.sub').css('display') !== 'none') {
+        $('#addForm .sub').css('display', 'none');
+    }
+    if (!$.trim($("#addForm #message").val()) && $('#addForm .error.msg').css('display') === 'none') {
+        $('#addForm .msg').css('display', 'block');
+    } else if ($.trim($("#addForm #message").val()) && $('#addForm .error.msg').css('display') !== 'none') {
+        $('#addForm .msg').css('display', 'none');
+    }
+
+    if ((!$('#addForm .contactsList').is(':empty')) && ($.trim($('#addForm #subject').val())) && ($.trim($("#addForm #message").val()))) {
+        $('#addForm #addBtn').toggleClass('disabled');
+        var rcpts = [];
+
+        $("#addModal .contactsList").children(".chip").each(function () {
+            rcpts.push($(this).attr('id'));
+        });
+
         console.log('#uuid', $('#uuid').val());
         console.log('#eventId', $('#addModal #eventId').val());
         console.log('#email', $.cookie("email"));
-        console.log('#contacts', $('#addModal #contacts').data().autocomplete.selection.data);
+        console.log('#contacts', rcpts.join(','));
         console.log('#subject', $('#addModal #subject').val());
         console.log('#message', $('#addModal #message').val());
         console.log('#date', $('#addModal #date').val());
         console.log('#time', $('#addModal #time').val());
         console.log('#now', $('#addModal #now').is(':checked'));
-        console.log('#calendars', $('#addModal #calendars').val());
+        console.log('#calendars', $('#addModal #calendars option:selected').val());
         console.log('#startDate', $('#calendarModal #startDate').val());
         console.log('#startTime', $('#calendarModal #startTime').val());
         console.log('#endDate', $('#calendarModal #endDate').val());
         console.log('#endTime', $('#calendarModal #endTime').val());
+
+        var tz = new Date().getTimezoneOffset() / 60;
+        var timeZoneOffset = '';
+        if (tz > -10 && tz < 10) {
+            if (tz <= 0) {
+                timeZoneOffset = '+0' + Math.abs(tz);
+            } else if (tz > 0) {
+                timeZoneOffset = '-0' + Math.abs(tz);
+            }
+        } else {
+            if (tz <= 0) {
+                timeZoneOffset = '+' + Math.abs(tz);
+            } else if (tz > 0) {
+                timeZoneOffset = '-' + Math.abs(tz);
+            }
+        }
 
         window.scrollTo(0, 0);
         $('.progress').toggle();
@@ -53,15 +92,16 @@ function addCard() {
             id: $('#uuid').val(),
             eventId: $('#addModal #eventId').val(),
             user_email: $.cookie("email"),
-            contacts: $('#addModal #contacts').data().autocomplete.selection.data,
+            contacts: rcpts.join(','),
             subject: $('#addModal #subject').val(),
             message: $('#addModal #message').val(),
             now: $('#addModal #now').is(':checked'),
-            calendarId: $('#addModal #calendars').val(),
+            calendarId: $('#addModal #calendars option:selected').val(),
             date: $('#addModal #date').val(),
             time: $('#addModal #time').val(),
             eventStart: $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val(),
             eventEnd: $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(),
+            timeZoneOffset: timeZoneOffset,
             type: 'ADD'
         };
 
@@ -77,6 +117,13 @@ function addCard() {
                 }
             }
             $('.progress').toggle();
+            $('#addForm #addBtn').toggleClass('disabled');
+            $('#addModal').closeModal();
+            onModalComplete();
         });
     }
+}
+
+function updateCard() {
+    console.log('clicked');
 }

@@ -80,8 +80,8 @@ public class GoogleMail {
             email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipient));
         }
 
-        email.setSubject(subject);
-
+        email.setSubject(subject, "UTF-8");
+        
         email.setContent(bodyText, "text/html; charset=utf-8");
 
         return email;
@@ -139,6 +139,7 @@ public class GoogleMail {
             return message.get("labelIds").toString().replace("[", "").replace("]", "").trim();
         } catch (IOException | MessagingException ex) {
             Logger.getLogger(GoogleMail.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
             return "Error Sending";
         }
     }

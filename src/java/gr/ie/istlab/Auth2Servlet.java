@@ -11,7 +11,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.common.collect.Lists;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonObject;
 import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
@@ -23,10 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -39,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Androklis Gregoriou
  */
 public class Auth2Servlet extends HttpServlet {
-
+    
     private JsonObject json;
     private ScheduledExecutorService exec;
 
@@ -54,26 +50,25 @@ public class Auth2Servlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         json = null;
         try {
-            response.setContentType("text/html;charset=UTF-8");
-
             json = new JsonObject();
-
+            
             GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
-
+            
             if (GoogleSpreadsheet.getInstance().getWorksheet(request.getParameter("json[user_email]")) == null) {
                 GoogleSpreadsheet.getInstance().addWorksheet(request.getParameter("json[user_email]"));
             }
             json.add("schemes", GoogleSpreadsheet.getInstance().getSchemes(request.getParameter("json[user_email]")));
-
+            
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
         } catch (MalformedURLException | ServiceException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @Override
     public void destroy() {
         exec.shutdown();
@@ -117,7 +112,7 @@ public class Auth2Servlet extends HttpServlet {
     public String getServletInfo() {
         return getClass().getName();
     }
-
+    
     @Override
     public void init() throws ServletException {
         try {
@@ -132,7 +127,7 @@ public class Auth2Servlet extends HttpServlet {
                             new File(Auth2Servlet.class
                                     .getResource("GNM_GMail_SA-key.p12").getPath().replace("%20", " ").trim())).build();
             SERVICE_GOOGLE_CREDENTIAL.refreshToken();
-
+            
         } catch (GeneralSecurityException | IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -145,19 +140,19 @@ public class Auth2Servlet extends HttpServlet {
 //            }
 //        }, 0, 5, TimeUnit.SECONDS);
     }
-
+    
     private GoogleCredential getGoogleCredential(String authCode) {
-
+        
         GoogleCredential credential = null;
         NetHttpTransport netHttpTransport = new NetHttpTransport();
         JacksonFactory jacksonFactory = JacksonFactory.getDefaultInstance();
-
+        
         try {
-
+            
             GoogleClientSecrets clientSecrets
                     = GoogleClientSecrets.load(
                             JacksonFactory.getDefaultInstance(), new FileReader(Auth2Servlet.class.getClassLoader().getResource("gr/ie/istlab/cs/GNM-client_secrets.json").toString().replace("file:/", "").replaceAll("%20", " ").trim()));
-
+            
             GoogleAuthorizationCodeFlow authorizationFlow = new GoogleAuthorizationCodeFlow.Builder(
                     netHttpTransport,
                     jacksonFactory,
@@ -165,12 +160,12 @@ public class Auth2Servlet extends HttpServlet {
                     clientSecrets.getDetails().getClientSecret(),
                     Arrays.asList("https://mail.google.com/", "https://www.googleapis.com/auth/calendar"))
                     .setApprovalPrompt("force").setAccessType("offline").build();
-
+            
             GoogleAuthorizationCodeTokenRequest tokenRequest = authorizationFlow
                     .newTokenRequest(authCode);
             tokenRequest.setRedirectUri("postmessage");
             GoogleTokenResponse tokenResponse = tokenRequest.execute();
-
+            
             credential = new GoogleCredential.Builder()
                     .setTransport(netHttpTransport).setJsonFactory(jacksonFactory)
                     .setClientSecrets(clientSecrets.getDetails().getClientId(), clientSecrets.getDetails().getClientSecret())
@@ -179,18 +174,18 @@ public class Auth2Servlet extends HttpServlet {
                         public void onTokenErrorResponse(Credential credential,
                                 TokenErrorResponse tokenErrorResponse)
                                 throws IOException {
-
+                            
                         }
-
+                        
                         @Override
                         public void onTokenResponse(Credential credential,
                                 TokenResponse tokenResponse) throws IOException {
-
+                            
                         }
                     }).build();
-
+            
             credential.setFromTokenResponse(tokenResponse);
-
+            
         } catch (IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }

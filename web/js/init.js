@@ -7,7 +7,6 @@ $(function () {
     s.parentNode.insertBefore(po, s);
 
     initComponents();
-
     addFormRules();
 
     $('select#calendars').on('change', function () {
@@ -31,12 +30,7 @@ $(function () {
     });
     $('#addBtn.modal-trigger').leanModal({
         complete: function () {
-            $("#addModal #now").prop("checked", true);
-            $("select#calendars").val('0');
-            $('select#calendars').material_select();
-            $("#addModal #subject").val('');
-            $("#addModal #message").val('');
-            $("#addForm").validate().resetForm();
+            onModalComplete();
         }, ready: function () {
             $('#uuid').val('0');
             $('#addModal #date, #addModal #time').prop('disabled',
@@ -70,6 +64,7 @@ $(function () {
         var time = checkTime(today.getHours()) + ':'
                 + checkTime(today.getMinutes());
         $('.button-collapse').sideNav();
+
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 //        $('div#welcomeScreen').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 
@@ -118,6 +113,10 @@ $(function () {
         $('#calendarModal #endTime').val(time);
     }
 
+    $(window).resize(function () {
+        $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
+    });
+
     $("#contacts").autocomplete({
         lookup: function (query, done) {
             var result = {suggestions: []};
@@ -151,6 +150,16 @@ $(function () {
                     });
         },
         onSelect: function (suggestion) {
+            if (!document.getElementById(suggestion.data)) {
+                $('.contactsList').append('<div id="' + suggestion.data + '" class="chip"><img src="' + suggestion.img + '">' + suggestion.value + '<i class="material-icons">close</i></div>');
+            }
+            $("#contacts").val('');
+
+            if (!$('#addForm .contactsList').is(':empty')) {
+                $('#addForm .con').css('display', 'none');
+            } else {
+                $('#addForm .con').css('display', 'block');
+            }
         }
     });
 });
@@ -165,27 +174,49 @@ function toggleSuggestions() {
 }
 
 function addFormRules() {
-    $("#addForm").validate({
-        rules: {
-            contacs: "required",
-            subject: "required",
-            message: "required"
-        },
-        messages: {
-            contacts: "Select at least one contact",
-            subject: "Specify a subject",
-            message: "Enter a message to send"
-        },
-        errorElement: 'div',
-        errorPlacement: function (error, element) {
-            var placement = $(element).data('error');
-            if (placement) {
-                $(placement).append(error);
-            } else {
-                error.insertAfter(element);
-            }
+
+    $("#contacts").keyup(function (e) {
+        if (!$('#addForm .contactsList').is(':empty')) {
+            $('#addForm .con').css('display', 'none');
+        } else {
+            $('#addForm .con').css('display', 'block');
         }
     });
+
+    $('#addForm #subject').on('input', function () {
+        if ($.trim($(this).val())) {
+            $('#addForm .sub').css('display', 'none');
+        } else {
+            $('#addForm .sub').css('display', 'block');
+        }
+    });
+
+    $('#addForm #message').on('keyup', function () {
+        if ($.trim($(this).val())) {
+            $('#addForm .msg').css('display', 'none');
+        } else {
+            $('#addForm .msg').css('display', 'block');
+        }
+    });
+}
+
+function onModalComplete() {
+    var datepicker = $('#addModal #date').pickadate({});
+    var picker = datepicker.pickadate('picker');
+    picker.set('max', false);
+    picker.set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
+    $("#addModal #now").prop("checked", true);
+    $("select#calendars").val('0');
+    $('select#calendars').material_select();
+    $('#addModal .contactsList').empty();
+    $("#addModal #contacts").val('');
+    $("#addModal #subject").val('');
+    $("#addModal #message").val('');
+    $("#addModal #eventId").val('0');
+    $("label[for='contacts']").removeClass('active');
+    $("label[for='subject']").removeClass('active');
+    $("label[for='message']").removeClass('active');
+    $('select#calendars').prop('disabled', false);
 }
 
 function checkTime(i) {

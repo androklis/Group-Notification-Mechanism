@@ -36,7 +36,6 @@
         <link rel="manifest" href="/manifest.json">
 
         <script src="js/jquery-2.1.1.min.js"></script>
-        <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
         <script src="js/jquery.mixitup.min.js"></script>
@@ -108,7 +107,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <i><strong class="btn-flat left" style="cursor: initial;"><font color='red'>THIS PROCEDURE IS IRREVERSIBLE</font></strong></i>
+                <em><strong class="btn-flat left red-text" style="cursor: initial;">THIS PROCEDURE IS IRREVERSIBLE</strong></em>
                 <a id="delBtn" class="modal-action modal-close waves-effect btn-flat red-text" onclick="delCard();"> Delete </a>
                 <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
             </div>
@@ -196,42 +195,55 @@
 
         <div id="addModal" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4 style="text-align: center;">Add new Scheme</h4>
+                <h4 id="schemeTitle" style="text-align: center;">Add new Scheme</h4>
                 <input type="hidden" id="eventId" name="eventID" value="0"/>
                 <form id="addForm"> 
                     <div class="row input-field">
                         <div class="contactsList"></div>
+                    </div>
+                    <div class="row input-field">
                         <div class="ui-widget">
-                            <input id="contacts" name="contacts" type="text" required="required"/>
+                            <input id="contacts" name="contacts" type="text" required="required">
                             <label for="contacts">Choose contacts</label>
+                            <div class="error con" style="display: none;">
+                                <label>Select at least one contact</label>
+                            </div>
                         </div>
                     </div>
                     <div class="row input-field">
-                        <input id="subject" name="subject" type="text" required="required">
+                        <input id="subject" name="subject" type="text">
                         <label for="subject">Subject</label>
+                        <div class="error sub" style="display: none;">
+                            <label>Enter a Subject</label>
+                        </div>
                     </div>
                     <div class="row input-field">
                         <div class="col s4 m4 l2">
                             <input type="checkbox" id="now" checked="checked" />
                             <label for="now">now</label>
                         </div>
-                        <div class="col s8 m8 l4">
+                        <div class="col s8 m8 l4" style="position: relative;">
                             <select id="calendars">
                                 <option value="0" selected>DO NOT ADD TO CALENDAR</option>
                             </select>
                             <label for="calendars">Calendars</label>
                         </div>
-                        <div class="col s6 m6 l3">
+                        <div class="col s6 m6 l3" style="position: relative;">
                             <input id="date" class="datepicker" type="date">
+                            <label for="date">Date</label>
                         </div>
-                        <div class="col s6 m6 l3">
+                        <div class="col s6 m6 l3" style="position: relative;">
                             <input id="time" class="timepicker" type="text">
+                            <label for="time">Time</label>
                         </div>
 
                     </div>
                     <div class="row input-field">
                         <textarea id="message" name="message" class="materialize-textarea" length="500" required="required"></textarea>
                         <label for="message">Message</label>
+                        <div class="error msg" style="display: none;">
+                            <label>Enter a Message</label>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -257,6 +269,34 @@
         </div>
         <div class="section no-pad-bot" id="index-banner">
             <div class="container">
+                <div id="schemes" style="display:none;">
+                    <form>
+                        <div class="input-field">
+                            <input id="search" type="search" required>
+                            <label for="search"><i class="material-icons">search</i></label>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m4 l4">
+                                <label for="">Filter:</label>
+                                <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
+                                <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
+                                <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
+                                <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
+                                <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m4 l4">
+                                <label for="">Sort:</label>
+                                <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
+                                <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="schemesContainer" class="row">
+                    </div>
+                </div>
+
                 <div id="welcomeScreen" class="row center" style="display:none;">
                     <br><br>
                     <img id="logo-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
@@ -264,35 +304,6 @@
                     <h5 class="header col s12 light">A mashup web application mechanism to manage group notification schemes</h5><br/><br/><br/><br/>
                     <button id="customBtn" class="waves-effect waves-light btn red">Sign in with Google</button>
                     <br><br>
-                </div>
-                <div id="schemes" class="grid" style="display:none;">
-                    <form>
-                        <div class="input-field">
-                            <input id="search" type="search" required>
-                            <label for="search"><i class="material-icons">search</i></label>
-                        </div>
-                        <div>
-                            <div class="row">
-                                <div class="col s12 m4 l4">
-                                    <label for="">Filter:</label>
-                                    <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
-                                    <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
-                                    <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
-                                    <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
-                                    <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col s12 m4 l4">
-                                    <label for="">Sort:</label>
-                                    <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
-                                    <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div id="schemesContainer" class="row">
-                    </div>
                 </div>
 
                 <div id="spinnerContainer" class="row center" style="display:none;">
