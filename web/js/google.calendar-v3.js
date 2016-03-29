@@ -320,53 +320,28 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 
         $.each(rcpts.split(','), function (index, value) {
             if (value !== "") {
-
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + encodeURIComponent($.cookie("access_token")) + "&q=" + value + "&max-results=1&v=3.0");
-                xhr.onload = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.feed.entry) {
-                            if (response.feed.entry[0].title.$t.length > 0) {
-                                if (response.feed.entry[0].link[0].gd$etag) {
-                                    $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=1&v=3.0",
+                        function (response) {
+                            if (response.feed.entry) {
+                                if (response.feed.entry[0].title.$t.length > 0) {
+                                    if (response.feed.entry[0].link[0].gd$etag) {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                    } else {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                    }
                                 } else {
-                                    $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                    if (response.feed.entry[0].link[0].gd$etag) {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + value + "</div>");
+                                    } else {
+                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+                                    }
                                 }
                             } else {
-                                if (response.feed.entry[0].link[0].gd$etag) {
-                                    $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + value + "</div>");
-                                } else {
-                                    $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
-                                }
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
                             }
-                        } else {
-                            $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
-                        }
-                    }
-                };
-                xhr.send();
-                console.log(xhr);
-//                $.post("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=1&v=3.0",
-//                        function (response) {
-//                            if (response.feed.entry) {
-//                                if (response.feed.entry[0].title.$t.length > 0) {
-//                                    if (response.feed.entry[0].link[0].gd$etag) {
-//                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
-//                                    } else {
-//                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
-//                                    }
-//                                } else {
-//                                    if (response.feed.entry[0].link[0].gd$etag) {
-//                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + value + "</div>");
-//                                    } else {
-//                                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
-//                                    }
-//                                }
-//                            } else {
-//                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
-//                            }
-//                        }, "jsonp");
+                        }, "json").fail(function () {
+                    $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+                });
             } else {
                 $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
             }
