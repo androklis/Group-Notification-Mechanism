@@ -74,7 +74,7 @@
                         <li>
                             <div class="collapsible-header">
                                 <i class="material-icons">cast</i>
-                                Resource
+                                Resource<span id="rsc" class="badge right" style="position: inherit;"></span>
                             </div>
                             <div class="collapsible-body">
                                 <p class="resource"></p>
@@ -101,7 +101,7 @@
                         <li>
                             <div class="collapsible-header">
                                 <i class="material-icons">contacts</i>
-                                Attendees<span id="attendeesCnt" class="badge right"></span>
+                                Attendees<span id="attendeesCnt" class="badge right" style="position: inherit;"></span>
                             </div>
                             <div class="collapsible-body">
                                 <div class="attendees">

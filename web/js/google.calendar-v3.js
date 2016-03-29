@@ -306,13 +306,21 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         var card = $(this).parents('.adr_schema');
         var rcpts = card.find('#rcpts').val();
         $('#viewModal #viewTitle').text(card.find('#adr_title').text());
-        $('#viewModal .viewContent .resource').append(card.find('#adr_badge').text());
+        if (card.hasClass('suggestion')) {
+            $('#viewModal .viewContent .resource').append(card.find('#adr_badge').text());
+            $('#viewModal .viewContent #rsc').html('SUGGESTION');
+        } else {
+            $('#viewModal .viewContent .resource').append('GROUP NOTIFICATION SCHEMES');
+            $('#viewModal .viewContent #rsc').html(card.find('#adr_badge').text());
+        }
+
         $('#viewModal .viewContent .dateRange').append(card.find('#timestamp').text());
         $('#viewModal .viewContent .desc').append(card.find('#adr_description').text());
         $('#viewModal .viewContent #attendeesCnt').html(card.find('.card-action i.tooltipped').data('tooltip'));
+
         $.each(rcpts.split(','), function (index, value) {
             if (value !== "") {
-              
+
                 $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=1&v=3.0",
                         function (response) {
                             if (response.feed.entry) {
@@ -345,7 +353,8 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 $('#viewModal .viewContent .dateRange').empty();
                 $('#viewModal .viewContent .desc').empty();
                 $('#viewModal .viewContent .attendees').empty();
-                $('#viewModal .viewContent #attendeesCnt').html('0');
+                $('#viewModal .viewContent #attendeesCnt').html('');
+                $('#viewModal .viewContent #rsc').html('');
                 collapseAll();
             },
             ready: function () {
