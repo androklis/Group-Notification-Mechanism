@@ -85,7 +85,6 @@ function servletCall(code) {
     };
 
     $.post("Auth2Servlet", {json: json}, function (response, statusText, xhr) {
-        console.log('STATUS', xhr.status);
         if (xhr.status === 200) {
             loadCards(response.schemes);
             $('#spinnerContainer').attr('style', 'display: none');

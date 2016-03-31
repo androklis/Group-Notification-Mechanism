@@ -5,7 +5,6 @@
  * is loaded.
  */
 function loadCards(schemes) {
-    console.log(schemes);
     var schemeIds = [];
     $.each(schemes, function (index, value) {
         createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
@@ -15,7 +14,6 @@ function loadCards(schemes) {
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
         request.execute(function (response) {
-            console.log('CALENDARS', response);
             $.each(response.items, function (index, value) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
@@ -60,7 +58,6 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
         'orderBy': 'startTime'
     });
     request.execute(function (response) {
-        console.log('EVENTS', response);
         var events = response.items;
         $.each(events, function (index, event) {
             var when = event.start.dateTime;
@@ -112,9 +109,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                             resource = summary + ' Calendar';
                         }
                     }
-
                     createCard('', calendarID, event.id, 'suggestion', event.summary, description, attendees.join(','), start, resource, color);
-
                 }
             }
         });
@@ -315,7 +310,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         }
 
         $('#viewModal .viewContent .dateRange').append(card.find('#timestamp').text());
-        $('#viewModal .viewContent .desc').append(card.find('#adr_description').text());
+        $('#viewModal .viewContent .desc').append(card.find('#adr_description').html());
         $('#viewModal .viewContent #attendeesCnt').html(card.find('.card-action i.tooltipped').data('tooltip'));
 
         $.each(rcpts.split(','), function (index, value) {
