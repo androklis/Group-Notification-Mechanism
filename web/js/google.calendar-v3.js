@@ -168,6 +168,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped right orange-text" data-position="left" data-delay="50" data-tooltip="' + i + '">people</i>');
             element.find("#adr_badge").html(status.toUpperCase()).css('color', color.split("@")[0]);
+            element.find('.card').css('border', '1px solid ' + color.split("@")[0]);
 
             if (className === "birthday") {
                 element.find("#adr_type").html('<i class="material-icons">cake</i>');
@@ -319,9 +320,9 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                     if (response.feed.entry) {
                         if (response.feed.entry[0].title.$t.length > 0) {
                             if (response.feed.entry[0].link[0].gd$etag) {
-                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value.split('@')[1] + ")</div>");
                             } else {
-                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value + ")</div>");
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value.split('@')[1] + ")</div>");
                             }
                         } else {
                             if (response.feed.entry[0].link[0].gd$etag) {
@@ -354,6 +355,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             },
             ready: function () {
                 $('#attPeople.collapsible').collapsible({});
+                expandAll();
             }
         });
 

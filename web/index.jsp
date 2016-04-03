@@ -95,7 +95,7 @@
                                 Description
                             </div>
                             <div class="collapsible-body">
-                                <p class="desc"></p>
+                                <div class="desc"></div>
                             </div>
                         </li>
                         <li>

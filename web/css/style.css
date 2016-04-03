@@ -72,9 +72,9 @@ label.active{
     max-height: 85%;
 }
 
-#viewModal .attendees{
+#viewModal .attendees, #viewModal .desc{
     margin: 0;
-    padding: 15px;
+    padding: 2rem;
 }
 
 .attendees .chip {
