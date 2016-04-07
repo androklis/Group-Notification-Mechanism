@@ -130,6 +130,14 @@ p#adr_description {
     background-color: lightblue;
 }
 
+#schemes ul.pagination{
+    margin: 0;
+}
+
+#schemes form > div.row{
+    text-align: center;
+}
+
 #schemesContainer .mix{
     display: none;
 }

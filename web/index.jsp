@@ -8,18 +8,23 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- Meta -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+        <!-- Meta -->
 
+        <!-- Title -->
         <title>Group Notification Mechanism</title>
+        <!-- Title -->
 
         <!-- CSS  -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/materialize.clockpicker.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <!-- CSS  -->
 
-        <!-- Favicons-->
+        <!-- Favicons -->
         <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-icon-60x60.png">
         <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-icon-72x72.png">
@@ -33,14 +38,20 @@
         <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="96x96" href="images/favicons/favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
-        <link rel="manifest" href="/manifest.json">
+        <!-- Favicons -->
 
+        <!-- Manifest -->
+        <link rel="manifest" href="/manifest.json">
+        <!-- Manifest -->
+
+        <!-- Scripts -->
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
         <script src="js/jquery.mixitup.min.js"></script>
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
+        <!-- Scripts -->
     </head>
     <body>
         <div class="adr_schema col s12 m6 l3 mix" style="display:none;">
@@ -319,20 +330,28 @@
                         </div>
                         <div class="row">
                             <div class="col s12 m4 l4">
-                                <label for="">Filter:</label>
-                                <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
-                                <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
-                                <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
-                                <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
-                                <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                                <div class="row">
+                                    <label for="">Filter:</label>
+                                    <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
+                                    <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
+                                    <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
+                                    <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
+                                    <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col s12 m4 l4">
-                                <label for="">Sort:</label>
-                                <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
-                                <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                                <div class="row">
+                                    <label for="">Sort:</label>
+                                    <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
+                                    <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                                </div>
                             </div>
+                            <div class="col s12 m4 l4">
+                                <div class="row">
+                                    <ul class="pagination">
+                                    </ul>
+                                </div>
+                            </div>  
                         </div>
                     </form>
                     <div id="schemesContainer" class="row">
