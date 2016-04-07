@@ -130,12 +130,9 @@ p#adr_description {
     background-color: lightblue;
 }
 
-#schemes ul.pagination{
-    margin: 0;
-}
-
-#schemes form > div.row{
+div#paginationDiv{
     text-align: center;
+    padding-top: 15px;
 }
 
 #schemesContainer .mix{

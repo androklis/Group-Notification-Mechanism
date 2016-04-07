@@ -66,7 +66,7 @@ $(function () {
         $('.button-collapse').sideNav();
 
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
-//        $('div#welcomeScreen').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
+//        $('div.container').css('min-height', $('div#index-banner').height());
 
         $('#schemesContainer').mixItUp({
             load: {

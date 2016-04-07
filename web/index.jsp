@@ -338,19 +338,22 @@
                                     <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
                                     <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
                                 </div>
-                            </div>
-                            <div class="col s12 m4 l4">
                                 <div class="row">
                                     <label for="">Sort:</label>
                                     <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
                                     <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
                                 </div>
                             </div>
-                            <div class="col s12 m4 l4">
-                                <div class="row">
-                                    <ul class="pagination">
-                                    </ul>
-                                </div>
+                            <div id="paginationDiv" class="col s12 m4 l4 right">
+<!--                                <ul class="pagination">
+                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                                    <li class="active"><a href="#!">1</a></li>
+                                    <li class="waves-effect"><a href="#!">2</a></li>
+                                    <li class="waves-effect"><a href="#!">3</a></li>
+                                    <li class="waves-effect"><a href="#!">4</a></li>
+                                    <li class="waves-effect"><a href="#!">5</a></li>
+                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                                </ul>-->
                             </div>  
                         </div>
                     </form>
@@ -358,11 +361,11 @@
                     </div>
                 </div>
 
-                <div id="welcomeScreen" class="row center" style="display:none;">
+                <div id="welcomeScreen" class="center" style="display:none;">
                     <br><br>
-                    <img id="logo-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
+                    <img id="logo-img" class="responsive-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
                     <br><br>
-                    <h5 class="header col s12 light">A mashup web application mechanism to manage group notification schemes</h5><br/><br/><br/><br/>
+                    <h5 class="header light">A mashup web application mechanism to manage group notification schemes</h5><br/><br/><br/><br/>
                     <button id="customBtn" class="waves-effect waves-light btn red">Sign in with Google</button>
                     <br><br>
                 </div>
