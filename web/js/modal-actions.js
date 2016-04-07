@@ -120,7 +120,7 @@ function addCard() {
             $('#addForm #addBtn').toggleClass('disabled');
             $('#addModal').closeModal();
             onModalComplete();
-        });
+        }, "json");
     }
 }
 

@@ -8,18 +8,23 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- Meta -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+        <!-- Meta -->
 
+        <!-- Title -->
         <title>Group Notification Mechanism</title>
+        <!-- Title -->
 
         <!-- CSS  -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/materialize.clockpicker.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <!-- CSS  -->
 
-        <!-- Favicons-->
+        <!-- Favicons -->
         <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-icon-60x60.png">
         <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-icon-72x72.png">
@@ -33,14 +38,20 @@
         <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="96x96" href="images/favicons/favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
-        <link rel="manifest" href="/manifest.json">
+        <!-- Favicons -->
 
+        <!-- Manifest -->
+        <link rel="manifest" href="/manifest.json">
+        <!-- Manifest -->
+
+        <!-- Scripts -->
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
         <script src="js/jquery.mixitup.min.js"></script>
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
+        <!-- Scripts -->
     </head>
     <body>
         <div class="adr_schema col s12 m6 l3 mix" style="display:none;">
@@ -69,9 +80,51 @@
         <div id="viewModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;"></h4>
-                <div class="viewContent"></div>
+                <div class="viewContent">
+                    <ul id="attPeople" class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">cast</i>
+                                Resource<span id="rsc" class="badge right" style="position: inherit;"></span>
+                            </div>
+                            <div class="collapsible-body">
+                                <p class="resource"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">date_range</i>
+                                Timestamp
+                            </div>
+                            <div class="collapsible-body">
+                                <p class="dateRange"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">description</i>
+                                Description
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="desc"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">contacts</i>
+                                Attendees<span id="attendeesCnt" class="badge right" style="position: inherit;"></span>
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="attendees">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="modal-footer">
+                <a class="waves-effect btn left" onClick="expandAll();"><i class="material-icons left">fullscreen</i>Expand All</a>
+                <a class="waves-effect btn left" onClick="collapseAll();" style="margin-left: 5px;"><i class="material-icons left">fullscreen_exit</i>Collapse All</a>
                 <a href="#!" class=" modal-action modal-close waves-effect btn-flat">Close</a>
             </div>
         </div>
@@ -277,31 +330,42 @@
                         </div>
                         <div class="row">
                             <div class="col s12 m4 l4">
-                                <label for="">Filter:</label>
-                                <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
-                                <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
-                                <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
-                                <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
-                                <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                                <div class="row">
+                                    <label for="">Filter:</label>
+                                    <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
+                                    <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
+                                    <div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>
+                                    <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
+                                    <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
+                                </div>
+                                <div class="row">
+                                    <label for="">Sort:</label>
+                                    <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
+                                    <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m4 l4">
-                                <label for="">Sort:</label>
-                                <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
-                                <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
-                            </div>
+                            <div id="paginationDiv" class="col s12 m4 l4 right">
+<!--                                <ul class="pagination">
+                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                                    <li class="active"><a href="#!">1</a></li>
+                                    <li class="waves-effect"><a href="#!">2</a></li>
+                                    <li class="waves-effect"><a href="#!">3</a></li>
+                                    <li class="waves-effect"><a href="#!">4</a></li>
+                                    <li class="waves-effect"><a href="#!">5</a></li>
+                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                                </ul>-->
+                            </div>  
                         </div>
                     </form>
                     <div id="schemesContainer" class="row">
                     </div>
                 </div>
 
-                <div id="welcomeScreen" class="row center" style="display:none;">
+                <div id="welcomeScreen" class="center" style="display:none;">
                     <br><br>
-                    <img id="logo-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
+                    <img id="logo-img" class="responsive-img" height="100" alt="" src="images/MashUp_Logo-1993x1328.png"/>
                     <br><br>
-                    <h5 class="header col s12 light">A mashup web application mechanism to manage group notification schemes</h5><br/><br/><br/><br/>
+                    <h5 class="header light">A mashup web application mechanism to manage group notification schemes</h5><br/><br/><br/><br/>
                     <button id="customBtn" class="waves-effect waves-light btn red">Sign in with Google</button>
                     <br><br>
                 </div>

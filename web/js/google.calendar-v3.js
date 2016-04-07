@@ -5,7 +5,6 @@
  * is loaded.
  */
 function loadCards(schemes) {
-    console.log(schemes);
     var schemeIds = [];
     $.each(schemes, function (index, value) {
         createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
@@ -15,7 +14,6 @@ function loadCards(schemes) {
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
         request.execute(function (response) {
-            console.log('CALENDARS', response);
             $.each(response.items, function (index, value) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
@@ -60,7 +58,6 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
         'orderBy': 'startTime'
     });
     request.execute(function (response) {
-        console.log('EVENTS', response);
         var events = response.items;
         $.each(events, function (index, event) {
             var when = event.start.dateTime;
@@ -112,9 +109,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                             resource = summary + ' Calendar';
                         }
                     }
-
                     createCard('', calendarID, event.id, 'suggestion', event.summary, description, attendees.join(','), start, resource, color);
-
                 }
             }
         });
@@ -173,6 +168,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             element.find(".card-action").append('<a href="javascript:void(0);" id="viewCard"><i class="material-icons waves-effect waves-light right orange-text">launch</i></a>');
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped right orange-text" data-position="left" data-delay="50" data-tooltip="' + i + '">people</i>');
             element.find("#adr_badge").html(status.toUpperCase()).css('color', color.split("@")[0]);
+            element.find('.card').css('border', '1px solid ' + color.split("@")[0]);
 
             if (className === "birthday") {
                 element.find("#adr_type").html('<i class="material-icons">cake</i>');
@@ -305,43 +301,61 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     $('a#viewCard').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         var rcpts = card.find('#rcpts').val();
-        var rcptsNames = $('<ul></ul>');
-        rcptsNames.attr('id', 'guestsView');
-        rcptsNames.addClass('collection');
+        $('#viewModal #viewTitle').text(card.find('#adr_title').text());
+        if (card.hasClass('suggestion')) {
+            $('#viewModal .viewContent .resource').append(card.find('#adr_badge').text());
+            $('#viewModal .viewContent #rsc').html('SUGGESTION');
+        } else {
+            $('#viewModal .viewContent .resource').append('GROUP NOTIFICATION SCHEMES');
+            $('#viewModal .viewContent #rsc').html(card.find('#adr_badge').text());
+        }
+
+        $('#viewModal .viewContent .dateRange').append(card.find('#timestamp').text());
+        $('#viewModal .viewContent .desc').append(card.find('#adr_description').html());
+        $('#viewModal .viewContent #attendeesCnt').html(card.find('.card-action i.tooltipped').data('tooltip'));
+
         $.each(rcpts.split(','), function (index, value) {
-            var img = "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50";
-            var title = "NO GUESTS";
             if (value !== "") {
-                $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=1&v=3.0",
-                        function (response) {
-                            if (response.feed.entry) {
-                                if (response.feed.entry[0].title.$t.length > 0) {
-                                    title = response.feed.entry[0].title.$t;
-                                }
-                                if (response.feed.entry[0].link[0].gd$etag) {
-                                    img = (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token");
-                                }
+                $.getJSON("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + encodeURIComponent($.cookie("access_token")) + "&q=" + value + "&max-results=1&v=3.0").then(function (response) {
+                    if (response.feed.entry) {
+                        if (response.feed.entry[0].title.$t.length > 0) {
+                            if (response.feed.entry[0].link[0].gd$etag) {
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + response.feed.entry[0].title.$t + " (" + value.split('@')[1] + ")</div>");
                             } else {
-                                title = "NOT FOUND";
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + response.feed.entry[0].title.$t + " (" + value.split('@')[1] + ")</div>");
                             }
-                            rcptsNames.append('<li class="collection-item avatar"> <img src="' + img + '" alt="" class="circle"> <span class="title">' + title + '</span> <p>' + value + '</p></li>');
-                        });
+                        } else {
+                            if (response.feed.entry[0].link[0].gd$etag) {
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='" + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + "' alt=''>" + value + "</div>");
+                            } else {
+                                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+                            }
+                        }
+                    } else {
+                        $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+                    }
+                }, function (error) {
+                    $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+                });
             } else {
-                rcptsNames.append('<li class="collection-item avatar"> <img src="' + img + '" alt="" class="circle"> <span class="title">' + title + '</span> <p>' + value + '<br/></p></li>');
+                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
             }
         });
-        $('#viewModal #viewTitle').text(card.find('#adr_title').text());
-        $('#viewModal .viewContent').append("<strong>From:</strong> " + card.find('#adr_badge').text() + "<br/><strong>Timestamp:</strong> " + card.find('#timestamp').text() + "<br/><strong>Description:</strong> " + card.find('#adr_description').text() + "<br/><strong>Guests:</strong><br/>");
-        $('#viewModal .viewContent').append(rcptsNames);
+
         $('#viewModal').openModal({
             complete: function () {
                 $('#viewModal #viewTitle').empty();
-                $('#viewModal .viewContent').empty();
+                $('#viewModal .viewContent .resource').empty();
+                $('#viewModal .viewContent .dateRange').empty();
+                $('#viewModal .viewContent .desc').empty();
+                $('#viewModal .viewContent .attendees').empty();
+                $('#viewModal .viewContent #attendeesCnt').html('');
+                $('#viewModal .viewContent #rsc').html('');
+                collapseAll();
             },
             ready: function () {
-                $('.collapsible').collapsible({
-                    accordion: false
-                });
+                $('#attPeople.collapsible').collapsible({});
+                expandAll();
             }
         });
 

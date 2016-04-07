@@ -81,7 +81,7 @@ public class GoogleMail {
         }
 
         email.setSubject(subject, "UTF-8");
-        
+
         email.setContent(bodyText, "text/html; charset=utf-8");
 
         return email;
@@ -123,7 +123,6 @@ public class GoogleMail {
      * @throws MalformedURLException Thrown to indicate that a malformed URL has
      * occurred. Either no legal protocol could be found in a specification
      * string or the string could not be parsed
-     *
      * @throws IOException Signals that an I/O exception of some sort has
      * occurred. Exceptions produced by failed or interrupted I/O operations
      */
@@ -132,15 +131,16 @@ public class GoogleMail {
         gmailService = new Gmail.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(from)).setApplicationName("Group Notification Mechanism").build();
 
         try {
+//            email.setHeader("Authorization", "Bearer " + GOOGLE_CREDENTIALS.get(from).getAccessToken());
             Message message = createMessageWithEmail(email);
             message = gmailService.users().messages().send(from, message).execute();
 
             GoogleSpreadsheet.getInstance().updateScheme(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
             return message.get("labelIds").toString().replace("[", "").replace("]", "").trim();
-        } catch (IOException | MessagingException ex) {
+        } catch (MessagingException ex) {
             Logger.getLogger(GoogleMail.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
-            return "Error Sending";
+            return ex.getMessage();
         }
     }
 }
