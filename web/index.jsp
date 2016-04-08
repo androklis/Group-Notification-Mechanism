@@ -289,7 +289,6 @@
                             <input id="time" class="timepicker" type="text">
                             <label for="time">Time</label>
                         </div>
-
                     </div>
                     <div class="row input-field">
                         <textarea id="message" name="message" class="materialize-textarea" length="500" required="required"></textarea>
