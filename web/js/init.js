@@ -213,6 +213,9 @@ function onModalComplete() {
     $("#addModal #subject").val('');
     $("#addModal #message").val('');
     $("#addModal #eventId").val('0');
+    $('#addForm .con').css('display', 'none');
+    $('#addForm .sub').css('display', 'none');
+    $('#addForm .msg').css('display', 'none');
     $("label[for='contacts']").removeClass('active');
     $("label[for='subject']").removeClass('active');
     $("label[for='message']").removeClass('active');

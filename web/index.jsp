@@ -301,7 +301,7 @@
             </div>
             <div class="modal-footer">
                 <a id="eventSettings" class="waves-effect btn-flat left disabled"><i class="material-icons">date_range</i></a>
-                <a id="addBtn" href="#!" class="waves-effect btn-flat" onclick="addCard();">Add</a>
+                <a id="addBtn" class="waves-effect btn-flat" onclick="addCard();">Add</a>
             </div>
         </div>
 
