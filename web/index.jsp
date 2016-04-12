@@ -328,7 +328,7 @@
                             <label for="search"><i class="material-icons">search</i></label>
                         </div>
                         <div class="row">
-                            <div class="col s12 m4 l4">
+                            <div class="col s12 m6 l4">
                                 <div class="row">
                                     <label for="">Filter:</label>
                                     <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
@@ -343,7 +343,7 @@
                                     <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
                                 </div>
                             </div>
-                            <div id="paginationDiv" class="col s12 m4 l4 right">
+                            <div id="paginationDiv" class="col s12 m6 l4 right">
 <!--                                <ul class="pagination">
                                     <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
                                     <li class="active"><a href="#!">1</a></li>

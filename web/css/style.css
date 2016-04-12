@@ -143,6 +143,14 @@ div#paginationDiv{
     background-color: #29b6f6;
 }
 
+.contactsList > .chip{
+    margin: 2px;
+}
+
+.modal a.disabled {
+    pointer-events: none;
+}
+
 .autocomplete-suggestions { 
     border: 1px solid #999; 
     background: #FFF; 

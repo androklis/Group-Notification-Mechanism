@@ -47,7 +47,8 @@ function addCard() {
     }
 
     if ((!$('#addForm .contactsList').is(':empty')) && ($.trim($('#addForm #subject').val())) && ($.trim($("#addForm #message").val()))) {
-        $('#addForm #addBtn').toggleClass('disabled');
+        $('#addModal #addBtn').addClass('disabled');
+        
         var rcpts = [];
 
         $("#addModal .contactsList").children(".chip").each(function () {
@@ -117,7 +118,6 @@ function addCard() {
                 }
             }
             $('.progress').toggle();
-            $('#addForm #addBtn').toggleClass('disabled');
             $('#addModal').closeModal();
             onModalComplete();
         }, "json");

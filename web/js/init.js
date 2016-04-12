@@ -220,6 +220,7 @@ function onModalComplete() {
     $("label[for='subject']").removeClass('active');
     $("label[for='message']").removeClass('active');
     $('select#calendars').prop('disabled', false);
+    $('#addModal #addBtn').removeClass('disabled');
 }
 
 function expandAll() {
