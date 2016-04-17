@@ -371,4 +371,9 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         });
     });
     $('.tooltipped').tooltip();
+
+    $('#schemesContainer').mixItUp('paginate', {
+        page: 1,
+        limit: 12
+    });
 }

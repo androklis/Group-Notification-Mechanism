@@ -70,7 +70,16 @@ $(function () {
 
         $('#schemesContainer').mixItUp({
             load: {
+                page: 1,
                 filter: 'all'
+            },
+            pagination: {
+                limit: 12,
+                loop: false,
+                generatePagers: true,
+                maxPagers: 5,
+                prevButtonHTML: '<',
+                nextButtonHTML: '>'
             }
         });
 

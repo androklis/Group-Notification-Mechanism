@@ -49,6 +49,7 @@
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
         <script src="js/jquery.mixitup.min.js"></script>
+        <script src="js/jquery.mixitup-pagination.js"></script>
         <script src="js/materialize.js"></script>
         <script src="js/materialize.clockpicker.js"></script>
         <!-- Scripts -->
@@ -340,7 +341,7 @@
                                     <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
                                 </div>
                             </div>
-                            <div id="paginationDiv" class="col s12 m6 l4 right">
+                            <div id="paginationDiv" class="col s12 m6 l4 right pager-list">
                                 <!--                                <ul class="pagination">
                                                                     <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
                                                                     <li class="active"><a href="#!">1</a></li>
