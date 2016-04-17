@@ -376,5 +376,5 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         page: 1,
         limit: 12
     });
-    $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
+//    $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
 }
