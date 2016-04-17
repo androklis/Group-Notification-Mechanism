@@ -148,8 +148,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect btn-flat" onclick="saveSettings();">Save</a>
-                <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
             </div>
         </div>
 
@@ -204,8 +202,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect btn-flat" onclick=""> Save </a>
-                <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+                <a class="modal-action modal-close waves-effect btn-flat">Close</a>
             </div>
         </div>
 
@@ -271,23 +268,23 @@
                         </div>
                     </div>
                     <div class="row input-field">
-                        <div class="col s4 m4 l2">
+                        <div class="col s12 m4 l2" style="margin-bottom:20px;">
                             <input type="checkbox" id="now" checked="checked" />
                             <label for="now">now</label>
                         </div>
-                        <div class="col s8 m8 l4" style="position: relative;">
+                        <div class="col s12 m8 l4" style="position: relative;">
                             <select id="calendars">
                                 <option value="0" selected>DO NOT ADD TO CALENDAR</option>
                             </select>
-                            <label for="calendars">Calendars</label>
+                            <label for="calendars" class="active">Calendars</label>
                         </div>
-                        <div class="col s6 m6 l3" style="position: relative;">
-                            <input id="date" class="datepicker" type="date">
-                            <label for="date">Date</label>
+                        <div class="col s12 m6 l3" style="position: relative;">
+                            <input id="date" class="datepicker" type="date" tabindex="-1">
+                            <label for="date" class="active">Date</label>
                         </div>
-                        <div class="col s6 m6 l3" style="position: relative;">
-                            <input id="time" class="timepicker" type="text">
-                            <label for="time">Time</label>
+                        <div class="col s12 m6 l3" style="position: relative;">
+                            <input id="time" class="timepicker" type="text" tabindex="-1">
+                            <label for="time" class="active">Time</label>
                         </div>
                     </div>
                     <div class="row input-field">
@@ -344,15 +341,15 @@
                                 </div>
                             </div>
                             <div id="paginationDiv" class="col s12 m6 l4 right">
-<!--                                <ul class="pagination">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>-->
+                                <!--                                <ul class="pagination">
+                                                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                                                                    <li class="active"><a href="#!">1</a></li>
+                                                                    <li class="waves-effect"><a href="#!">2</a></li>
+                                                                    <li class="waves-effect"><a href="#!">3</a></li>
+                                                                    <li class="waves-effect"><a href="#!">4</a></li>
+                                                                    <li class="waves-effect"><a href="#!">5</a></li>
+                                                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                                                                </ul>-->
                             </div>  
                         </div>
                     </form>

@@ -1,7 +1,3 @@
-function saveSettings() {
-
-}
-
 $('#suggChk').change(function () {
     if ($(this).is(':checked')) {
         $('#schemes').find("div[data-filter='all']").click();

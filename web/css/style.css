@@ -77,6 +77,10 @@ label.active{
     padding: 2rem;
 }
 
+.select-wrapper + label {
+    top:  0.8rem;
+}
+
 .attendees .chip {
     margin: 5px;
 }
@@ -174,10 +178,6 @@ div#paginationDiv{
 .autocomplete-group strong { 
     display: block; 
     border-bottom: 1px solid #000; 
-}
-
-#addForm input, #addForm textarea {
-    margin: 0px;
 }
 
 div.error {
