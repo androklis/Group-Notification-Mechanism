@@ -69,6 +69,10 @@ $(function () {
 //        $('div.container').css('min-height', $('div#index-banner').height());
 
         $('#schemesContainer').mixItUp({
+            callbacks: {
+                onMixEnd: function (state) {
+                }
+            },
             load: {
                 page: 1,
                 filter: 'all'
