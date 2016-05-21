@@ -39,6 +39,10 @@ function updateProfileInfo(code) {
         var request = gapi.client.plus.people.get({'userId': 'me'});
         request.execute(function (response) {
 
+            $.cookie("email", response.emails[0].value, {
+                expires: 1
+            });
+
             var name;
             var img;
 
@@ -53,24 +57,12 @@ function updateProfileInfo(code) {
                 img = response.image.url;
             }
 
-            $('#user').append('<ul id="userDropdown" class="dropdown-content waves-effect waves-light" style="position: fixed;"><li><a href="#!" class="light-blue-text" onclick="signOut();">Sign Out</a></li></ul>');
-
             $('#user').append('<li><a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a></li>');
             $('#user').append('<li><a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a></li>');
 
             $('#user').append('<li><a href="javascript:void(0);" class="waves-effect waves-light" onclick="appSettings();"><i class="material-icons">settings</i></a></li>');
-            $('#user').append('<li><a class="dropdown-button waves-effect waves-light" href="#!" data-activates="userDropdown"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/>&nbsp;&nbsp;' + name + '<i class="material-icons right">arrow_drop_down</i></a></li>');
-
+            $('#user').append('<li> <div id="user_infoContainer" class="user-wrapper" style="display: block;"> <div class="user-links-wrapper"> <div class="user-links-row"> <a class="user-link" href="https://myaccount.google.com/">' + $.cookie("email") + '</a> </div> <div class="user-links-row"> <a class="user-change user-link" href="https://www.google.com/accounts/Logout?continue=https://accounts.google.com/AccountChooser?continue=https://appengine.google.com/_ah/logout?continue=http://group-notification-mechanism.appspot.com/"> Change account </a> <span class="user-link user-pipe">|</span> <a class="user-signout user-link" href="https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://group-notification-mechanism.appspot.com/"> Sign out </a> </div> </div> <a href="https://myaccount.google.com/" class="userAvatar"> <img src="' + img + '" class="avatar"> </a> </div> </li>');
             $('#nav-mobile').append('<li style="text-align: center;"><img alt="" src="' + img + '" style="vertical-align: middle; border-radius: 25px; width:50px; height:50px;"/></li><li style="color: black; text-align: center;"><strong>' + name + '</strong></li><li style="text-align: center;"><a href="javascript:void(0);" class="waves-effect waves-light" onclick="appSettings();">Settings</a></li><li style="text-align: center;"><a href="#!" class="waves-effect waves-light light-blue-text" onclick="signOut();">Sign Out</a></li><li><a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a></li><li><a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a></li>');
-
-            $(".dropdown-button").dropdown({
-                hover: true,
-                belowOrigin: true
-            });
-
-            $.cookie("email", response.emails[0].value, {
-                expires: 1
-            });
 
             servletCall(code);
         });

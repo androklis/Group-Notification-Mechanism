@@ -306,8 +306,14 @@
         <nav class="light-blue lighten-1">
             <div class="nav-wrapper container">
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-                <a href="#!" class="brand-logo">GNM</a>
+                <a href="#!" class="brand-logo"><i class="material-icons">notifications</i></a>
                 <ul id="user" class="right hide-on-med-and-down">
+<!--                    <li>
+                        <a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a>
+                    </li>
+                    <li>
+                        <a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a>
+                    </li>-->
                 </ul>
                 <ul class="side-nav" id="nav-mobile">
                 </ul>

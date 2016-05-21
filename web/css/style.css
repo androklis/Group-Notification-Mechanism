@@ -11,8 +11,69 @@
 }
 
 .container .row {
-     margin-left: 0px; 
-     margin-right: 0px; 
+    margin-left: 0px; 
+    margin-right: 0px; 
+}
+
+#user_infoContainer {
+    margin-top: 10px;
+}
+
+.user-wrapper {
+    display: inline-block;
+    height: 32px;
+    margin: 2px 0;
+    text-align: right;
+    vertical-align: top;
+    padding-left: 16px;
+}
+
+.user-links-wrapper {
+    display: inline-block;
+    /*margin-right: 10px;*/
+}
+
+.user-links-row {
+    height: 16px;
+    line-height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.user-link {
+    display: inline-block;
+    line-height: 16px;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    padding: 0px;
+}
+
+.user-link:hover, .userAvatar:hover {
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.user-change {
+    max-width: calc(( 100% - 10px)*.625);
+}
+
+.user-pipe {
+    margin: 0 4px;
+    opacity: 0.7;
+}
+
+.user-signout {
+    max-width: calc(( 100% - 10px)*.375);
+}
+
+.avatar {
+    border-radius: 50%;
+    height: 32px;
+    vertical-align: top;
+    width: 32px;
+    margin-top: 5px;
 }
 
 .btn{
