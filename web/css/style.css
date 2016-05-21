@@ -10,6 +10,11 @@
     max-width: inherit;
 }
 
+.container .row {
+     margin-left: 0px; 
+     margin-right: 0px; 
+}
+
 .btn{
     background-color: #29b6f6;
 }

@@ -44,27 +44,27 @@ function addCard() {
 
     if ((!$('#addForm .contactsList').is(':empty')) && ($.trim($('#addForm #subject').val())) && ($.trim($("#addForm #message").val()))) {
         $('#addModal #addBtn').addClass('disabled');
-        
+
         var rcpts = [];
 
         $("#addModal .contactsList").children(".chip").each(function () {
             rcpts.push($(this).attr('id'));
         });
 
-        console.log('#uuid', $('#uuid').val());
-        console.log('#eventId', $('#addModal #eventId').val());
-        console.log('#email', $.cookie("email"));
-        console.log('#contacts', rcpts.join(','));
-        console.log('#subject', $('#addModal #subject').val());
-        console.log('#message', $('#addModal #message').val());
-        console.log('#date', $('#addModal #date').val());
-        console.log('#time', $('#addModal #time').val());
-        console.log('#now', $('#addModal #now').is(':checked'));
-        console.log('#calendars', $('#addModal #calendars option:selected').val());
-        console.log('#startDate', $('#calendarModal #startDate').val());
-        console.log('#startTime', $('#calendarModal #startTime').val());
-        console.log('#endDate', $('#calendarModal #endDate').val());
-        console.log('#endTime', $('#calendarModal #endTime').val());
+//        console.log('#uuid', $('#uuid').val());
+//        console.log('#eventId', $('#addModal #eventId').val());
+//        console.log('#email', $.cookie("email"));
+//        console.log('#contacts', rcpts.join(','));
+//        console.log('#subject', $('#addModal #subject').val());
+//        console.log('#message', $('#addModal #message').val());
+//        console.log('#date', $('#addModal #date').val());
+//        console.log('#time', $('#addModal #time').val());
+//        console.log('#now', $('#addModal #now').is(':checked'));
+//        console.log('#calendars', $('#addModal #calendars option:selected').val());
+//        console.log('#startDate', $('#calendarModal #startDate').val());
+//        console.log('#startTime', $('#calendarModal #startTime').val());
+//        console.log('#endDate', $('#calendarModal #endDate').val());
+//        console.log('#endTime', $('#calendarModal #endTime').val());
 
         var tz = new Date().getTimezoneOffset() / 60;
         var timeZoneOffset = '';

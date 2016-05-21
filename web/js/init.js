@@ -46,6 +46,7 @@ $(function () {
     });
 
     $('#search').keyup(function () {
+        $('#schemes').find("div[data-filter='all']").click();
         var filter = $("#search").val();
         $("#schemes .row .adr_schema").each(function (index) {
             if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
@@ -55,6 +56,13 @@ $(function () {
             }
         });
     });
+
+    $('#clearSearch').click(function () {
+        $('#search').val('');
+        $('label[for="search"]').removeClass('active');
+        $('#search').keyup();
+    });
+
     function initComponents() {
 
         var today = new Date();

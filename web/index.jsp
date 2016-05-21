@@ -324,6 +324,7 @@
                         <div class="input-field">
                             <input id="search" type="search" required>
                             <label for="search"><i class="material-icons">search</i></label>
+                            <i class="material-icons" id="clearSearch">close</i>
                         </div>
                         <div class="row">
                             <div class="col s12 m6 l4">
