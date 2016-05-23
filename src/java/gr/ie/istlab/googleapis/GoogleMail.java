@@ -82,7 +82,7 @@ public class GoogleMail {
 
         email.setSubject(subject, "UTF-8");
 
-        email.setContent(bodyText, "text/html; charset=utf-8");
+        email.setContent(bodyText + "<br/><br/><em>This notification was sent from <a href='group-notification-mechanism.appspot.com'>iSTLab Group Notification Mechanism Mashup Web Application</a>.</em>", "text/html; charset=utf-8");
 
         return email;
     }

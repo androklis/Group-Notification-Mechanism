@@ -84,19 +84,6 @@ $(function () {
         }, 200);
     });
 
-//    $('#search').keyup(function () {
-//        $('#schemes').find("div[data-filter='all']").click();
-//        var filter = $("#search").val();
-//
-//        $("#schemes .row .adr_schema:not(.suggestion)").each(function (index) {
-//            if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
-//                $(this).fadeOut(1000);
-//            } else {
-//                $(this).fadeIn(1000);
-//            }
-//        });
-//    });
-
     $('#clearSearch').click(function () {
         $('#search').val('');
         $('label[for="search"]').removeClass('active');
@@ -117,15 +104,14 @@ $(function () {
         $('.button-collapse').sideNav();
 
         autoplay();
-        $('select#adv').material_select();
-        $("#advancedFilters").hide();
-        $(".advanced").click(function () {
-            if ($("#advancedFilters").is(':hidden')) {
-                $("#advancedFilters").slideDown();
-                $(".advanced").text("Hide advanced filters");
+        $("#moreFilters").hide();
+        $(".more").click(function () {
+            if ($("#moreFilters").is(':hidden')) {
+                $("#moreFilters").slideDown();
+                $(".more").html('Show less <i class="material-icons" style="position:fixed;">expand_less</i>');
             } else {
-                $("#advancedFilters").slideUp();
-                $(".advanced").text("Show advanced filters");
+                $("#moreFilters").slideUp();
+                $(".more").html('Show more <i class="material-icons" style="position:fixed;">expand_more</i>');
             }
         });
 
@@ -198,6 +184,34 @@ $(function () {
     $("#contacts").autocomplete({
         lookup: function (query, done) {
             var result = {suggestions: []};
+            $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query,
+                    function (response) {
+                        try {
+                            $.each(response.feed.entry, function (index, value) {
+                                if (value.gd$email) {
+                                    if (value.title.$t.length > 0) {
+                                        if ((value.title.$t).indexOf('Google+') < 0) {
+                                            if (value.link[0].gd$etag) {
+                                                result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
+                                            } else {
+                                                result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
+                                            }
+                                        }
+                                    } else {
+                                        if (value.link[0].gd$etag) {
+                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
+                                        } else {
+                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
+                                        }
+                                    }
+                                }
+                            });
+                        } catch (error) {
+                            console.error('ERROR', error);
+                        } finally {
+                            done(result);
+                        }
+                    });
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0",
                     function (response) {
                         try {

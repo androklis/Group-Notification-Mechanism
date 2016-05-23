@@ -24,16 +24,19 @@ function loadCards(schemes) {
             $.each(response.items, function (index, value) {
                 if (value.primary) {
                     $('select#calendars').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
+                    $('select#adv').append('<option value="' + value.id + '">PRIMARY CALENDAR</option>');
                 } else {
                     if (!/calendar/i.test(value.summary.toUpperCase())) {
+                        $('select#adv').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         if (value.accessRole.indexOf('reader') > -1) {
-                            $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                            $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
                             $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {
                             return;
                         }
                     } else {
+                        $('select#adv').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + '</option>');
                         if (value.accessRole.indexOf('reader') > -1) {
                             $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + '</option>');
                         } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
@@ -46,6 +49,7 @@ function loadCards(schemes) {
                 listUpcomingEvents(schemeIds, value.id, value.summary, value.backgroundColor);
             });
             $('select#calendars').material_select();
+            $('select#adv').material_select();
         });
     });
 }

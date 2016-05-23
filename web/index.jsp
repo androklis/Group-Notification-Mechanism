@@ -342,7 +342,7 @@
                                     <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
                                 </div>
                                 <div class="row">
-                                    <div id="advancedFilters">
+                                    <div id="moreFilters">
                                         <div id="calendarFilters">
                                             <select id="adv" multiple>
                                                 <option value="" disabled selected>Calendars to show</option>
@@ -354,7 +354,7 @@
                                                                                     </select>
                                                                                 </div>-->
                                     </div>
-                                    <a href="#" class="advanced">Show Advanced Filters</a>
+                                    <a href="#" class="more">Show more <i class="material-icons" style="position:fixed;">expand_more</i></a>
                                 </div>
                             </div>
                             <div id="paginationDiv" class="col s12 m6 l4 right pager-list pagination">
