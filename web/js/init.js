@@ -48,7 +48,7 @@ $(function () {
     $('#search').keyup(function () {
         $('#schemes').find("div[data-filter='all']").click();
         var filter = $("#search").val();
-        $("#schemes .row .adr_schema").each(function (index) {
+        $("#schemes .row .adr_schema:not(.suggestion)").each(function (index) {
             if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
                 $(this).fadeOut(1000);
             } else {
@@ -71,7 +71,10 @@ $(function () {
         var year = today.getFullYear();
         var time = checkTime(today.getHours()) + ':'
                 + checkTime(today.getMinutes());
+
         $('.button-collapse').sideNav();
+
+        autoplay();
 
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 //        $('div.container').css('min-height', $('div#index-banner').height());
@@ -260,6 +263,11 @@ function collapseAll() {
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
+}
+
+function autoplay() {
+    $('.carousel').carousel('next');
+    setTimeout(autoplay, 4500);
 }
 
 function checkTime(i) {

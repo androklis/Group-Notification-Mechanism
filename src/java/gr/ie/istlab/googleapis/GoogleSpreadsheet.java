@@ -48,7 +48,7 @@ public class GoogleSpreadsheet {
 
         WorksheetEntry worksheet = new WorksheetEntry();
         worksheet.setTitle(new PlainTextConstruct(userEmail));
-        worksheet.setColCount(9);
+        worksheet.setColCount(10);
         worksheet.setRowCount(1);
 
         URL worksheetFeedUrl = spreadsheet.getWorksheetFeedUrl();
@@ -73,17 +73,19 @@ public class GoogleSpreadsheet {
         cellFeed.insert(cellEntry);
         cellEntry = new CellEntry(1, 3, "EVENT_ID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 4, "ACCESS_ROLE");
+        cellEntry = new CellEntry(1, 4, "EVENT_TIMESTAMP");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 5, "RECIPIENTS");
+        cellEntry = new CellEntry(1, 5, "ACCESS_ROLE");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 6, "SUBJECT");
+        cellEntry = new CellEntry(1, 6, "RECIPIENTS");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 7, "MESSAGE");
+        cellEntry = new CellEntry(1, 7, "SUBJECT");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 8, "TIMESTAMP");
+        cellEntry = new CellEntry(1, 8, "MESSAGE");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 9, "STATUS");
+        cellEntry = new CellEntry(1, 9, "TIMESTAMP");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 10, "STATUS");
         cellFeed.insert(cellEntry);
 
         worksheet.setEtag("*");
@@ -93,7 +95,7 @@ public class GoogleSpreadsheet {
     }
 
     public String addScheme(String calendarId, String eventId, String accessRole, String userEmail, String to, String subject, String message,
-            String timestamp) throws MalformedURLException, IOException,
+            String eventTimestamp, String timestamp) throws MalformedURLException, IOException,
             ServiceException {
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
@@ -105,6 +107,7 @@ public class GoogleSpreadsheet {
         row.getCustomElements().setValueLocal("UUID", uuid);
         row.getCustomElements().setValueLocal("CALENDARID", calendarId);
         row.getCustomElements().setValueLocal("EVENTID", eventId);
+        row.getCustomElements().setValueLocal("EVENTTIMESTAMP", eventTimestamp);
         row.getCustomElements().setValueLocal("ACCESSROLE", accessRole);
         row.getCustomElements().setValueLocal("RECIPIENTS", to);
         row.getCustomElements().setValueLocal("SUBJECT", subject);

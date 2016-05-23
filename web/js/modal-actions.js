@@ -51,21 +51,6 @@ function addCard() {
             rcpts.push($(this).attr('id'));
         });
 
-//        console.log('#uuid', $('#uuid').val());
-//        console.log('#eventId', $('#addModal #eventId').val());
-//        console.log('#email', $.cookie("email"));
-//        console.log('#contacts', rcpts.join(','));
-//        console.log('#subject', $('#addModal #subject').val());
-//        console.log('#message', $('#addModal #message').val());
-//        console.log('#date', $('#addModal #date').val());
-//        console.log('#time', $('#addModal #time').val());
-//        console.log('#now', $('#addModal #now').is(':checked'));
-//        console.log('#calendars', $('#addModal #calendars option:selected').val());
-//        console.log('#startDate', $('#calendarModal #startDate').val());
-//        console.log('#startTime', $('#calendarModal #startTime').val());
-//        console.log('#endDate', $('#calendarModal #endDate').val());
-//        console.log('#endTime', $('#calendarModal #endTime').val());
-
         var tz = new Date().getTimezoneOffset() / 60;
         var timeZoneOffset = '';
         if (tz > -10 && tz < 10) {
@@ -108,9 +93,10 @@ function addCard() {
                     $("div[id=" + json.eventId + "]").remove();
                 }
                 if (response.status === "Error Sending") {
-                    createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ff0000');
+                    createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ff0000');
+
                 } else {
-                    createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time, response.status, '#ffab40');
+                    createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ffab40');
                 }
             }
             $('.progress').toggle();
@@ -121,5 +107,26 @@ function addCard() {
 }
 
 function updateCard() {
-    console.log('clicked');
+
+    var rcpts = [];
+
+    $("#addModal .contactsList").children(".chip").each(function () {
+        rcpts.push($(this).attr('id'));
+    });
+
+
+    console.log('#uuid', $('#uuid').val());
+    console.log('#eventId', $('#addModal #eventId').val());
+    console.log('#email', $.cookie("email"));
+    console.log('#contacts', rcpts.join(','));
+    console.log('#subject', $('#addModal #subject').val());
+    console.log('#message', $('#addModal #message').val());
+    console.log('#date', $('#addModal #date').val());
+    console.log('#time', $('#addModal #time').val());
+    console.log('#now', $('#addModal #now').is(':checked'));
+    console.log('#calendars', $('#addModal #calendars option:selected').val());
+    console.log('#startDate', $('#calendarModal #startDate').val());
+    console.log('#startTime', $('#calendarModal #startTime').val());
+    console.log('#endDate', $('#calendarModal #endDate').val());
+    console.log('#endTime', $('#calendarModal #endTime').val());
 }

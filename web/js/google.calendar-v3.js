@@ -1,13 +1,20 @@
 /* global gapi */
 
+jQuery.fn.outerHTML = function (s) {
+    return s
+            ? this.before(s).remove()
+            : jQuery("<p>").append(this.eq(0).clone().css('display', 'block')).html();
+};
+
 /**
  * Load Google Calendar client library. List upcoming events once client library
  * is loaded.
  */
+
 function loadCards(schemes) {
     var schemeIds = [];
     $.each(schemes, function (index, value) {
-        createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp, value.status, '#ffab40');
+        createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp + '||' + value.eventtimestamp, value.status, '#ffab40');
         schemeIds.push(value.eventid);
     });
 
@@ -60,25 +67,32 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
     request.execute(function (response) {
         var events = response.items;
         $.each(events, function (index, event) {
-            var when = event.start.dateTime;
-            if (!when) {
-                when = event.start.date;
+
+            var start = event.start.dateTime;
+            var end = event.end.dateTime;
+
+            if (!start) {
+                start = event.start.date;
             }
+
+            if (!end) {
+                end = event.end.date;
+            }
+
             if ($.inArray(event.id, schemeIds) < 0) {
                 if ((event.id).indexOf('BIRTHDAY') > -1) {
                     if (event.gadget.preferences["goo.contactsEmail"]) {
-                        createCard('', calendarID, event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], event.start.date, summary + ' Calendar', color);
+                        createCard('', calendarID, event.id, 'birthday', event.summary, event.description, event.gadget.preferences["goo.contactsEmail"], start + "||" + end, summary + ' Calendar', color);
                     } else {
-                        createCard('', calendarID, event.id, 'birthday', event.summary, event.description, "", event.start.date, summary + ' Calendar', color);
+                        createCard('', calendarID, event.id, 'birthday', event.summary, event.description, "", start + "||" + end, summary + ' Calendar', color);
                     }
                 } else if (calendarID.indexOf('#holiday@') > -1) {
-                    createCard('', calendarID, event.id, 'holiday', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color);
+                    createCard('', calendarID, event.id, 'holiday', event.summary, event.summary, "", start + "||" + end, summary + ' Calendar', color);
                 } else if (calendarID.indexOf('#weather@') > -1) {
-                    createCard('', calendarID, event.id, 'weather', event.summary, event.summary, "", event.start.date, summary + ' Calendar', color + '@' + event.gadget.iconLink);
+                    createCard('', calendarID, event.id, 'weather', event.summary, event.summary, "", start + "||" + end, summary + ' Calendar', color + '@' + event.gadget.iconLink);
                 } else {
 
                     var attendees = [];
-                    var start = "";
                     var description = "";
                     var resource = "";
 
@@ -86,12 +100,6 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                         $.each(event.attendees, function (index, attendee) {
                             attendees.push(attendee.email);
                         });
-                    }
-
-                    if (event.start.dateTime) {
-                        start = (event.start.dateTime).split("T")[0] + ' ' + ((event.start.dateTime).split("T")[1]).substring(0, 5);
-                    } else {
-                        start = event.start.date;
                     }
 
                     if (event.description) {
@@ -109,7 +117,7 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                             resource = summary + ' Calendar';
                         }
                     }
-                    createCard('', calendarID, event.id, 'suggestion', event.summary, description, attendees.join(','), start, resource, color);
+                    createCard('', calendarID, event.id, 'suggestion', event.summary, description, attendees.join(','), start + "||" + end, resource, color);
                 }
             }
         });
@@ -124,8 +132,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     element.addClass(className);
     element.find("#adr_title").html(title);
     element.find("#adr_description").html(content);
-    element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + timestamp + '</span>');
-    element.attr('data-timestamp', timestamp);
 
     var guests = [];
     var i = 0;
@@ -143,6 +149,14 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         case "scheme":
             element.attr('id', uuid);
             element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
+
+            element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + timestamp.split("||")[0] + '</span>');
+            element.attr('data-timestamp', timestamp.split("||")[0]);
+
+            if (timestamp.split("||")[1] !== 'null') {
+                element.attr('data-event-timestamp', timestamp.split("||")[1]);
+            }
+
             if (status === "PENDING") {
                 element.addClass('pending');
                 element.find(".card-action").append('<a href="javascript:void(0);" id="editScheme"><i class="material-icons waves-effect waves-light right black-text">mode_edit</i></a>');
@@ -162,6 +176,15 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             element.appendTo("#schemes #schemesContainer.row").slideDown(1000);
             break;
         default:
+            var start = timestamp.split("||")[0];
+            var end = timestamp.split("||")[1];
+            if (start.split("T")[1]) {
+                element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + start.split("T")[0] + ' ' + (start.split("T")[1]).substring(0, 5) + ' - ' + end.split("T")[0] + ' ' + (end.split("T")[1]).substring(0, 5) + '</span>');
+                element.attr('data-timestamp', start + ' - ' + end);
+            } else {
+                element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + start + '</span>');
+                element.attr('data-timestamp', start);
+            }
             element.attr('id', eventId);
             element.find(".card-action").append('<a href="javascript:void(0);" id="addSuggestion"><i class="material-icons waves-effect waves-light right light-blue-text">add_alert</i></a>');
             element.find("#rcpts").val(guests);
@@ -183,7 +206,17 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 element.find("#adr_type").html('<i class="material-icons">event</i>');
             }
 
-            element.prependTo("#schemes #schemesContainer.row").slideDown(1000);
+            $('.carousel').removeClass('initialized');
+            var carouselItem = document.createElement('a');
+            carouselItem.setAttribute('href', "#" + $('.carousel a.carousel-item').length);
+            carouselItem.innerHTML = element.outerHTML();
+            carouselItem.setAttribute('class', 'carousel-item');
+            $('.carousel').append(carouselItem);
+            $('.carousel').carousel({
+                full_width: true,
+                padding: 5
+            });
+
             break;
     }
 
@@ -233,6 +266,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 
     $('a#editScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
+        $('#uuid').val(card.attr('id'));
         $('#addModal #addBtn').attr('onclick', 'updateCard();');
         $('#addModal #addBtn').text('Update');
         $('#addModal #schemeTitle').text(card.find('#adr_title').text());
@@ -260,16 +294,21 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             });
         });
         $('select#calendars').val(card.find('#calendarId').val());
-        if (card.find('#calendarId').val() !== '0') {
-            var datepicker = $('#date').pickadate({});
-            var picker = datepicker.pickadate('picker');
-            picker.set('max', (card.find('#timestamp').text()).split(' ')[0], {format: 'yyyy-mm-dd'});
-            $('select#calendars').prop('disabled', true);
-        }
+        var datepicker = $('#date').pickadate({});
+        var picker = datepicker.pickadate('picker');
+
         $('select#calendars').material_select();
 
-        $('#addModal #date, #addModal #time').prop('disabled',
-                $('#addModal #now').is(':checked'));
+        if (card.find('#calendarId').val() !== '0') {
+            $('#eventSettings').removeClass('disabled');
+            console.log(card.attr('data-event-timestamp'));
+        }
+
+        $('#addModal #now').attr('checked', false);
+
+        picker.set('select', card.find('#timestamp').text().split(' ')[0], {format: 'yyyy-mm-dd'});
+        $('#addModal #time').val(card.find('#timestamp').text().split(' ')[1]);
+
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
         $('#addModal #message').val(card.find('#adr_description').text()).change();
         $('#addModal #eventId').val(card.attr('id'));
@@ -337,9 +376,10 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 }, function (error) {
                     $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
                 });
-            } else {
-                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
             }
+//            else {
+//                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
+//            }
         });
 
         $('#viewModal').openModal({
@@ -374,7 +414,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 
     $('#schemesContainer').mixItUp('paginate', {
         page: 1,
-        limit: 12
+        limit: 8
     });
-//    $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
+    $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
 }
