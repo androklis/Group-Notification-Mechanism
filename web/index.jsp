@@ -308,12 +308,6 @@
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
                 <a href="#!" class="brand-logo"><i class="material-icons">notifications</i></a>
                 <ul id="user" class="right hide-on-med-and-down">
-                    <!--                    <li>
-                                            <a href="http://master-thesis-954.appspot.com/topics.jsp" class="waves-effect waves-light">iSTLab Content Aggregator</a>
-                                        </li>
-                                        <li>
-                                            <a href="http://1-dot-ktistak-calendar-md.appspot.com/" class="waves-effect waves-light">iSTLab Calendar</a>
-                                        </li>-->
                 </ul>
                 <ul class="side-nav" id="nav-mobile">
                 </ul>
@@ -335,7 +329,7 @@
                         <div class="row">
                             <div class="col s12 m6 l4">
                                 <div class="row">
-                                    <label for="">Filter:</label>
+                                    <label for="filter"><strong>Filter:</strong></label>
                                     <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
                                     <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
                                     <!--<div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>-->
@@ -343,21 +337,27 @@
                                     <div class="chip waves-effect filter" data-filter=".sent">Sent</div>
                                 </div>
                                 <div class="row">
-                                    <label for="">Sort:</label>
+                                    <label for="sort"><strong>Sort:</strong></label>
                                     <div class="chip waves-effect sort" data-sort="timestamp:asc">Ascending</div>
                                     <div class="chip waves-effect sort" data-sort="timestamp:desc">Descending</div>
                                 </div>
+                                <div class="row">
+                                    <div id="advancedFilters">
+                                        <div id="calendarFilters">
+                                            <select id="adv" multiple>
+                                                <option value="" disabled selected>Calendars to show</option>
+                                            </select>
+                                        </div>
+                                        <!--                                        <div id="labelsFilters" class="col s6">
+                                                                                    <select multiple>
+                                                                                        <option value="" disabled selected>Filter by label</option>
+                                                                                    </select>
+                                                                                </div>-->
+                                    </div>
+                                    <a href="#" class="advanced">Show Advanced Filters</a>
+                                </div>
                             </div>
-                            <div id="paginationDiv" class="col s12 m6 l4 right pager-list">
-                                <!--                                <ul class="pagination">
-                                                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                                                    <li class="active"><a href="#!">1</a></li>
-                                                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                                                </ul>-->
+                            <div id="paginationDiv" class="col s12 m6 l4 right pager-list pagination">
                             </div>  
                         </div>
                     </form>

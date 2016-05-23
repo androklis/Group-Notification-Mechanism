@@ -414,7 +414,8 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 
     $('#schemesContainer').mixItUp('paginate', {
         page: 1,
-        limit: 8
+        limit: 8,
+        pagerClass: 'waves-effect'
     });
     $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
 }

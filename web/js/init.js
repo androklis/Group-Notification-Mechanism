@@ -45,22 +45,64 @@ $(function () {
         }
     });
 
-    $('#search').keyup(function () {
-        $('#schemes').find("div[data-filter='all']").click();
-        var filter = $("#search").val();
-        $("#schemes .row .adr_schema:not(.suggestion)").each(function (index) {
-            if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
-                $(this).fadeOut(1000);
+    var inputText;
+    var $matching = $();
+
+    // Delay function
+    var delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    $("#search").keyup(function () {
+        // Delay function invoked to make sure user stopped typing
+        delay(function () {
+            $('#schemes').find("div[data-filter='all']").click();
+            inputText = $("#search").val().toLowerCase();
+
+            // Check to see if input field is empty
+            if ((inputText.length) > 0) {
+                $('#schemes .row .adr_schema:not(.suggestion)').each(function () {
+                    $this = $("this");
+
+                    // add item to be filtered out if input text matches items inside the title   
+                    if ($(this).find('.card-content').text().toLowerCase().match(inputText)) {
+                        $matching = $matching.add(this);
+                    } else {
+                        // removes any previously matched item
+                        $matching = $matching.not(this);
+                    }
+                });
+                $("#schemesContainer").mixItUp('filter', $matching);
             } else {
-                $(this).fadeIn(1000);
+                // resets the filter to show all item if input is empty
+                $("#schemesContainer").mixItUp('filter', 'all');
             }
-        });
+        }, 200);
     });
+
+//    $('#search').keyup(function () {
+//        $('#schemes').find("div[data-filter='all']").click();
+//        var filter = $("#search").val();
+//
+//        $("#schemes .row .adr_schema:not(.suggestion)").each(function (index) {
+//            if ($(this).find(".card-content").context.outerText.search(new RegExp(filter, "i")) < 0) {
+//                $(this).fadeOut(1000);
+//            } else {
+//                $(this).fadeIn(1000);
+//            }
+//        });
+//    });
 
     $('#clearSearch').click(function () {
         $('#search').val('');
         $('label[for="search"]').removeClass('active');
         $('#search').keyup();
+        $("#schemesContainer").mixItUp('filter', 'all');
+        $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
     });
 
     function initComponents() {
@@ -75,6 +117,17 @@ $(function () {
         $('.button-collapse').sideNav();
 
         autoplay();
+        $('select#adv').material_select();
+        $("#advancedFilters").hide();
+        $(".advanced").click(function () {
+            if ($("#advancedFilters").is(':hidden')) {
+                $("#advancedFilters").slideDown();
+                $(".advanced").text("Hide advanced filters");
+            } else {
+                $("#advancedFilters").slideUp();
+                $(".advanced").text("Show advanced filters");
+            }
+        });
 
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
 //        $('div.container').css('min-height', $('div#index-banner').height());
@@ -139,6 +192,7 @@ $(function () {
 
     $(window).resize(function () {
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
+        $('.button-collapse').sideNav('hide');
     });
 
     $("#contacts").autocomplete({
