@@ -20,6 +20,10 @@ label[for=filter], label[for=sort] {
     font-size: 15px;
 }
 
+.more i{
+    position: absolute;
+}
+
 #user_infoContainer {
     margin-top: 10px;
 }
@@ -247,6 +251,7 @@ div#paginationDiv{
     padding: 2px 5px; 
     white-space: nowrap; 
     overflow: hidden; 
+    cursor: default;
 }
 .autocomplete-selected {
     background: #F0F0F0; 

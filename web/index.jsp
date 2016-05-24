@@ -354,7 +354,7 @@
                                                                                     </select>
                                                                                 </div>-->
                                     </div>
-                                    <a href="#" class="more">Show more <i class="material-icons" style="position:fixed;">expand_more</i></a>
+                                    <a href="#" class="more">Show more <i class="material-icons">expand_more</i></a>
                                 </div>
                             </div>
                             <div id="paginationDiv" class="col s12 m6 l4 right pager-list pagination">
@@ -433,7 +433,7 @@
         <!--  Scripts-->
         <script src="js/oauth.js"></script>
         <script src="js/init.js"></script>
-        <script src="js/google.contacts-v3.js"></script>
+        <!--<script src="js/google.contacts-v3.js"></script>-->
         <script src="js/google.calendar-v3.js"></script>
         <script src="js/modal-actions.js"></script>
     </body>

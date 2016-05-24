@@ -1,6 +1,6 @@
 function fetchContacts() {
 
-    $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&v=3.0",
+    $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&max-results=100&v=3.0",
             function (response) {
                 console.log('GROUPS', response);
                 $.each(response.feed.entry, function (index, value) {

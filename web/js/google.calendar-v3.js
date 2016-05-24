@@ -29,7 +29,7 @@ function loadCards(schemes) {
                     if (!/calendar/i.test(value.summary.toUpperCase())) {
                         $('select#adv').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         if (value.accessRole.indexOf('reader') > -1) {
-                            $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                            -$('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
                             $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {

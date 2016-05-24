@@ -94,29 +94,22 @@ $(function () {
 
     function initComponents() {
 
-        var today = new Date();
-        var day = today.getDate();
-        var monthIndex = today.getMonth() + 1;
-        var year = today.getFullYear();
-        var time = checkTime(today.getHours()) + ':'
-                + checkTime(today.getMinutes());
-
         $('.button-collapse').sideNav();
 
         autoplay();
+
         $("#moreFilters").hide();
         $(".more").click(function () {
             if ($("#moreFilters").is(':hidden')) {
                 $("#moreFilters").slideDown();
-                $(".more").html('Show less <i class="material-icons" style="position:fixed;">expand_less</i>');
+                $(".more").html('Show less <i class="material-icons">expand_less</i>');
             } else {
                 $("#moreFilters").slideUp();
-                $(".more").html('Show more <i class="material-icons" style="position:fixed;">expand_more</i>');
+                $(".more").html('Show more <i class="material-icons">expand_more</i>');
             }
         });
 
         $('div#index-banner').css('min-height', ($(window).height() - $('#footer').height() - $('#footer').height() - $('nav.light-blue.lighten-1').height()) + 10);
-//        $('div.container').css('min-height', $('div#index-banner').height());
 
         $('#schemesContainer').mixItUp({
             callbacks: {
@@ -137,7 +130,7 @@ $(function () {
             }
         });
 
-        $('#date').pickadate({
+        $('#date, #startDate, #endDate').pickadate({
             selectMonths: true,
             selectYears: 15,
             min: true,
@@ -146,34 +139,14 @@ $(function () {
             clear: '',
             close: 'DONE'
         });
-        $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
-        $('#startDate').pickadate({
-            selectMonths: true,
-            selectYears: 15,
-            min: true,
-            format: 'yyyy-mm-dd',
-            today: 'TODAY',
-            clear: '',
-            close: 'DONE'
-        });
-        $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
-        $('#endDate').pickadate({
-            selectMonths: true,
-            selectYears: 15,
-            min: true,
-            format: 'yyyy-mm-dd',
-            today: 'TODAY',
-            clear: '',
-            close: 'DONE'
-        });
-        $('#endDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'});
+
         $('#time, #startTime, #endTime').pickatime({
             twelvehour: false,
             default: 'now'
         });
-        updateTime();
-        $('#calendarModal #startTime').val(time);
-        $('#calendarModal #endTime').val(time);
+
+        initDateTime();
+
     }
 
     $(window).resize(function () {
@@ -184,62 +157,40 @@ $(function () {
     $("#contacts").autocomplete({
         lookup: function (query, done) {
             var result = {suggestions: []};
-            $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query,
-                    function (response) {
-                        try {
-                            $.each(response.feed.entry, function (index, value) {
-                                if (value.gd$email) {
-                                    if (value.title.$t.length > 0) {
-                                        if ((value.title.$t).indexOf('Google+') < 0) {
-                                            if (value.link[0].gd$etag) {
-                                                result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
-                                            } else {
-                                                result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
-                                            }
-                                        }
-                                    } else {
-                                        if (value.link[0].gd$etag) {
-                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
-                                        } else {
-                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
-                                        }
-                                    }
+
+            var d1 = $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&v=3.0", function (groupResponse) {
+                $.each(groupResponse.feed.entry, function (index, value) {
+                    console.log(value);
+                    result.suggestions.push({"value": value.title.$t + ' (' + value.title.$t + ')', "data": value.id.$t, "img": "\images/contact_group.png?sz=50"});
+                });
+            });
+
+            var d2 = $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0", function (contactResponse) {
+                $.each(contactResponse.feed.entry, function (index, value) {
+                    if (value.gd$email) {
+                        if (value.title.$t.length > 0) {
+                            if ((value.title.$t).indexOf('Google+') < 0) {
+                                if (value.link[0].gd$etag) {
+                                    result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
+                                } else {
+                                    result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
                                 }
-                            });
-                        } catch (error) {
-                            console.error('ERROR', error);
-                        } finally {
-                            done(result);
+                            }
+                        } else {
+                            if (value.link[0].gd$etag) {
+                                result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
+                            } else {
+                                result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
+                            }
                         }
-                    });
-            $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + query + "&max-results=100&v=3.0",
-                    function (response) {
-                        try {
-                            $.each(response.feed.entry, function (index, value) {
-                                if (value.gd$email) {
-                                    if (value.title.$t.length > 0) {
-                                        if ((value.title.$t).indexOf('Google+') < 0) {
-                                            if (value.link[0].gd$etag) {
-                                                result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
-                                            } else {
-                                                result.suggestions.push({"value": value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')', "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
-                                            }
-                                        }
-                                    } else {
-                                        if (value.link[0].gd$etag) {
-                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token")});
-                                        } else {
-                                            result.suggestions.push({"value": value.gd$email[0].address, "data": value.gd$email[0].address, "img": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"});
-                                        }
-                                    }
-                                }
-                            });
-                        } catch (error) {
-                            console.error('ERROR', error);
-                        } finally {
-                            done(result);
-                        }
-                    });
+                    }
+                });
+            });
+
+            $.when(d1, d2).done(function () {
+                done(result);
+            });
+
         },
         onSelect: function (suggestion) {
             if (!document.getElementById(suggestion.data)) {
@@ -293,10 +244,6 @@ function addFormRules() {
 }
 
 function onModalComplete() {
-    var datepicker = $('#addModal #date').pickadate({});
-    var picker = datepicker.pickadate('picker');
-    picker.set('max', false);
-    picker.set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
     $("#addModal #now").prop("checked", true);
     $("select#calendars").val('0');
     $('select#calendars').material_select();
@@ -313,6 +260,28 @@ function onModalComplete() {
     $("label[for='message']").removeClass('active');
     $('select#calendars').prop('disabled', false);
     $('#addModal #addBtn').removeClass('disabled');
+    $('#addModal #eventSettings').addClass('disabled');
+    initDateTime();
+}
+
+function initDateTime() {
+    var today = new Date();
+    var day = today.getDate();
+    var monthIndex = today.getMonth() + 1;
+    var year = today.getFullYear();
+    var time = checkTime(today.getHours()) + ':'
+            + checkTime(today.getMinutes());
+
+    $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+    $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+    $('#endDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+
+    $('#calendarModal #startTime, #calendarModal #endTime').val(time);
+
+    if ($('#addModal #now').is(':checked')) {
+        $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
+        $('#addModal #time').val(time);
+    }
 }
 
 function expandAll() {
@@ -340,17 +309,4 @@ function autoplay() {
 
 function checkTime(i) {
     return (i < 10) ? "0" + i : i;
-}
-
-function updateTime() {
-    var today = new Date();
-    var day = today.getDate();
-    var monthIndex = today.getMonth() + 1;
-    var year = today.getFullYear();
-    var time = checkTime(today.getHours()) + ':'
-            + checkTime(today.getMinutes());
-    if ($('#addModal #now').is(':checked')) {
-        $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
-        $('#addModal #time').val(time);
-    }
 }
