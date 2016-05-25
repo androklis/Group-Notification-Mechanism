@@ -92,6 +92,7 @@ label[for=filter], label[for=sort] {
 
 .carousel .carousel-item {
     width: 300px;
+    cursor: default;
 }
 
 .suggestion{
@@ -186,6 +187,7 @@ span#adr_badge{
 
 span#adr_type {
     position: inherit;
+    min-width: 2rem;
 }
 
 span#timestamp {

@@ -345,7 +345,7 @@
                                     <div id="moreFilters">
                                         <div id="calendarFilters">
                                             <select id="adv" multiple>
-                                                <option value="" disabled selected>Calendars to show</option>
+                                                <option value="" disabled selected>Filter Calendars</option>
                                             </select>
                                         </div>
                                         <!--                                        <div id="labelsFilters" class="col s6">

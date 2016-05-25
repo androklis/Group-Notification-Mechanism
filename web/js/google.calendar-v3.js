@@ -29,7 +29,7 @@ function loadCards(schemes) {
                     if (!/calendar/i.test(value.summary.toUpperCase())) {
                         $('select#adv').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         if (value.accessRole.indexOf('reader') > -1) {
-                            -$('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
+                            $('select#calendars').append('<option value="' + value.id + '" disabled>' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         } else if ((value.accessRole.indexOf('writer') > -1) || (value.accessRole.indexOf('owner') > -1)) {
                             $('select#calendars').append('<option value="' + value.id + '">' + value.summary.toUpperCase() + ' CALENDAR</option>');
                         } else if ((value.accessRole.indexOf('none') > -1) || (value.accessRole.indexOf('freeBusyReader') > -1)) {
@@ -134,6 +134,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     element.find("#calendarId").val(calendarId);
     element.find("#eventId").val(eventId);
     element.addClass(className);
+    element.addClass(calendarId);
     element.find("#adr_title").html(title);
     element.find("#adr_description").html(content);
 
@@ -305,7 +306,13 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 
         if (card.find('#calendarId').val() !== '0') {
             $('#eventSettings').removeClass('disabled');
-            console.log(card.attr('data-event-timestamp'));
+
+            $('#startDate').pickadate('picker').set('select', ((card.attr('data-event-timestamp').split(' - ')[0]).split(' ')[0]).trim(), {format: 'yyyy-mm-dd'}).set('max', false);
+            $('#endDate').pickadate('picker').set('select', ((card.attr('data-event-timestamp').split(' - ')[1]).split(' ')[0]).trim(), {format: 'yyyy-mm-dd'}).set('max', false);
+
+            $('#calendarModal #startTime').val(((card.attr('data-event-timestamp').split(' - ')[0]).split(' ')[1]).trim());
+            $('#calendarModal #endTime').val(((card.attr('data-event-timestamp').split(' - ')[1]).split(' ')[1]).trim());
+
         }
 
         $('#addModal #now').attr('checked', false);

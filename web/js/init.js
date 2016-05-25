@@ -20,6 +20,16 @@ $(function () {
             $('#eventSettings').addClass('disabled');
         }
     });
+
+    $('select#adv').on('change', function () {
+        if ($('select#adv').val().length > 0) {
+//            console.log('.' + $('select#adv').val().join(" ."));
+//            $("#schemesContainer").mixItUp('filter', '.' + $('select#adv').val().join(" ."));
+        } else {
+//            console.log('Empty');
+        }
+    });
+
     $('#eventSettings').on('click', function () {
         if (!$('#eventSettings').hasClass('disabled')) {
             $('#calendarModal').openModal({
@@ -28,6 +38,7 @@ $(function () {
             });
         }
     });
+
     $('#addBtn.modal-trigger').leanModal({
         complete: function () {
             onModalComplete();
@@ -37,6 +48,7 @@ $(function () {
                     $('#addModal #now').is(':checked'));
         }
     });
+
     $('#addModal #now').click(function () {
         $('#addModal #date, #addModal #time').prop('disabled',
                 $('#addModal #now').is(':checked'));
@@ -160,7 +172,6 @@ $(function () {
 
             var d1 = $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&v=3.0", function (groupResponse) {
                 $.each(groupResponse.feed.entry, function (index, value) {
-                    console.log(value);
                     result.suggestions.push({"value": value.title.$t + ' (' + value.title.$t + ')', "data": value.id.$t, "img": "\images/contact_group.png?sz=50"});
                 });
             });
@@ -193,10 +204,38 @@ $(function () {
 
         },
         onSelect: function (suggestion) {
-            if (!document.getElementById(suggestion.data)) {
-                $('.contactsList').append('<div id="' + suggestion.data + '" class="chip"><img src="' + suggestion.img + '">' + suggestion.value + '<i class="material-icons">close</i></div>');
+            if (suggestion.img === '\images/contact_group.png?sz=50') {
+                $.get("https://www.google.com/m8/feeds/contacts/default/full/?alt=json&access_token=" + $.cookie("access_token") + "&group=" + suggestion.data + "&max-results=100",
+                        function (response) {
+                            $.each(response.feed.entry, function (index, value) {
+                                if (value.gd$email) {
+                                    if (!document.getElementById(value.gd$email[0].address)) {
+                                        if (value.title.$t.length > 0) {
+                                            if ((value.title.$t).indexOf('Google+') < 0) {
+                                                if (value.link[0].gd$etag) {
+                                                    $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="' + (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')' + '<i class="material-icons">close</i></div>');
+                                                } else {
+                                                    $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')' + '<i class="material-icons">close</i></div>');
+                                                }
+                                            }
+                                        } else {
+                                            if (value.link[0].gd$etag) {
+                                                $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="' + (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + value.gd$email[0].address + '<i class="material-icons">close</i></div>');
+                                            } else {
+                                                $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + value.gd$email[0].address + '<i class="material-icons">close</i></div>');
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        });
+            } else {
+                if (!document.getElementById(suggestion.data)) {
+                    $('.contactsList').append('<div id="' + suggestion.data + '" class="chip"><img src="' + suggestion.img + '">' + suggestion.value + '<i class="material-icons">close</i></div>');
+                }
             }
             $("#contacts").val('');
+            $("#contacts").focus();
 
             if (!$('#addForm .contactsList').is(':empty')) {
                 $('#addForm .con').css('display', 'none');
