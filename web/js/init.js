@@ -50,10 +50,17 @@ $(function () {
     });
 
     $('#addModal #now').click(function () {
-        $('#addModal #date, #addModal #time').prop('disabled',
-                $('#addModal #now').is(':checked'));
+        $('#addModal #date, #addModal #time').prop('disabled', $('#addModal #now').is(':checked'));
         if ($('#addModal #now').is(':checked')) {
-            $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'});
+
+            var today = new Date();
+            var day = today.getDate();
+            var monthIndex = today.getMonth() + 1;
+            var year = today.getFullYear();
+            var time = checkTime(today.getHours()) + ':' + checkTime(today.getMinutes());
+
+            $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
+            $('#addModal #time').val(time);
         }
     });
 
@@ -101,7 +108,7 @@ $(function () {
         $('label[for="search"]').removeClass('active');
         $('#search').keyup();
         $("#schemesContainer").mixItUp('filter', 'all');
-        $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
+        $('#schemesContainer').mixItUp('sort', 'timestamp:desc');
     });
 
     function initComponents() {
@@ -142,7 +149,7 @@ $(function () {
             }
         });
 
-        $('#date, #startDate, #endDate').pickadate({
+        $('#date').pickadate({
             selectMonths: true,
             selectYears: 15,
             min: true,
@@ -150,6 +157,30 @@ $(function () {
             today: 'TODAY',
             clear: '',
             close: 'DONE'
+        });
+
+        $('#endDate').pickadate({
+            selectMonths: true,
+            selectYears: 15,
+            min: new Date((new Date()).valueOf() + 1000 * 3600 * 24),
+            today: '',
+            format: 'yyyy-mm-dd',
+            clear: '',
+            close: 'DONE'
+        });
+
+        $('#startDate').pickadate({
+            selectMonths: true,
+            selectYears: 15,
+            min: true,
+            format: 'yyyy-mm-dd',
+            today: 'TODAY',
+            clear: '',
+            close: 'DONE',
+            onSet: function () {
+                $('#endDate').pickadate('picker').set('min', new Date((new Date(($('#startDate').val()))).valueOf() + 1000 * 3600 * 24));
+                $('#endDate').pickadate('picker').set('select', new Date((new Date(($('#startDate').val()))).valueOf() + 1000 * 3600 * 24));
+            }
         });
 
         $('#time, #startTime, #endTime').pickatime({
@@ -283,9 +314,10 @@ function addFormRules() {
 }
 
 function onModalComplete() {
+    $('#addModal #schemeTitle').text('Add new Scheme');
+    $('#addModal #addBtn').text('Add');
     $("#addModal #now").prop("checked", true);
     $("select#calendars").val('0');
-    $('select#calendars').material_select();
     $('#addModal .contactsList').empty();
     $("#addModal #contacts").val('');
     $("#addModal #subject").val('');
@@ -298,6 +330,7 @@ function onModalComplete() {
     $("label[for='subject']").removeClass('active');
     $("label[for='message']").removeClass('active');
     $('select#calendars').prop('disabled', false);
+    $('select#calendars').material_select();
     $('#addModal #addBtn').removeClass('disabled');
     $('#addModal #eventSettings').addClass('disabled');
     initDateTime();
@@ -310,6 +343,11 @@ function initDateTime() {
     var year = today.getFullYear();
     var time = checkTime(today.getHours()) + ':'
             + checkTime(today.getMinutes());
+    setInterval(function () {
+        time = checkTime(today.getHours()) + ':'
+                + checkTime(today.getMinutes());
+    }, 30000);
+
 
     $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
     $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);

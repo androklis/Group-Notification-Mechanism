@@ -5,7 +5,6 @@ jQuery.fn.outerHTML = function (s) {
             ? this.before(s).remove()
             : jQuery("<p>").append(this.eq(0).clone().css('display', 'block')).html();
 };
-
 /**
  * Load Google Calendar client library. List upcoming events once client library
  * is loaded.
@@ -14,10 +13,14 @@ jQuery.fn.outerHTML = function (s) {
 function loadCards(schemes) {
     var schemeIds = [];
     $.each(schemes, function (index, value) {
-        createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp + '||' + value.eventtimestamp, value.status, '#ffab40');
+//        console.log(value.accessrole);
+        if (value.accessrole === '1') {
+            createCard(value.uuid, value.calendarid, value.eventid, 'scheme owner', value.subject, value.message, value.recipients, value.timestamp + '||' + value.eventtimestamp, value.status, '#ffab40');
+        } else {
+            createCard(value.uuid, value.calendarid, value.eventid, 'scheme', value.subject, value.message, value.recipients, value.timestamp + '||' + value.eventtimestamp, value.status, '#ffab40');
+        }
         schemeIds.push(value.eventid);
     });
-
     gapi.client.load('calendar', 'v3', function () {
         var request = gapi.client.calendar.calendarList.list();
         request.execute(function (response) {
@@ -71,10 +74,8 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
     request.execute(function (response) {
         var events = response.items;
         $.each(events, function (index, event) {
-
             var start = event.start.dateTime;
             var end = event.end.dateTime;
-
             if (!start) {
                 start = event.start.date;
             }
@@ -95,11 +96,10 @@ function listUpcomingEvents(schemeIds, calendarID, summary, color) {
                 } else if (calendarID.indexOf('#weather@') > -1) {
                     createCard('', calendarID, event.id, 'weather', event.summary, event.summary, "", start + "||" + end, summary + ' Calendar', color + '@' + event.gadget.iconLink);
                 } else {
-
                     var attendees = [];
                     var description = "";
                     var resource = "";
-
+                    attendees.push(event.creator.email);
                     if (event.attendees) {
                         $.each(event.attendees, function (index, attendee) {
                             attendees.push(attendee.email);
@@ -134,13 +134,11 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     element.find("#calendarId").val(calendarId);
     element.find("#eventId").val(eventId);
     element.addClass(className);
-    element.addClass(calendarId);
+//    element.addClass(calendarId);
     element.find("#adr_title").html(title);
     element.find("#adr_description").html(content);
-
     var guests = [];
     var i = 0;
-
     if (recipients.length > 0) {
         $.each(recipients.split(','), function (index, attendee) {
             if (attendee.indexOf($.cookie("email")) < 0) {
@@ -150,14 +148,12 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         });
     }
 
-    switch (className) {
+    switch (className.split(' ')[0]) {
         case "scheme":
             element.attr('id', uuid);
             element.find(".card-action").append('<a href="javascript:void(0);" id="deleteScheme"><i class="material-icons waves-effect waves-light right red-text">delete_forever</i></a>');
-
             element.find(".card-action").append('<span id="timestamp" class="badge left light-blue-text">' + timestamp.split("||")[0] + '</span>');
             element.attr('data-timestamp', timestamp.split("||")[0]);
-
             if (timestamp.split("||")[1] !== 'null') {
                 element.attr('data-event-timestamp', timestamp.split("||")[1]);
             }
@@ -197,7 +193,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             element.find(".card-action").append('<i class="material-icons waves-effect waves-light tooltipped right orange-text" data-position="left" data-delay="50" data-tooltip="' + i + '">people</i>');
             element.find("#adr_badge").html(status.toUpperCase()).css('color', color.split("@")[0]);
             element.find('.card').css('border', '1px solid ' + color.split("@")[0]);
-
             if (className === "birthday") {
                 element.find("#adr_type").html('<i class="material-icons">cake</i>');
                 element.addClass('suggestion');
@@ -221,7 +216,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 full_width: true,
                 padding: 5
             });
-
             break;
     }
 
@@ -268,14 +262,12 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             }
         });
     });
-
     $('a#editScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         $('#uuid').val(card.attr('id'));
         $('#addModal #addBtn').attr('onclick', 'updateCard();');
         $('#addModal #addBtn').text('Update');
         $('#addModal #schemeTitle').text(card.find('#adr_title').text());
-
         var rcpts = card.find('#rcpts').val();
         $.each(rcpts.split(','), function (index, value) {
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
@@ -299,30 +291,28 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             });
         });
         $('select#calendars').val(card.find('#calendarId').val());
-        var datepicker = $('#date').pickadate({});
-        var picker = datepicker.pickadate('picker');
-
-        $('select#calendars').material_select();
-
-        if (card.find('#calendarId').val() !== '0') {
+        if (!card.hasClass('owner') && $('select#calendars').val() !== '0') {
+            $('select#calendars').prop('disabled', true);
+        } else if ($('#addModal #calendars option:selected').val() === '0') {
+        } else {
             $('#eventSettings').removeClass('disabled');
-
-            $('#startDate').pickadate('picker').set('select', ((card.attr('data-event-timestamp').split(' - ')[0]).split(' ')[0]).trim(), {format: 'yyyy-mm-dd'}).set('max', false);
-            $('#endDate').pickadate('picker').set('select', ((card.attr('data-event-timestamp').split(' - ')[1]).split(' ')[0]).trim(), {format: 'yyyy-mm-dd'}).set('max', false);
-
-            $('#calendarModal #startTime').val(((card.attr('data-event-timestamp').split(' - ')[0]).split(' ')[1]).trim());
-            $('#calendarModal #endTime').val(((card.attr('data-event-timestamp').split(' - ')[1]).split(' ')[1]).trim());
-
         }
 
-        $('#addModal #now').attr('checked', false);
+        var datepicker = $('#date').pickadate({});
+        var picker = datepicker.pickadate('picker');
+        if (card.attr('data-event-timestamp')) {
+            $('#startDate').pickadate('picker').set('select', ((card.attr('data-event-timestamp').split(' - ')[0]).split(' ')[0]).trim(), {format: 'yyyy-mm-dd'}).set('max', false);
+            $('#endDate').pickadate('picker').set('select', ((card.attr('data-event-timestamp').split(' - ')[1]).split(' ')[0]).trim(), {format: 'yyyy-mm-dd'}).set('max', false);
+            $('#calendarModal #startTime').val(((card.attr('data-event-timestamp').split(' - ')[0]).split(' ')[1]).trim());
+            $('#calendarModal #endTime').val(((card.attr('data-event-timestamp').split(' - ')[1]).split(' ')[1]).trim());
+        }
 
+        $('select#calendars').material_select();
+        $('#addModal #now').attr('checked', false);
         picker.set('select', card.find('#timestamp').text().split(' ')[0], {format: 'yyyy-mm-dd'});
         $('#addModal #time').val(card.find('#timestamp').text().split(' ')[1]);
-
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
         $('#addModal #message').val(card.find('#adr_description').text()).change();
-        $('#addModal #eventId').val(card.attr('id'));
         $('#addModal').openModal({
             complete: function () {
                 $('#addModal #addBtn').attr('onclick', 'addCard();');
@@ -335,19 +325,17 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
             }
         });
     });
-
     $('a#duplicateScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
-        $('#copyModal').openModal({
-            complete: function () {
-
-            },
-            ready: function () {
-
-            }
-        });
+//        $('#copyModal').openModal({
+//            complete: function () {
+//
+//            },
+//            ready: function () {
+//
+//            }
+//        });
     });
-
     $('a#viewCard').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         var rcpts = card.find('#rcpts').val();
@@ -363,7 +351,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         $('#viewModal .viewContent .dateRange').append(card.find('#timestamp').text());
         $('#viewModal .viewContent .desc').append(card.find('#adr_description').html());
         $('#viewModal .viewContent #attendeesCnt').html(card.find('.card-action i.tooltipped').data('tooltip'));
-
         $.each(rcpts.split(','), function (index, value) {
             if (value !== "") {
                 $.getJSON("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + encodeURIComponent($.cookie("access_token")) + "&q=" + value + "&max-results=1&v=3.0").then(function (response) {
@@ -392,7 +379,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
 //                $('#viewModal .viewContent .attendees').append("<div class='chip'><img src='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50' alt=''>" + value + "</div>");
 //            }
         });
-
         $('#viewModal').openModal({
             complete: function () {
                 $('#viewModal #viewTitle').empty();
@@ -409,7 +395,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 expandAll();
             }
         });
-
     });
     $('a#deleteScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
@@ -422,11 +407,10 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         });
     });
     $('.tooltipped').tooltip();
-
     $('#schemesContainer').mixItUp('paginate', {
         page: 1,
         limit: 8,
         pagerClass: 'waves-effect'
     });
-    $('#schemesContainer').mixItUp('sort', 'timestamp:asc');
+    $('#schemesContainer').mixItUp('sort', 'timestamp:desc');
 }

@@ -207,15 +207,13 @@ public class GoogleSpreadsheet {
         return jsonArray;
     }
 
-    public void updateScheme(String userEmail, String uuid, String status)
+    public void updateSchemeStatus(String userEmail, String uuid, String status)
             throws MalformedURLException, IOException, ServiceException {
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class
-        );
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
@@ -266,29 +264,38 @@ public class GoogleSpreadsheet {
 
     }
 
-    public void editScheme(String uuid, String userEmail, String to,
-            String subject, String message, String timestamp)
-            throws MalformedURLException, IOException, ServiceException {
+    public String editScheme(String uuid, String calendarId, String eventId, String userEmail, String to, String subject, String message,
+            String eventTimestamp, String timestamp) throws MalformedURLException, IOException,
+            ServiceException {
+
+        String fromCalendar = "";
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class
-        );
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
 
-                listEntry.getCustomElements().setValueLocal("Recipients", to);
-                listEntry.getCustomElements().setValueLocal("Subject", subject);
-                listEntry.getCustomElements().setValueLocal("Message", message);
-                listEntry.getCustomElements().setValueLocal("Timestamp",
-                        "'" + timestamp);
+                if (!calendarId.equals(listEntry.getCustomElements().getValue("CALENDARID"))) {
+                    listEntry.getCustomElements().setValueLocal("CALENDARID", calendarId);
+                    fromCalendar = listEntry.getCustomElements().getValue("CALENDARID");
+                }
+
+                listEntry.getCustomElements().setValueLocal("EVENTID", eventId);
+                listEntry.getCustomElements().setValueLocal("EVENTTIMESTAMP", eventTimestamp);
+                listEntry.getCustomElements().setValueLocal("RECIPIENTS", to);
+                listEntry.getCustomElements().setValueLocal("SUBJECT", subject);
+                listEntry.getCustomElements().setValueLocal("MESSAGE", message);
+                listEntry.getCustomElements().setValueLocal("TIMESTAMP", "'" + timestamp);
+                listEntry.getCustomElements().setValueLocal("STATUS", "PENDING");
 
                 listEntry.update();
+                break;
             }
         }
+        return fromCalendar;
     }
 
 }

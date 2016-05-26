@@ -207,43 +207,6 @@
             </div>
         </div>
 
-        <div id="copyModal" class="modal modal-fixed-footer">
-            <div class="modal-content">
-                <h4 id="viewTitle" style="text-align: center;">Repeat Scheme</h4>
-                <div class="viewContent" style="font-size: 1.5rem;">
-                </div>
-                <form id="deleteForm" class="col s12" action="GNMServlet" method="POST">
-                    <!--                    <div class="row input-field">
-                                            <div class="col s4 m4 l2">
-                                                <input type="checkbox" id="now" checked="checked" />
-                                                <label for="now">now</label>
-                                            </div>
-                    
-                                            <div class="col s8 m8 l4">
-                                                <select id="calendars">
-                                                    <option value="0" selected>Do not add to calendar</option>
-                                                </select>
-                                            </div>
-                    
-                                            <div class="col s6 m6 l3">
-                                                <input id="date" class="datepicker" type="date">
-                                            </div>
-                    
-                                            <div class="col s6 m6 l3">
-                                                <input id="time" class="timepicker" type="text">
-                                            </div>
-                    
-                                        </div>-->
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <strong class="btn-flat left" style="cursor: default;"><font color='red'>THIS PROCEDURE IS IRREVERSIBLE</font></strong>
-                <a id="delBtn" class="modal-action modal-close waves-effect btn-flat red-text" onclick="$('#deleteForm').submit();"> Delete </a>
-                <a id="delBtnCax" class="modal-action modal-close waves-effect btn-flat">Cancel</a>
-            </div>
-        </div>
-
         <div id="addModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="schemeTitle" style="text-align: center;">Add new Scheme</h4>

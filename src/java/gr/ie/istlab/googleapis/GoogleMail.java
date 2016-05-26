@@ -135,7 +135,7 @@ public class GoogleMail {
             Message message = createMessageWithEmail(email);
             message = gmailService.users().messages().send(from, message).execute();
 
-            GoogleSpreadsheet.getInstance().updateScheme(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
+            GoogleSpreadsheet.getInstance().updateSchemeStatus(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
             return message.get("labelIds").toString().replace("[", "").replace("]", "").trim();
         } catch (MessagingException ex) {
             Logger.getLogger(GoogleMail.class.getName()).log(Level.SEVERE, null, ex);
