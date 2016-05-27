@@ -202,7 +202,7 @@ function updateCard() {
                     }
 
                     $("div[id=" + json.id + "]").remove();
-                    createCard(json.id, $('#addModal #calendarId').val(), $('#uuid').val(), 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
+                    createCard(json.id, json.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
 
                     $('.progress').toggle();
                     $('#addModal').closeModal();
