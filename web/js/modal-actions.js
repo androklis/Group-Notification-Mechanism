@@ -91,19 +91,14 @@ function addCard() {
 
         $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
             if (xhr.status === 200) {
-                if ((json.eventId !== "0") && (json.calendarId !== "0")) {
-                    $("div[id=" + json.eventId + "]").remove();
-                }
-
-                if ((json.eventId === "0") && (json.calendarId !== "0")) {
-                    if (response.status === "Error Sending") {
-                        createCard(response.id, response.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ff0000');
-                    } else {
-                        createCard(response.id, response.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ffab40');
-                    }
+                if (response.status === "Error Sending") {
                 } else {
-                    if (response.status === "Error Sending") {
-                        createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ff0000');
+                    if ((json.eventId !== "0") && (json.calendarId !== "0")) {
+                        $("div[id=" + json.eventId + "]").remove();
+                    }
+
+                    if ((json.eventId === "0") && (json.calendarId !== "0")) {
+                        createCard(response.id, response.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ffab40');
                     } else {
                         createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ffab40');
                     }
@@ -194,8 +189,7 @@ function updateCard() {
             if (xhr.status === 200) {
 
                 if (response.status === "Error Updating") {
-                    console.log('error');
-//                    createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ff0000');
+
                 } else {
                     if ($("div[id=" + json.id + "]").hasClass('owner')) {
                         createCard(json.id, json.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
@@ -215,20 +209,4 @@ function updateCard() {
 
         }, "json");
     }
-
-
-//    console.log('#uuid', $('#uuid').val());
-//    console.log('#eventId', $('#addModal #eventId').val());
-//    console.log('#email', $.cookie("email"));
-//    console.log('#contacts', rcpts.join(','));
-//    console.log('#subject', $('#addModal #subject').val());
-//    console.log('#message', $('#addModal #message').val());
-//    console.log('#date', $('#addModal #date').val());
-//    console.log('#time', $('#addModal #time').val());
-//    console.log('#now', $('#addModal #now').is(':checked'));
-//    console.log('#calendars', $('#addModal #calendars option:selected').val());
-//    console.log('#startDate', $('#calendarModal #startDate').val());
-//    console.log('#startTime', $('#calendarModal #startTime').val());
-//    console.log('#endDate', $('#calendarModal #endDate').val());
-//    console.log('#endTime', $('#calendarModal #endTime').val());
 }

@@ -9,6 +9,18 @@ $(function () {
     initComponents();
     addFormRules();
 
+    var inputText;
+    var $matching = $();
+
+    // Delay function
+    var delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
     $('select#calendars').on('change', function () {
         if ($('select#calendars').val().length > 1) {
             $('#eventSettings').removeClass('disabled');
@@ -22,11 +34,19 @@ $(function () {
     });
 
     $('select#adv').on('change', function () {
-        if ($('select#adv').val().length > 0) {
-//            console.log('.' + $('select#adv').val().join(" ."));
-//            $("#schemesContainer").mixItUp('filter', '.' + $('select#adv').val().join(" ."));
+        var $match = $();
+        if ($('select#adv').val().length === 0) {
+            $("#schemesContainer").mixItUp('filter', 'all');
         } else {
-//            console.log('Empty');
+            $.each($('select#adv').val(), function (index, value) {
+                $('#schemes .row .adr_schema:not(.suggestion)').each(function () {
+                    $this = $("this");
+                    if ($(this).find('#calendarId').val().match(value)) {
+                        $match = $match.add(this);
+                    }
+                });
+            });
+            $("#schemesContainer").mixItUp('filter', $match);
         }
     });
 
@@ -63,18 +83,6 @@ $(function () {
             $('#addModal #time').val(time);
         }
     });
-
-    var inputText;
-    var $matching = $();
-
-    // Delay function
-    var delay = (function () {
-        var timer = 0;
-        return function (callback, ms) {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
-        };
-    })();
 
     $("#search").keyup(function () {
         // Delay function invoked to make sure user stopped typing
