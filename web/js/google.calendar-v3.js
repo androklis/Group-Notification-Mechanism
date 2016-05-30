@@ -253,7 +253,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 $('#addModal #now').is(':checked'));
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
         $('#addModal #message').val(card.find('#adr_description').text()).change();
-        $('#addModal #eventId').val(card.attr('id'));
+        $('#addModal #eventId').val(card.find('#eventID').val());
         $('#addModal').openModal({
             complete: function () {
                 onModalComplete();

@@ -279,8 +279,8 @@ public class GoogleSpreadsheet {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
 
                 if (!calendarId.equals(listEntry.getCustomElements().getValue("CALENDARID"))) {
-                    listEntry.getCustomElements().setValueLocal("CALENDARID", calendarId);
                     fromCalendar = listEntry.getCustomElements().getValue("CALENDARID");
+                    listEntry.getCustomElements().setValueLocal("CALENDARID", calendarId);
                 }
 
                 listEntry.getCustomElements().setValueLocal("EVENTID", eventId);

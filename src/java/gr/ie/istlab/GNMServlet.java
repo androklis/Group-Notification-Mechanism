@@ -98,16 +98,22 @@ public class GNMServlet extends HttpServlet {
                 calendarId = request.getParameter("json[calendarId]");
                 json.addProperty("status", "");
                 String fromCalendar = "";
+                
                 try {
-                    if ("0".equals(request.getParameter("json[owner]"))) {
-                        GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventTimestamp]"), request.getParameter("json[timestamp]"));
-                    } else if ("1".equals(request.getParameter("json[owner]"))) {
-                        fromCalendar = GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventStart]") + " - " + request.getParameter("json[eventEnd]"), request.getParameter("json[timestamp]"));
-                        eventId = GoogleCalendar.getInstance().updateEvent(fromCalendar, calendarId, request.getParameter("json[eventId]"), request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"), request.getParameter("json[timeZoneOffset]"));
-//                        GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventTimestamp]"), request.getParameter("json[timestamp]"));
-                    } else if ("2".equals(request.getParameter("json[owner]"))) {
-                        eventId = GoogleCalendar.getInstance().addEvent(calendarId, request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"), request.getParameter("json[timeZoneOffset]"));
-                        uuid = GoogleSpreadsheet.getInstance().addScheme(calendarId, eventId, "1", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), "", request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                    switch (request.getParameter("json[owner]")) {
+                        case "0":
+                            GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventTimestamp]"), request.getParameter("json[timestamp]"));
+                            break;
+                        case "1":
+                            fromCalendar = GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventStart]") + " - " + request.getParameter("json[eventEnd]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                            GoogleCalendar.getInstance().updateEvent(fromCalendar, calendarId, request.getParameter("json[eventId]"), request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"), request.getParameter("json[timeZoneOffset]"));
+                            break;
+                        case "2":
+                            eventId = GoogleCalendar.getInstance().addEvent(calendarId, request.getParameter("json[user_email]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[contacts]"), request.getParameter("json[eventStart]"), request.getParameter("json[eventEnd]"), request.getParameter("json[timeZoneOffset]"));
+                            uuid = GoogleSpreadsheet.getInstance().editScheme(calendarId, eventId, "1", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), "", request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+                            break;
+                        default:
+                            break;
                     }
                 } catch (MalformedURLException | ServiceException ex) {
                     Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);

@@ -69,6 +69,7 @@
                 </div>
             </div>
             <input type="hidden" id="rcpts" name="rcpts" value=""/>
+            <input type="hidden" id="eventId" name="eventID" value=""/>
             <input type="hidden" id="calendarId" name="calendarID" value=""/>
         </div>
         <input type="hidden" id="uuid" value="0"/>

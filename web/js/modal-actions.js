@@ -174,7 +174,7 @@ function updateCard() {
 
         var json = {
             id: $('#uuid').val(),
-            eventId: $('#addModal #eventId').val(),
+            eventId: $("div[id=" + $('#uuid').val() + "]").find('#eventId').val(),
             user_email: $.cookie("email"),
             contacts: rcpts.join(','),
             subject: $('#addModal #subject').val(),
@@ -198,11 +198,12 @@ function updateCard() {
 //                    createCard(response.id, response.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + json.eventStart + ' - ' + json.eventEnd, response.status, '#ff0000');
                 } else {
                     if ($("div[id=" + json.id + "]").hasClass('owner')) {
-                        console.log('owner');
+                        createCard(json.id, json.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
+                    } else {
+                        createCard(json.id, json.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
                     }
 
                     $("div[id=" + json.id + "]").remove();
-                    createCard(json.id, json.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
 
                     $('.progress').toggle();
                     $('#addModal').closeModal();
