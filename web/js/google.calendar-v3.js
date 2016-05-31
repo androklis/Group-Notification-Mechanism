@@ -134,7 +134,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     element.find("#calendarId").val(calendarId);
     element.find("#eventId").val(eventId);
     element.addClass(className);
-//    element.addClass(calendarId);
     element.find("#adr_title").html(title);
     element.find("#adr_description").html(content);
     var guests = [];
@@ -327,14 +326,15 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     });
     $('a#duplicateScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
-//        $('#copyModal').openModal({
-//            complete: function () {
-//
-//            },
-//            ready: function () {
-//
-//            }
-//        });
+        $('#uuid').val(card.attr('id'));
+        $('#copyModal').openModal({
+            complete: function () {
+
+            },
+            ready: function () {
+
+            }
+        });
     });
     $('a#viewCard').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');

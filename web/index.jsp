@@ -79,6 +79,34 @@
             </a>
         </div>
 
+        <div id="errorModal" class="modal">
+            <div class="modal-content">
+                <h4>Oops. Something went wrong.</h4>
+                <p>Please try again later.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Ok</a>
+            </div>
+        </div>
+
+        <div id="copyModal" class="modal bottom-sheet">
+            <div class="modal-content">
+                <h4 class="title"></h4>
+                <div class="row">
+                    <div class="col s6 m6 l6">
+
+                    </div>
+                    <div class="col s6 m6 l6">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="copyBtn" class="modal-action modal-close waves-effect btn-flat" onclick="copyCard();"> Copy </a>
+                <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            </div>
+        </div>
+
         <div id="viewModal" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4 id="viewTitle" style="text-align: center;"></h4>
@@ -309,14 +337,9 @@
                                     <div id="moreFilters">
                                         <div id="calendarFilters">
                                             <select id="adv" multiple>
-                                                <option value="" disabled selected>Filter Calendars</option>
+                                                <option value="" disabled selected>Filter by Calendar</option>
                                             </select>
                                         </div>
-                                        <!--                                        <div id="labelsFilters" class="col s6">
-                                                                                    <select multiple>
-                                                                                        <option value="" disabled selected>Filter by label</option>
-                                                                                    </select>
-                                                                                </div>-->
                                     </div>
                                     <a href="#" class="more">Show more <i class="material-icons">expand_more</i></a>
                                 </div>

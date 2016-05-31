@@ -92,6 +92,7 @@ function addCard() {
         $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
             if (xhr.status === 200) {
                 if (response.status === "Error Sending") {
+                    $('#errorModal').openModal();
                 } else {
                     if ((json.eventId !== "0") && (json.calendarId !== "0")) {
                         $("div[id=" + json.eventId + "]").remove();
@@ -189,7 +190,7 @@ function updateCard() {
             if (xhr.status === 200) {
 
                 if (response.status === "Error Updating") {
-
+                    $('#errorModal').openModal();
                 } else {
                     if ($("div[id=" + json.id + "]").hasClass('owner')) {
                         createCard(json.id, json.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
@@ -209,4 +210,46 @@ function updateCard() {
 
         }, "json");
     }
+}
+
+function copyCard() {
+
+    window.scrollTo(0, 0);
+    $('.progress').toggle();
+
+    var card = $("div[id=" + $('#uuid').val() + "]");
+
+    console.log('uuid', $('#uuid').val());
+    console.log('email', $.cookie("email"));
+    console.log('rcpts', card.find('#rcpts').val());
+    console.log('calendarId', card.find('#calendarId').val());
+    console.log('eventId', card.find('#eventId').val());
+    console.log('eventTimestamp', card.attr('data-event-timestamp'));
+    console.log('adr_title', card.find('#adr_title').text());
+    console.log('adr_description', card.find('#adr_description').text());
+
+//            subject: $('#addModal #subject').val(),
+//            message: $('#addModal #message').val(),
+//            now: $('#addModal #now').is(':checked'),
+//            calendarId: $('#addModal #calendars option:selected').val(),
+//            date: $('#addModal #date').val(),
+//            time: $('#addModal #time').val(),
+//            eventStart: $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val(),
+//            eventEnd: $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val()
+
+//    var json = {
+//        id: $('#uuid').val(),
+//        user_email: $.cookie("email"),
+//        type: 'COPY'
+//    };
+//
+//    $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
+//        if (xhr.status === 200) {
+//            $("div[id=" + $('#uuid').val() + "]").remove();
+//        }
+//        $('.progress').toggle();
+//        $("#schemesContainer").mixItUp('filter', 'all');
+//        $('#schemesContainer').mixItUp('sort', 'timestamp:desc');
+//    });
+
 }

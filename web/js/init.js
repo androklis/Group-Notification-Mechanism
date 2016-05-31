@@ -5,7 +5,7 @@ $(function () {
     po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(po, s);
-
+    
     initComponents();
     addFormRules();
 
@@ -346,9 +346,9 @@ function onModalComplete() {
 
 function initDateTime() {
     var today = new Date();
-    var day = today.getDate();
-    var monthIndex = today.getMonth() + 1;
-    var year = today.getFullYear();
+//    var day = today.getDate();
+//    var monthIndex = today.getMonth() + 1;
+//    var year = today.getFullYear();
     var time = checkTime(today.getHours()) + ':'
             + checkTime(today.getMinutes());
     setInterval(function () {
@@ -357,14 +357,14 @@ function initDateTime() {
     }, 30000);
 
 
-    $('#date').pickadate('picker').set('select', new Date().toISOString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+    $('#date').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
     $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
     $('#endDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
 
     $('#calendarModal #startTime, #calendarModal #endTime').val(time);
 
     if ($('#addModal #now').is(':checked')) {
-        $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
+       $('#date').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
         $('#addModal #time').val(time);
     }
 }
