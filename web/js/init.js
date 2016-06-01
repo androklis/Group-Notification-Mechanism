@@ -252,21 +252,39 @@ $(function () {
                 $('#addForm .con2').css('display', 'none');
                 if (validateEmail(input)) {
                     if (!document.getElementById(input)) {
-                        $('.contactsList').append('<div id="' + input + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + input + '<i class="material-icons">close</i></div>');
+                        $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + input + "&max-results=100&v=3.0", function (contactResponse) {
+                            if (contactResponse.feed.entry) {
+                                $.each(contactResponse.feed.entry, function (index, value) {
+                                    if (value.gd$email) {
+                                        if (value.title.$t.length > 0) {
+                                            if ((value.title.$t).indexOf('Google+') < 0) {
+                                                if (value.link[0].gd$etag) {
+                                                    $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="' + (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')' + '<i class="material-icons">close</i></div>');
+                                                } else {
+                                                    $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + value.title.$t + ' (' + value.gd$email[0].address.split('@')[1] + ')' + '<i class="material-icons">close</i></div>');
+                                                }
+                                            }
+                                        } else {
+                                            if (value.link[0].gd$etag) {
+                                                $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="' + (value.link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + value.gd$email[0].address + '<i class="material-icons">close</i></div>');
+                                            } else {
+                                                $('.contactsList').append('<div id="' + value.gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + value.gd$email[0].address + '<i class="material-icons">close</i></div>');
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                $('.contactsList').append('<div id="' + input + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + input + '<i class="material-icons">close</i></div>');
+                            }
+                        });
                     }
                 } else {
                     $('#addForm .con2').css('display', 'block');
                 }
                 $("#contacts").val('');
                 $("#contacts").focus();
-
-                if (!$('#addForm .contactsList').is(':empty')) {
-                    $('#addForm .con').css('display', 'none');
-                } else {
-                    $('#addForm .con').css('display', 'block');
-                }
+                $('#addForm .con').css('display', 'none');
             }
-
         }
     });
 
