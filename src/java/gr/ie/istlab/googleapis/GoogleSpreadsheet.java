@@ -1,5 +1,6 @@
 package gr.ie.istlab.googleapis;
 
+import com.google.gdata.client.spreadsheet.ListQuery;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,7 +18,11 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 
 public class GoogleSpreadsheet {
 
@@ -146,46 +151,32 @@ public class GoogleSpreadsheet {
 
     }
 
-//    public void checkWorksheet(String fullTextSearchString) throws IOException,
-//            ServiceException, MessagingException {
-//
-//        for (WorksheetEntry worksheet : getAllWorksheets()) {
-//            ListQuery query = new ListQuery(worksheet.getListFeedUrl());
-//            query.setFullTextQuery(fullTextSearchString);
-//            ListFeed feed = spreadsheetService.query(query, ListFeed.class);
-//
-//            feed.getEntries().stream().filter((entry) -> (GOOGLE_CREDENTIALS.get(entry.getTitle().getPlainText()) != null)).forEach((entry) -> {
-//                entry.getCustomElements().getTags().stream().filter((tag) -> ("timestamp".equals(tag)
-//                        && (fullTextSearchString.split(" ")[1] + " " + fullTextSearchString
-//                        .split(" ")[2]).equals(entry
-//                        .getCustomElements().getValue(tag)))).forEach((_item) -> {
-//                    GoogleMail
-//                            .getInstance()
-//                            .sendMessage(
-//                                    GoogleMail
-//                                    .getInstance()
-//                                    .createEmail(
-//                                            worksheet
-//                                            .getTitle()
-//                                            .getPlainText(),
-//                                            (entry.getCustomElements()
-//                                            .getValue(
-//                                                    "recipients")
-//                                            .split(", ")),
-//                                            entry.getCustomElements()
-//                                            .getValue(
-//                                                    "subject"),
-//                                            entry.getCustomElements()
-//                                            .getValue(
-//                                                    "message")),
-//                                    worksheet.getTitle().getPlainText(),
-//                                    entry.getCustomElements().getValue(
-//                                            "uuid"));
-//                });
-//            });
-//        }
-//
-//    }
+    public void checkWorksheet(String fullTextSearchString) throws IOException,
+            ServiceException {
+
+        for (WorksheetEntry worksheet : getAllWorksheets()) {
+            ListQuery query = new ListQuery(worksheet.getListFeedUrl());
+            query.setFullTextQuery(fullTextSearchString);
+            ListFeed feed = spreadsheetService.query(query, ListFeed.class);
+
+            for (ListEntry entry : feed.getEntries()) {
+
+                if (GOOGLE_CREDENTIALS.get(entry.getTitle().getPlainText()) != null) {
+                    for (String tag : entry.getCustomElements().getTags()) {
+
+                        if ("TIMESTAMP".equals(tag) && (fullTextSearchString.split(" ")[1] + " " + fullTextSearchString.split(" ")[2]).equals(entry.getCustomElements().getValue(tag))) {
+                            try {
+                                GoogleMail.getInstance().sendMessage(GoogleMail.getInstance().createEmail(worksheet.getTitle().getPlainText(), (entry.getCustomElements().getValue("RECIPIENTS").split(",")), entry.getCustomElements().getValue("SUBJECT"), entry.getCustomElements().getValue("MESSAGE")), worksheet.getTitle().getPlainText(), entry.getCustomElements().getValue("UUID"));
+                            } catch (MessagingException ex) {
+                                Logger.getLogger(GoogleSpreadsheet.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public JsonArray getSchemes(String userEmail) throws IOException, ServiceException {
 
         JsonArray jsonArray = new JsonArray();

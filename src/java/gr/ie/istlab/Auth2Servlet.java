@@ -22,14 +22,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.text.DateFormat;
 
 /**
  *
@@ -137,7 +142,12 @@ public class Auth2Servlet extends HttpServlet {
 //        exec.scheduleAtFixedRate(new Runnable() {
 //            @Override
 //            public void run() {
-//                System.out.println("lala");
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//
+//                Date date = new Date();
+//                Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, dateFormat.format(date));
+//
+//          GoogleSpreadsheet.getInstance().checkWorksheet(fullTextSearchString);
 //            }
 //        }, 0, 5, TimeUnit.SECONDS);
     }
