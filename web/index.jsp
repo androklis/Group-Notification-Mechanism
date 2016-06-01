@@ -85,7 +85,7 @@
                 <p>Please try again later.</p>
             </div>
             <div class="modal-footer">
-                <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Ok</a>
+                <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Ok</a>
             </div>
         </div>
 
@@ -93,11 +93,17 @@
             <div class="modal-content">
                 <h4 class="title"></h4>
                 <div class="row">
-                    <div class="col s6 m6 l6">
-
+                    <div class="col s12 m2 l2" style="margin-top: 30px;">
+                        <input type="checkbox" id="cpNow" checked="checked" />
+                        <label for="cpNow">now</label>
                     </div>
-                    <div class="col s6 m6 l6">
-
+                    <div class="col s12 m5 l5">
+                        <label for="cpDate">Date</label>
+                        <input id="cpDate" class="datepicker" type="date" tabindex="-1">
+                    </div>
+                    <div class="col s12 m5 l5">
+                        <label for="cpTime">Time</label>
+                        <input id="cpTime" class="timepicker" type="text" tabindex="-1">
                     </div>
                 </div>
             </div>
@@ -250,6 +256,9 @@
                             <label for="contacts">Choose contacts</label>
                             <div class="error con" style="display: none;">
                                 <label>Select at least one contact</label>
+                            </div>
+                            <div class="error con2" style="display: none;">
+                                <label>Enter a valid email address</label>
                             </div>
                         </div>
                     </div>
@@ -420,7 +429,6 @@
         <!--  Scripts-->
         <script src="js/oauth.js"></script>
         <script src="js/init.js"></script>
-        <!--<script src="js/google.contacts-v3.js"></script>-->
         <script src="js/google.calendar-v3.js"></script>
         <script src="js/modal-actions.js"></script>
     </body>

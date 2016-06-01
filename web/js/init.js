@@ -1,3 +1,14 @@
+var today = new Date();
+//    var day = today.getDate();
+//    var monthIndex = today.getMonth() + 1;
+//    var year = today.getFullYear();
+var time = checkTime(today.getHours()) + ':'
+        + checkTime(today.getMinutes());
+setInterval(function () {
+    time = checkTime(today.getHours()) + ':'
+            + checkTime(today.getMinutes());
+}, 30000);
+
 $(function () {
     var po = document.createElement('script');
     po.type = 'text/javascript';
@@ -5,7 +16,7 @@ $(function () {
     po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(po, s);
-    
+
     initComponents();
     addFormRules();
 
@@ -72,15 +83,14 @@ $(function () {
     $('#addModal #now').click(function () {
         $('#addModal #date, #addModal #time').prop('disabled', $('#addModal #now').is(':checked'));
         if ($('#addModal #now').is(':checked')) {
+            initDateTime();
+        }
+    });
 
-            var today = new Date();
-            var day = today.getDate();
-            var monthIndex = today.getMonth() + 1;
-            var year = today.getFullYear();
-            var time = checkTime(today.getHours()) + ':' + checkTime(today.getMinutes());
-
-            $('#addModal #date').val(year + '-' + monthIndex + '-' + day);
-            $('#addModal #time').val(time);
+    $('#copyModal #cpNow').click(function () {
+        $('#copyModal #cpDate, #copyModal #cpTime').prop('disabled', $('#copyModal #cpNow').is(':checked'));
+        if ($('#copyModal #cpNow').is(':checked')) {
+            initDateTime();
         }
     });
 
@@ -160,6 +170,18 @@ $(function () {
         $('#date').pickadate({
             selectMonths: true,
             selectYears: 15,
+            container: 'body',
+            min: true,
+            format: 'yyyy-mm-dd',
+            today: 'TODAY',
+            clear: '',
+            close: 'DONE'
+        });
+
+        $('#cpDate').pickadate({
+            selectMonths: true,
+            selectYears: 15,
+            container: 'body',
             min: true,
             format: 'yyyy-mm-dd',
             today: 'TODAY',
@@ -170,6 +192,7 @@ $(function () {
         $('#endDate').pickadate({
             selectMonths: true,
             selectYears: 15,
+            container: 'body',
             min: new Date((new Date()).valueOf() + 1000 * 3600 * 24),
             today: '',
             format: 'yyyy-mm-dd',
@@ -180,6 +203,7 @@ $(function () {
         $('#startDate').pickadate({
             selectMonths: true,
             selectYears: 15,
+            container: 'body',
             min: true,
             format: 'yyyy-mm-dd',
             today: 'TODAY',
@@ -191,9 +215,21 @@ $(function () {
             }
         });
 
-        $('#time, #startTime, #endTime').pickatime({
+        $('#time, #cpTime, #startTime, #endTime').pickatime({
             twelvehour: false,
-            default: 'now'
+            autoclose: true,
+            vibrate: true,
+            default: 'now',
+            init: function () {
+
+            },
+            beforeShow: function () {
+//                $('.clockpicker.picker').pickatime('hide');
+//                $('.clockpicker.picker').css('display', 'none');
+                $('.clockpicker.picker').detach().appendTo('body');
+//                $('.clockpicker.picker').css('display', 'block');
+//                $('.clockpicker.picker').pickatime('show');
+            }
         });
 
         initDateTime();
@@ -205,8 +241,38 @@ $(function () {
         $('.button-collapse').sideNav('hide');
     });
 
+    $("#contacts").keyup(function (e) {
+
+        var input = $("#contacts").val();
+        var code = e.which;
+
+        if ((input.length) > 0) {
+
+            if (code === 13) {
+                $('#addForm .con2').css('display', 'none');
+                if (validateEmail(input)) {
+                    if (!document.getElementById(input)) {
+                        $('.contactsList').append('<div id="' + input + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + input + '<i class="material-icons">close</i></div>');
+                    }
+                } else {
+                    $('#addForm .con2').css('display', 'block');
+                }
+                $("#contacts").val('');
+                $("#contacts").focus();
+
+                if (!$('#addForm .contactsList').is(':empty')) {
+                    $('#addForm .con').css('display', 'none');
+                } else {
+                    $('#addForm .con').css('display', 'block');
+                }
+            }
+
+        }
+    });
+
     $("#contacts").autocomplete({
         lookup: function (query, done) {
+
             var result = {suggestions: []};
 
             var d1 = $.get("https://www.google.com/m8/feeds/groups/default/full?alt=json&access_token=" + $.cookie("access_token") + "&v=3.0", function (groupResponse) {
@@ -345,27 +411,21 @@ function onModalComplete() {
 }
 
 function initDateTime() {
-    var today = new Date();
-//    var day = today.getDate();
-//    var monthIndex = today.getMonth() + 1;
-//    var year = today.getFullYear();
-    var time = checkTime(today.getHours()) + ':'
-            + checkTime(today.getMinutes());
-    setInterval(function () {
-        time = checkTime(today.getHours()) + ':'
-                + checkTime(today.getMinutes());
-    }, 30000);
-
-
     $('#date').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+    $('#cpDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
     $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
     $('#endDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
 
-    $('#calendarModal #startTime, #calendarModal #endTime').val(time);
+    $('#calendarModal #startTime, #calendarModal #endTime, #copyModal #cpTime').val(time);
 
     if ($('#addModal #now').is(':checked')) {
-       $('#date').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+        $('#date').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
         $('#addModal #time').val(time);
+    }
+
+    if ($('#copyModal #cpNow').is(':checked')) {
+        $('#cpDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
+        $('#copyModal #cpTime').val(time);
     }
 }
 

@@ -327,12 +327,15 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
     $('a#duplicateScheme').unbind("click").click(function () {
         var card = $(this).parents('.adr_schema');
         $('#uuid').val(card.attr('id'));
+        $('#copyModal .title').text(card.find('#adr_title').text());
         $('#copyModal').openModal({
             complete: function () {
-
+                $("#copyModal #cpNow").prop("checked", true);
+                $('#copyModal .title').text('');
             },
             ready: function () {
-
+                $('#copyModal #cpDate, #copyModal #cpTime').prop('disabled',
+                        $('#copyModal #cpNow').is(':checked'));
             }
         });
     });

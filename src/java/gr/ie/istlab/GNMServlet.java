@@ -98,7 +98,7 @@ public class GNMServlet extends HttpServlet {
                 calendarId = request.getParameter("json[calendarId]");
                 json.addProperty("status", "");
                 String fromCalendar = "";
-                
+
                 try {
                     switch (request.getParameter("json[owner]")) {
                         case "0":
@@ -144,12 +144,40 @@ public class GNMServlet extends HttpServlet {
 
                 break;
             case "COPY":
+                json = new JsonObject();
+                uuid = request.getParameter("json[id]");
+                json.addProperty("status", "");
+
+            try {
+                uuid = GoogleSpreadsheet.getInstance().addScheme("0", "0", "0", request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventStart]") + " - " + request.getParameter("json[eventEnd]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
+            } catch (MalformedURLException | ServiceException ex) {
+                Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+                json.addProperty("id", uuid);
+
+                if ("true".equals(request.getParameter("json[now]"))) {
+                    try {
+                        json.addProperty("status", GoogleMail.getInstance().sendMessage(
+                                GoogleMail.getInstance().createEmail(
+                                        request.getParameter("json[user_email]"),
+                                        request.getParameter("json[contacts]").split(","),
+                                        request.getParameter("json[subject]"),
+                                        request.getParameter("json[message]")),
+                                request.getParameter("json[user_email]"), uuid));
+                    } catch (MessagingException | MalformedURLException | ServiceException ex) {
+                        Logger.getLogger(GNMServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    json.addProperty("status", "PENDING");
+                }
+
+                response.setContentType("application/json");
+                response.getWriter().write(json.toString());
                 break;
             default:
                 break;
         }
-//        response.sendRedirect("index.jsp");
-//        response.setHeader("REFRESH", "0");
     }
 
     @Override

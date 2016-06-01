@@ -225,31 +225,25 @@ function copyCard() {
     console.log('calendarId', card.find('#calendarId').val());
     console.log('eventId', card.find('#eventId').val());
     console.log('eventTimestamp', card.attr('data-event-timestamp'));
+    console.log('now', $('#copyModal #cpNow').is(':checked'));
+    console.log('date', $('#copyModal #cpDate').val());
+    console.log('time', $('#copyModal #cpTime').val());
     console.log('adr_title', card.find('#adr_title').text());
     console.log('adr_description', card.find('#adr_description').text());
 
-//            subject: $('#addModal #subject').val(),
-//            message: $('#addModal #message').val(),
-//            now: $('#addModal #now').is(':checked'),
-//            calendarId: $('#addModal #calendars option:selected').val(),
-//            date: $('#addModal #date').val(),
-//            time: $('#addModal #time').val(),
-//            eventStart: $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val(),
-//            eventEnd: $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val()
+    var json = {
+        id: $('#uuid').val(),
+        type: 'COPY'
+    };
 
-//    var json = {
-//        id: $('#uuid').val(),
-//        user_email: $.cookie("email"),
-//        type: 'COPY'
-//    };
-//
-//    $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
-//        if (xhr.status === 200) {
-//            $("div[id=" + $('#uuid').val() + "]").remove();
-//        }
-//        $('.progress').toggle();
-//        $("#schemesContainer").mixItUp('filter', 'all');
-//        $('#schemesContainer').mixItUp('sort', 'timestamp:desc');
-//    });
+    $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
+        if (xhr.status === 200) {
+            $("div[id=" + $('#uuid').val() + "]").clone().appendTo("#schemes #schemesContainer.row");
+            response.id;
+        }
+        $('.progress').toggle();
+        $("#schemesContainer").mixItUp('filter', 'all');
+        $('#schemesContainer').mixItUp('sort', 'timestamp:desc');
+    });
 
 }
