@@ -247,7 +247,6 @@ $(function () {
         var code = e.which;
 
         if ((input.length) > 0) {
-
             if (code === 13) {
                 $('#addForm .con2').css('display', 'none');
                 if (validateEmail(input)) {

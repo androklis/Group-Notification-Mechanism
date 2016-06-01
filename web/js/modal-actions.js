@@ -193,12 +193,12 @@ function updateCard() {
                     $('#errorModal').openModal();
                 } else {
                     if ($("div[id=" + json.id + "]").hasClass('owner')) {
+                        $("div[id=" + json.id + "]").remove();
                         createCard(json.id, json.calendarId, response.eventId, 'scheme owner', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
                     } else {
+                        $("div[id=" + json.id + "]").remove();
                         createCard(json.id, json.calendarId, response.eventId, 'scheme', json.subject, json.message, json.contacts, json.date + ' ' + json.time + '||' + $('#calendarModal #startDate').val() + ' ' + $('#calendarModal #startTime').val() + ' - ' + $('#calendarModal #endDate').val() + ' ' + $('#calendarModal #endTime').val(), response.status, '#ffab40');
                     }
-
-                    $("div[id=" + json.id + "]").remove();
 
                     $('.progress').toggle();
                     $('#addModal').closeModal();
@@ -219,27 +219,21 @@ function copyCard() {
 
     var card = $("div[id=" + $('#uuid').val() + "]");
 
-    console.log('uuid', $('#uuid').val());
-    console.log('email', $.cookie("email"));
-    console.log('rcpts', card.find('#rcpts').val());
-    console.log('calendarId', card.find('#calendarId').val());
-    console.log('eventId', card.find('#eventId').val());
-    console.log('eventTimestamp', card.attr('data-event-timestamp'));
-    console.log('now', $('#copyModal #cpNow').is(':checked'));
-    console.log('date', $('#copyModal #cpDate').val());
-    console.log('time', $('#copyModal #cpTime').val());
-    console.log('adr_title', card.find('#adr_title').text());
-    console.log('adr_description', card.find('#adr_description').text());
-
     var json = {
         id: $('#uuid').val(),
+        user_email: $.cookie("email"),
+        contacts: card.find('#rcpts').val(),
+        subject: card.find('#adr_title').text(),
+        message: card.find('#adr_description').text(),
+        now: $('#copyModal #cpNow').is(':checked'),
+        date: $('#copyModal #cpDate').val(),
+        time: $('#copyModal #cpTime').val(),
         type: 'COPY'
     };
 
     $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
         if (xhr.status === 200) {
-            $("div[id=" + $('#uuid').val() + "]").clone().appendTo("#schemes #schemesContainer.row");
-            response.id;
+            createCard(response.id, "0", "0", 'scheme', card.find('#adr_title').text(), card.find('#adr_description').text(), card.find('#rcpts').val(), json.date + ' ' + json.time + '||', response.status, '#ffab40');
         }
         $('.progress').toggle();
         $("#schemesContainer").mixItUp('filter', 'all');

@@ -80,6 +80,8 @@ function servletCall(code) {
         if (xhr.status === 200) {
             loadCards(response.schemes);
             $('#spinnerContainer').attr('style', 'display: none');
+            $('.fixed-action-btn').attr('style', 'display: block');
+            $('#schemes').attr('style', 'display: block');
         }
     });
 }
@@ -99,9 +101,7 @@ function togglePage(status) {
         case "signedIn":
             $('#welcomeScreen').attr('style', 'display: none');
             $('#spinnerContainer').attr('style', 'display: block');
-            $('#schemes').attr('style', 'display: block');
             $('#user').attr('style', 'display: block');
-            $('.fixed-action-btn').attr('style', 'display: block');
             break;
         case "signedOut":
             $('#welcomeScreen').attr('style', 'display: block');
