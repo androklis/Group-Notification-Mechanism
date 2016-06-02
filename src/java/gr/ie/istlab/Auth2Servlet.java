@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -38,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 public class Auth2Servlet extends HttpServlet {
 
     private JsonObject json;
-    private ScheduledExecutorService exec;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -72,7 +70,6 @@ public class Auth2Servlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        exec.shutdown();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -132,14 +129,6 @@ public class Auth2Servlet extends HttpServlet {
         } catch (GeneralSecurityException | IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        exec = Executors.newSingleThreadScheduledExecutor();
-//        exec.scheduleAtFixedRate(new Runnable() {
-//            @Override
-//            public void run() {
-//                System.out.println("lala");
-//            }
-//        }, 0, 5, TimeUnit.SECONDS);
     }
 
     private GoogleCredential getGoogleCredential(String authCode) {

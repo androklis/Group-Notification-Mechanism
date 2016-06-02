@@ -75,4 +75,40 @@ public class GoogleCalendar {
         }
     }
 
+    public void updateEvent(String fromCalendarId, String toCalendarId, String eventId, String userEmail, String summary, String description, String guests, String start, String end, String timeZoneOffset) {
+
+        try {
+            calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
+
+            Event event;
+
+            if (!"".equals(fromCalendarId) && fromCalendarId != null) {
+                event = calendarService.events().get(fromCalendarId, eventId).execute();
+            } else {
+                event = calendarService.events().get(toCalendarId, eventId).execute();
+            }
+            event.setSummary(summary).setDescription(description);
+
+            event.setStart(new EventDateTime().setDateTime(new DateTime(start.split(" ")[0] + "T" + start.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
+            event.setEnd(new EventDateTime().setDateTime(new DateTime(end.split(" ")[0] + "T" + end.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
+
+            ArrayList<EventAttendee> attendees = new ArrayList<>();
+
+            for (String guest : guests.split(",")) {
+                attendees.add(new EventAttendee().setEmail(guest));
+            }
+
+            event.setAttendees(attendees);
+
+            Event updatedEvent = calendarService.events().update(fromCalendarId, event.getId(), event).execute();
+
+            if (!"".equals(fromCalendarId) && fromCalendarId != null) {
+                calendarService.events().move(fromCalendarId, updatedEvent.getId(), toCalendarId).execute();
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

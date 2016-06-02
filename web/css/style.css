@@ -10,6 +10,95 @@
     max-width: inherit;
 }
 
+.container .row {
+    margin-left: 0px; 
+    margin-right: 0px; 
+}
+
+label[for=filter], label[for=sort] {
+    color: #29b6f6;
+    font-size: 15px;
+}
+
+.more i{
+    position: absolute;
+}
+
+#user_infoContainer {
+    margin-top: 10px;
+}
+
+.user-wrapper {
+    display: inline-block;
+    height: 32px;
+    margin: 2px 0;
+    text-align: right;
+    vertical-align: top;
+    padding-left: 16px;
+}
+
+.user-links-wrapper {
+    display: inline-block;
+    /*margin-right: 10px;*/
+}
+
+.user-links-row {
+    height: 16px;
+    line-height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.user-link {
+    display: inline-block;
+    line-height: 16px;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    padding: 0px;
+    opacity: 0.7;
+}
+
+.user-link:hover:not(span), .userAvatar:hover {
+    background-color: transparent;
+    text-decoration: underline;
+    opacity: 1;
+}
+
+.user-change {
+    max-width: calc(( 100% - 10px)*.625);
+}
+
+.user-pipe {
+    margin: 0 4px;
+    opacity: 0.7;
+}
+
+.user-signout {
+    max-width: calc(( 100% - 10px)*.375);
+}
+
+.avatar {
+    border-radius: 50%;
+    height: 42px;
+    vertical-align: top;
+    width: 42px;
+}
+
+.carousel{
+    height: 300px !important;
+}
+
+.carousel .carousel-item {
+    width: 300px;
+    cursor: default;
+}
+
+.suggestion{
+    width: 300px !important;
+}
+
 .btn{
     background-color: #29b6f6;
 }
@@ -77,6 +166,10 @@ label.active{
     padding: 2rem;
 }
 
+.select-wrapper + label {
+    top:  0.8rem;
+}
+
 .attendees .chip {
     margin: 5px;
 }
@@ -94,6 +187,7 @@ span#adr_badge{
 
 span#adr_type {
     position: inherit;
+    min-width: 2rem;
 }
 
 span#timestamp {
@@ -131,8 +225,7 @@ p#adr_description {
 }
 
 div#paginationDiv{
-    text-align: center;
-    padding-top: 15px;
+    display: inline-flex;
 }
 
 #schemesContainer .mix{
@@ -141,6 +234,14 @@ div#paginationDiv{
 
 .chip.active{
     background-color: #29b6f6;
+}
+
+.contactsList > .chip{
+    margin: 2px;
+}
+
+.modal a.disabled {
+    pointer-events: none;
 }
 
 .autocomplete-suggestions { 
@@ -152,6 +253,7 @@ div#paginationDiv{
     padding: 2px 5px; 
     white-space: nowrap; 
     overflow: hidden; 
+    cursor: default;
 }
 .autocomplete-selected {
     background: #F0F0F0; 
@@ -166,10 +268,6 @@ div#paginationDiv{
 .autocomplete-group strong { 
     display: block; 
     border-bottom: 1px solid #000; 
-}
-
-#addForm input, #addForm textarea {
-    margin: 0px;
 }
 
 div.error {
@@ -200,3 +298,52 @@ div.error label{
 #suggestionsSwitch.switch label input[type=checkbox]:checked + .lever:after, #mapSwitch.switch label input[type=checkbox]:checked + .lever:after {
     background-color: #29b6f6;
 }
+/*Pagination Controls*/
+.pager-list span {
+    display: inline-block;
+    font-size: 1.2rem;
+    padding: 0 10px;
+    line-height: 30px;
+    border-radius: 2px;
+    text-align: center;
+    color: #444;
+    cursor: pointer;
+}
+
+.pager-list span.active span {
+    color: #fff;
+    background-color: #29b6f6;
+}
+
+.pager-list span.active{
+    cursor: default;
+}
+
+.pager-list span.disabled{
+    cursor: not-allowed;
+}
+
+.pager-list span.disabled span{
+    cursor: not-allowed;
+    color: #999;
+}
+
+.pager-list span.pager {
+    display: inline-block;
+    float: none;
+}
+
+@media only screen and (max-width: 992px) {
+    .pager-list {
+        width: 100%;
+    }
+    .pager-list span.page-prev,
+    .pager-list span.page-next {
+        width: 10%;
+    }
+    .pager-list span.pager {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+/*Pagination Controls*/

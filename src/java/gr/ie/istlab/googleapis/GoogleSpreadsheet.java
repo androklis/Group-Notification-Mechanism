@@ -1,5 +1,7 @@
 package gr.ie.istlab.googleapis;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.gdata.client.spreadsheet.ListQuery;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,7 +19,12 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 
 public class GoogleSpreadsheet {
 
@@ -48,7 +55,7 @@ public class GoogleSpreadsheet {
 
         WorksheetEntry worksheet = new WorksheetEntry();
         worksheet.setTitle(new PlainTextConstruct(userEmail));
-        worksheet.setColCount(9);
+        worksheet.setColCount(10);
         worksheet.setRowCount(1);
 
         URL worksheetFeedUrl = spreadsheet.getWorksheetFeedUrl();
@@ -73,17 +80,19 @@ public class GoogleSpreadsheet {
         cellFeed.insert(cellEntry);
         cellEntry = new CellEntry(1, 3, "EVENT_ID");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 4, "ACCESS_ROLE");
+        cellEntry = new CellEntry(1, 4, "EVENT_TIMESTAMP");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 5, "RECIPIENTS");
+        cellEntry = new CellEntry(1, 5, "ACCESS_ROLE");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 6, "SUBJECT");
+        cellEntry = new CellEntry(1, 6, "RECIPIENTS");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 7, "MESSAGE");
+        cellEntry = new CellEntry(1, 7, "SUBJECT");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 8, "TIMESTAMP");
+        cellEntry = new CellEntry(1, 8, "MESSAGE");
         cellFeed.insert(cellEntry);
-        cellEntry = new CellEntry(1, 9, "STATUS");
+        cellEntry = new CellEntry(1, 9, "TIMESTAMP");
+        cellFeed.insert(cellEntry);
+        cellEntry = new CellEntry(1, 10, "STATUS");
         cellFeed.insert(cellEntry);
 
         worksheet.setEtag("*");
@@ -93,7 +102,7 @@ public class GoogleSpreadsheet {
     }
 
     public String addScheme(String calendarId, String eventId, String accessRole, String userEmail, String to, String subject, String message,
-            String timestamp) throws MalformedURLException, IOException,
+            String eventTimestamp, String timestamp) throws MalformedURLException, IOException,
             ServiceException {
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
@@ -105,6 +114,7 @@ public class GoogleSpreadsheet {
         row.getCustomElements().setValueLocal("UUID", uuid);
         row.getCustomElements().setValueLocal("CALENDARID", calendarId);
         row.getCustomElements().setValueLocal("EVENTID", eventId);
+        row.getCustomElements().setValueLocal("EVENTTIMESTAMP", eventTimestamp);
         row.getCustomElements().setValueLocal("ACCESSROLE", accessRole);
         row.getCustomElements().setValueLocal("RECIPIENTS", to);
         row.getCustomElements().setValueLocal("SUBJECT", subject);
@@ -143,46 +153,42 @@ public class GoogleSpreadsheet {
 
     }
 
-//    public void checkWorksheet(String fullTextSearchString) throws IOException,
-//            ServiceException, MessagingException {
-//
-//        for (WorksheetEntry worksheet : getAllWorksheets()) {
-//            ListQuery query = new ListQuery(worksheet.getListFeedUrl());
-//            query.setFullTextQuery(fullTextSearchString);
-//            ListFeed feed = spreadsheetService.query(query, ListFeed.class);
-//
-//            feed.getEntries().stream().filter((entry) -> (GOOGLE_CREDENTIALS.get(entry.getTitle().getPlainText()) != null)).forEach((entry) -> {
-//                entry.getCustomElements().getTags().stream().filter((tag) -> ("timestamp".equals(tag)
-//                        && (fullTextSearchString.split(" ")[1] + " " + fullTextSearchString
-//                        .split(" ")[2]).equals(entry
-//                        .getCustomElements().getValue(tag)))).forEach((_item) -> {
-//                    GoogleMail
-//                            .getInstance()
-//                            .sendMessage(
-//                                    GoogleMail
-//                                    .getInstance()
-//                                    .createEmail(
-//                                            worksheet
-//                                            .getTitle()
-//                                            .getPlainText(),
-//                                            (entry.getCustomElements()
-//                                            .getValue(
-//                                                    "recipients")
-//                                            .split(", ")),
-//                                            entry.getCustomElements()
-//                                            .getValue(
-//                                                    "subject"),
-//                                            entry.getCustomElements()
-//                                            .getValue(
-//                                                    "message")),
-//                                    worksheet.getTitle().getPlainText(),
-//                                    entry.getCustomElements().getValue(
-//                                            "uuid"));
-//                });
-//            });
-//        }
-//
-//    }
+    public void checkWorksheet(String fullTextSearchString) throws IOException,
+            ServiceException {
+
+        for (Map.Entry<String, GoogleCredential> entry : GOOGLE_CREDENTIALS.entrySet()) {
+
+            WorksheetEntry worksheet = getWorksheet(entry.getKey());
+            URL listFeedUrl = worksheet.getListFeedUrl();
+            ListFeed listFeed = (ListFeed) spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
+
+            for (ListEntry listEntry : listFeed.getEntries()) {
+                for (String tag : listEntry.getCustomElements().getTags()) {
+                    if ("PENDING".equals(listEntry.getCustomElements().getValue("status"))) {
+                        if ((fullTextSearchString).equals(listEntry.getCustomElements().getValue("timestamp"))) {
+
+                            try {
+                                GoogleMail.getInstance().sendMessage(
+                                        GoogleMail.getInstance().createEmail(
+                                                worksheet.getTitle().getPlainText(),
+                                                listEntry.getCustomElements().getValue("recipients").split(","),
+                                                listEntry.getCustomElements().getValue("subject"),
+                                                listEntry.getCustomElements().getValue("message")),
+                                        worksheet.getTitle().getPlainText(), listEntry.getCustomElements().getValue("uuid"));
+                                break;
+                            } catch (MessagingException ex) {
+                                Logger.getLogger(GoogleSpreadsheet.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     public JsonArray getSchemes(String userEmail) throws IOException, ServiceException {
 
         JsonArray jsonArray = new JsonArray();
@@ -204,15 +210,13 @@ public class GoogleSpreadsheet {
         return jsonArray;
     }
 
-    public void updateScheme(String userEmail, String uuid, String status)
+    public void updateSchemeStatus(String userEmail, String uuid, String status)
             throws MalformedURLException, IOException, ServiceException {
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class
-        );
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
@@ -263,29 +267,38 @@ public class GoogleSpreadsheet {
 
     }
 
-    public void editScheme(String uuid, String userEmail, String to,
-            String subject, String message, String timestamp)
-            throws MalformedURLException, IOException, ServiceException {
+    public String editScheme(String uuid, String calendarId, String eventId, String userEmail, String to, String subject, String message,
+            String eventTimestamp, String timestamp) throws MalformedURLException, IOException,
+            ServiceException {
+
+        String fromCalendar = "";
 
         WorksheetEntry worksheet = getWorksheet(userEmail);
 
         URL listFeedUrl = worksheet.getListFeedUrl();
-        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl,
-                ListFeed.class
-        );
+        ListFeed listFeed = spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
         for (ListEntry listEntry : listFeed.getEntries()) {
             if (uuid.equals(listEntry.getTitle().getPlainText())) {
 
-                listEntry.getCustomElements().setValueLocal("Recipients", to);
-                listEntry.getCustomElements().setValueLocal("Subject", subject);
-                listEntry.getCustomElements().setValueLocal("Message", message);
-                listEntry.getCustomElements().setValueLocal("Timestamp",
-                        "'" + timestamp);
+                if (!calendarId.equals(listEntry.getCustomElements().getValue("CALENDARID"))) {
+                    fromCalendar = listEntry.getCustomElements().getValue("CALENDARID");
+                    listEntry.getCustomElements().setValueLocal("CALENDARID", calendarId);
+                }
+
+                listEntry.getCustomElements().setValueLocal("EVENTID", eventId);
+                listEntry.getCustomElements().setValueLocal("EVENTTIMESTAMP", eventTimestamp);
+                listEntry.getCustomElements().setValueLocal("RECIPIENTS", to);
+                listEntry.getCustomElements().setValueLocal("SUBJECT", subject);
+                listEntry.getCustomElements().setValueLocal("MESSAGE", message);
+                listEntry.getCustomElements().setValueLocal("TIMESTAMP", "'" + timestamp);
+                listEntry.getCustomElements().setValueLocal("STATUS", "PENDING");
 
                 listEntry.update();
+                break;
             }
         }
+        return fromCalendar;
     }
 
 }

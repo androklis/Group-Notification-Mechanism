@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/CheckServlet</url>
+        <description>Cron Job to check if a notification must be sent to recipients</description>
+        <schedule>every 1 minutes</schedule>
+    </cron>
+</cronentries>

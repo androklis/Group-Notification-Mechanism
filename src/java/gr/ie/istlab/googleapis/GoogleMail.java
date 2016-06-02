@@ -82,7 +82,7 @@ public class GoogleMail {
 
         email.setSubject(subject, "UTF-8");
 
-        email.setContent(bodyText, "text/html; charset=utf-8");
+        email.setContent(bodyText + "<br/><br/><em>This notification was sent from <a href='group-notification-mechanism.appspot.com'>iSTLab Group Notification Mechanism Mashup Web Application</a>.</em>", "text/html; charset=utf-8");
 
         return email;
     }
@@ -135,7 +135,7 @@ public class GoogleMail {
             Message message = createMessageWithEmail(email);
             message = gmailService.users().messages().send(from, message).execute();
 
-            GoogleSpreadsheet.getInstance().updateScheme(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
+            GoogleSpreadsheet.getInstance().updateSchemeStatus(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
             return message.get("labelIds").toString().replace("[", "").replace("]", "").trim();
         } catch (MessagingException ex) {
             Logger.getLogger(GoogleMail.class.getName()).log(Level.SEVERE, null, ex);
