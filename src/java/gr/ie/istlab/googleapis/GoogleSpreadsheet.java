@@ -1,5 +1,6 @@
 package gr.ie.istlab.googleapis;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.gdata.client.spreadsheet.ListQuery;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -20,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -154,27 +156,37 @@ public class GoogleSpreadsheet {
     public void checkWorksheet(String fullTextSearchString) throws IOException,
             ServiceException {
 
-        for (WorksheetEntry worksheet : getAllWorksheets()) {
-            ListQuery query = new ListQuery(worksheet.getListFeedUrl());
-            query.setFullTextQuery(fullTextSearchString);
-            ListFeed feed = spreadsheetService.query(query, ListFeed.class);
+        for (Map.Entry<String, GoogleCredential> entry : GOOGLE_CREDENTIALS.entrySet()) {
 
-            for (ListEntry entry : feed.getEntries()) {
+            WorksheetEntry worksheet = getWorksheet(entry.getKey());
+            URL listFeedUrl = worksheet.getListFeedUrl();
+            ListFeed listFeed = (ListFeed) spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
-                if (GOOGLE_CREDENTIALS.get(entry.getTitle().getPlainText()) != null) {
-                    for (String tag : entry.getCustomElements().getTags()) {
+            for (ListEntry listEntry : listFeed.getEntries()) {
+                for (String tag : listEntry.getCustomElements().getTags()) {
+                    if ("PENDING".equals(listEntry.getCustomElements().getValue("status"))) {
+                        if ((fullTextSearchString).equals(listEntry.getCustomElements().getValue("timestamp"))) {
 
-                        if ("TIMESTAMP".equals(tag) && (fullTextSearchString.split(" ")[1] + " " + fullTextSearchString.split(" ")[2]).equals(entry.getCustomElements().getValue(tag))) {
                             try {
-                                GoogleMail.getInstance().sendMessage(GoogleMail.getInstance().createEmail(worksheet.getTitle().getPlainText(), (entry.getCustomElements().getValue("RECIPIENTS").split(",")), entry.getCustomElements().getValue("SUBJECT"), entry.getCustomElements().getValue("MESSAGE")), worksheet.getTitle().getPlainText(), entry.getCustomElements().getValue("UUID"));
+                                GoogleMail.getInstance().sendMessage(
+                                        GoogleMail.getInstance().createEmail(
+                                                worksheet.getTitle().getPlainText(),
+                                                listEntry.getCustomElements().getValue("recipients").split(","),
+                                                listEntry.getCustomElements().getValue("subject"),
+                                                listEntry.getCustomElements().getValue("message")),
+                                        worksheet.getTitle().getPlainText(), listEntry.getCustomElements().getValue("uuid"));
+                                break;
                             } catch (MessagingException ex) {
                                 Logger.getLogger(GoogleSpreadsheet.class.getName()).log(Level.SEVERE, null, ex);
                             }
+
+                            break;
                         }
                     }
                 }
             }
         }
+
     }
 
     public JsonArray getSchemes(String userEmail) throws IOException, ServiceException {

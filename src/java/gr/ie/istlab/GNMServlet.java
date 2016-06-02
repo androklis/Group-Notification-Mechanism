@@ -102,7 +102,7 @@ public class GNMServlet extends HttpServlet {
                 try {
                     switch (request.getParameter("json[owner]")) {
                         case "0":
-                            GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventStart]") + " - " + request.getParameter("json[eventEnd]"), request.getParameter("json[timestamp]"));
+                            GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), "", request.getParameter("json[date]") + " " + request.getParameter("json[time]"));
                             break;
                         case "1":
                             fromCalendar = GoogleSpreadsheet.getInstance().editScheme(uuid, calendarId, eventId, request.getParameter("json[user_email]"), request.getParameter("json[contacts]"), request.getParameter("json[subject]"), request.getParameter("json[message]"), request.getParameter("json[eventStart]") + " - " + request.getParameter("json[eventEnd]"), request.getParameter("json[date]") + " " + request.getParameter("json[time]"));

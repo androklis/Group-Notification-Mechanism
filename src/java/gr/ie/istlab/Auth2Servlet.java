@@ -22,19 +22,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.text.DateFormat;
 
 /**
  *
@@ -43,7 +37,6 @@ import java.text.DateFormat;
 public class Auth2Servlet extends HttpServlet {
 
     private JsonObject json;
-    private ScheduledExecutorService exec;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -77,7 +70,6 @@ public class Auth2Servlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        exec.shutdown();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -137,19 +129,6 @@ public class Auth2Servlet extends HttpServlet {
         } catch (GeneralSecurityException | IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        exec = Executors.newSingleThreadScheduledExecutor();
-//        exec.scheduleAtFixedRate(new Runnable() {
-//            @Override
-//            public void run() {
-//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//
-//                Date date = new Date();
-//                Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, dateFormat.format(date));
-//
-//          GoogleSpreadsheet.getInstance().checkWorksheet(fullTextSearchString);
-//            }
-//        }, 0, 5, TimeUnit.SECONDS);
     }
 
     private GoogleCredential getGoogleCredential(String authCode) {

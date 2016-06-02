@@ -9,6 +9,10 @@
         <servlet-name>GNMServlet</servlet-name>
         <servlet-class>gr.ie.istlab.GNMServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CheckServlet</servlet-name>
+        <servlet-class>gr.ie.istlab.CheckServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Auth2Servlet</servlet-name>
         <url-pattern>/Auth2Servlet</url-pattern>
@@ -16,6 +20,10 @@
     <servlet-mapping>
         <servlet-name>GNMServlet</servlet-name>
         <url-pattern>/GNMServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckServlet</servlet-name>
+        <url-pattern>/CheckServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
