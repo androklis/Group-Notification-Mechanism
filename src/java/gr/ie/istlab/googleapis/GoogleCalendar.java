@@ -1,5 +1,7 @@
 package gr.ie.istlab.googleapis;
 
+import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
+
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -7,18 +9,23 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A helper class for GoogleCalendar API.
+ *
+ * @author Androklis Gregoriou
+ *
+ */
 public class GoogleCalendar {
 
-    // Singleton instance of GoogleCalendar class
-    private static GoogleCalendar instance = null;
+    private static GoogleCalendar instance = null;// Singleton instance of GoogleCalendar class
 
-    private Calendar calendarService;
+    private Calendar calendarService; // Calendar Service instance
 
     /**
      * GoogleCalendar constructor.
@@ -40,7 +47,29 @@ public class GoogleCalendar {
         return instance;
     }
 
-    public String addEvent(String calendarId, String userEmail, String summary, String description, String guests, String start, String end, String timeZoneOffset) {
+    /**
+     * Adds a new event to selected calendar on Google Calendar and returns the
+     * id of the new event.
+     *
+     *
+     * @param calendarId {String} - The id of the calendar for the new
+     * scheme/event
+     * @param summary {String} - Event summary to be placed as event title
+     * @param description {String} - Event description to be placed as event
+     * description
+     * @param guests {String} - A String of comma separated email addresses, to
+     * be used as event attendees
+     * @param start {String} - Event start timestamp with yyyy-MM-dd HH:mm
+     * format
+     * @param end {String} - Event end timestamp with yyyy-MM-dd HH:mm format
+     * @param timeZoneOffset {String} - Time zone offset in seconds
+     * @param userEmail {String} - Event creator
+     * @return created event's id
+     *
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. Exceptions produced by failed or interrupted I/O operations
+     */
+    public String addEvent(String calendarId, String userEmail, String summary, String description, String guests, String start, String end, String timeZoneOffset) throws IOException {
 
         calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
 
@@ -57,57 +86,79 @@ public class GoogleCalendar {
 
         event.setAttendees(attendees);
 
-        try {
-            event = calendarService.events().insert(calendarId, event).execute();
-            return event.getId();
-        } catch (IOException ex) {
-            Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
-            return "0";
-        }
+        event = calendarService.events().insert(calendarId, event).execute();
+        return event.getId();
     }
 
-    public void deleteEvent(String userEmail, String calendarId, String eventId) {
+    /**
+     * Deletes an event based on given calendar id and event id.
+     *
+     *
+     * @param userEmail {String} - User's email to get user's worksheet
+     * @param calendarId {String} - The id of the calendar where the event is in
+     * @param eventId {String} - The id of the event that has to be deleted
+     *
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. Exceptions produced by failed or interrupted I/O operations
+     */
+    public void deleteEvent(String userEmail, String calendarId, String eventId) throws IOException {
         calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
-        try {
-            calendarService.events().delete(calendarId, eventId).execute();
-        } catch (IOException ex) {
-            Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        calendarService.events().delete(calendarId, eventId).execute();
     }
 
-    public void updateEvent(String fromCalendarId, String toCalendarId, String eventId, String userEmail, String summary, String description, String guests, String start, String end, String timeZoneOffset) {
+    /**
+     * Edits a Notification Scheme to user's worksheet on Google Spreadsheet.
+     * Also updates the event if an event is associated with the scheme.
+     *
+     *
+     * @param fromCalendarId {String} - The id of the calendar where the event
+     * is in
+     * @param toCalendarId {String} - The id of the calendar for the event to be
+     * moved into
+     * @param eventId {String} - The id of the event to be updated
+     * @param userEmail {String} - Event creator
+     * @param summary {String} - Event summary to be placed as event title
+     * @param description {String} - Event description to be placed as event
+     * description
+     * @param guests {String} - A String of comma separated email addresses, to
+     * be used as event attendees
+     * @param start {String} - Event start timestamp with yyyy-MM-dd HH:mm
+     * format
+     * @param end {String} - Event end timestamp with yyyy-MM-dd HH:mm format
+     * @param timeZoneOffset {String} - Time zone offset in seconds
+     *
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. Exceptions produced by failed or interrupted I/O operations
+     */
+    public void updateEvent(String fromCalendarId, String toCalendarId, String eventId, String userEmail, String summary, String description, String guests, String start, String end, String timeZoneOffset) throws IOException {
 
-        try {
-            calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
+        calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
 
-            Event event;
+        Event event;
 
-            if (!"".equals(fromCalendarId) && fromCalendarId != null) {
-                event = calendarService.events().get(fromCalendarId, eventId).execute();
-            } else {
-                event = calendarService.events().get(toCalendarId, eventId).execute();
-            }
-            event.setSummary(summary).setDescription(description);
+        if (!"".equals(fromCalendarId) && fromCalendarId != null) {
+            event = calendarService.events().get(fromCalendarId, eventId).execute();
+        } else {
+            event = calendarService.events().get(toCalendarId, eventId).execute();
+        }
+        event.setSummary(summary).setDescription(description);
 
-            event.setStart(new EventDateTime().setDateTime(new DateTime(start.split(" ")[0] + "T" + start.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
-            event.setEnd(new EventDateTime().setDateTime(new DateTime(end.split(" ")[0] + "T" + end.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
+        event.setStart(new EventDateTime().setDateTime(new DateTime(start.split(" ")[0] + "T" + start.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
+        event.setEnd(new EventDateTime().setDateTime(new DateTime(end.split(" ")[0] + "T" + end.split(" ")[1] + ":00" + timeZoneOffset + ":00")));
 
-            ArrayList<EventAttendee> attendees = new ArrayList<>();
+        ArrayList<EventAttendee> attendees = new ArrayList<>();
 
-            for (String guest : guests.split(",")) {
-                attendees.add(new EventAttendee().setEmail(guest));
-            }
+        for (String guest : guests.split(",")) {
+            attendees.add(new EventAttendee().setEmail(guest));
+        }
 
-            event.setAttendees(attendees);
+        event.setAttendees(attendees);
 
-            Event updatedEvent = calendarService.events().update(fromCalendarId, event.getId(), event).execute();
+        Event updatedEvent = calendarService.events().update(fromCalendarId, event.getId(), event).execute();
 
-            if (!"".equals(fromCalendarId) && fromCalendarId != null) {
-                calendarService.events().move(fromCalendarId, updatedEvent.getId(), toCalendarId).execute();
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(GoogleCalendar.class.getName()).log(Level.SEVERE, null, ex);
+        if (!"".equals(fromCalendarId) && fromCalendarId != null) {
+            calendarService.events().move(fromCalendarId, updatedEvent.getId(), toCalendarId).execute();
         }
     }
 

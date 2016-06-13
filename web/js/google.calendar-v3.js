@@ -205,16 +205,10 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 element.find("#adr_type").html('<i class="material-icons">event</i>');
             }
 
-            $('.carousel').removeClass('initialized');
-            var carouselItem = document.createElement('a');
-            carouselItem.setAttribute('href', "#" + $('.carousel a.carousel-item').length);
-            carouselItem.innerHTML = element.outerHTML();
-            carouselItem.setAttribute('class', 'carousel-item');
-            $('.carousel').append(carouselItem);
-            $('.carousel').carousel({
-                full_width: true,
-                padding: 5
-            });
+            element.css('display', 'block');
+
+            $(".owl-carousel").data('owlCarousel').addItem(element);
+
             break;
     }
 
@@ -223,24 +217,29 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         var datepicker = $('#date').pickadate({});
         var picker = datepicker.pickadate('picker');
         var rcpts = card.find('#rcpts').val();
+
         $.each(rcpts.split(','), function (index, value) {
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
-                if (response.feed.entry[0].gd$email) {
-                    if (response.feed.entry[0].title.$t.length > 0) {
-                        if ((response.feed.entry[0].title.$t).indexOf('Google+') < 0) {
+                if (response.feed.entry) {
+                    if (response.feed.entry[0].gd$email) {
+                        if (response.feed.entry[0].title.$t.length > 0) {
+                            if ((response.feed.entry[0].title.$t).indexOf('Google+') < 0) {
+                                if (response.feed.entry[0].link[0].gd$etag) {
+                                    $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                } else {
+                                    $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                }
+                            }
+                        } else {
                             if (response.feed.entry[0].link[0].gd$etag) {
-                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
                             } else {
-                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
                             }
                         }
-                    } else {
-                        if (response.feed.entry[0].link[0].gd$etag) {
-                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
-                        } else {
-                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
-                        }
                     }
+                } else {
+                    $('#addModal .contactsList').append('<div id="' + value + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + value + '<i class="material-icons">close</i></div>');
                 }
             });
         });
@@ -252,7 +251,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 $('#addModal #now').is(':checked'));
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
         $('#addModal #message').val(card.find('#adr_description').text()).change();
-        $('#addModal #eventId').val(card.find('#eventID').val());
+        $('#addModal #eventId').val(card.find('#eventId').val());
         $('#addModal').openModal({
             complete: function () {
                 onModalComplete();
@@ -270,22 +269,26 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         var rcpts = card.find('#rcpts').val();
         $.each(rcpts.split(','), function (index, value) {
             $.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&access_token=" + $.cookie("access_token") + "&q=" + value + "&max-results=100&v=3.0", function (response) {
-                if (response.feed.entry[0].gd$email) {
-                    if (response.feed.entry[0].title.$t.length > 0) {
-                        if ((response.feed.entry[0].title.$t).indexOf('Google+') < 0) {
+                if (response.feed.entry) {
+                    if (response.feed.entry[0].gd$email) {
+                        if (response.feed.entry[0].title.$t.length > 0) {
+                            if ((response.feed.entry[0].title.$t).indexOf('Google+') < 0) {
+                                if (response.feed.entry[0].link[0].gd$etag) {
+                                    $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                } else {
+                                    $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                }
+                            }
+                        } else {
                             if (response.feed.entry[0].link[0].gd$etag) {
-                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
                             } else {
-                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].title.$t + '<i class="material-icons">close</i></div>');
+                                $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
                             }
                         }
-                    } else {
-                        if (response.feed.entry[0].link[0].gd$etag) {
-                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="' + (response.feed.entry[0].link[0].href).replace('?v=3.0', '').trim() + "?access_token=" + $.cookie("access_token") + '">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
-                        } else {
-                            $('#addModal .contactsList').append('<div id="' + response.feed.entry[0].gd$email[0].address + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + response.feed.entry[0].gd$email[0].address + '<i class="material-icons">close</i></div>');
-                        }
                     }
+                } else {
+                    $('#addModal .contactsList').append('<div id="' + value + '" class="chip"><img src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50">' + value + '<i class="material-icons">close</i></div>');
                 }
             });
         });
@@ -296,6 +299,8 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         } else {
             $('#eventSettings').removeClass('disabled');
         }
+
+        $('#addModal #eventId').val(card.find('#eventId').val());
 
         var datepicker = $('#date').pickadate({});
         var picker = datepicker.pickadate('picker');

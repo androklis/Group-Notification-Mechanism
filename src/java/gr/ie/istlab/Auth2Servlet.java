@@ -1,5 +1,8 @@
 package gr.ie.istlab;
 
+import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
+import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
@@ -13,9 +16,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonObject;
-import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
-import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
+
 import gr.ie.istlab.googleapis.GoogleSpreadsheet;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,12 +26,18 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+//import java.sql.Connection;
+//import java.sql.DriverManager;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +46,14 @@ import javax.servlet.http.HttpServletResponse;
 public class Auth2Servlet extends HttpServlet {
 
     private JsonObject json;
+
+//    private Connection con = null;
+//    private Statement st = null;
+//    private ResultSet rs = null;
+
+//    private final String url = "jdbc:postgresql://db12.grserver.gr/gnm_social_circle_db";
+//    private final String user = "androklis_root";
+//    private final String password = "!#/bin/2106/";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -61,11 +78,35 @@ public class Auth2Servlet extends HttpServlet {
             }
             json.add("schemes", GoogleSpreadsheet.getInstance().getSchemes(request.getParameter("json[user_email]")));
 
+//            con = DriverManager.getConnection(url, user, password);
+//            st = con.createStatement();
+//            rs = st.executeQuery("SELECT VERSION()");
+//
+//            if (rs.next()) {
+//                System.out.println(rs.getString(1));
+//            }
+
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
         } catch (MalformedURLException | ServiceException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+//        finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//                if (st != null) {
+//                    st.close();
+//                }
+//                if (con != null) {
+//                    con.close();
+//                }
+//
+//            } catch (SQLException ex) {
+//                Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
     }
 
     @Override

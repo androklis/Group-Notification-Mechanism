@@ -1,5 +1,7 @@
 package gr.ie.istlab.googleapis;
 
+import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
+
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +18,6 @@ import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import com.google.gdata.util.ServiceException;
-import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,11 +29,9 @@ import java.util.logging.Logger;
  */
 public class GoogleMail {
 
-    // Singleton instance of GoogleMail class
-    private static GoogleMail instance = null;
+    private static GoogleMail instance = null; // Singleton instance of GoogleMail class
 
-    // Gmail Service instance
-    private Gmail gmailService;
+    private Gmail gmailService; // Gmail Service instance
 
     /**
      * GoogleMail constructor.
@@ -63,6 +62,7 @@ public class GoogleMail {
      * @param subject {String} - Subject of the email.
      * @param bodyText {String} - Body text of the email.
      * @return MimeMessage to be used to send email.
+     *
      * @throws MessagingException The base class for all exceptions thrown by
      * the Messaging classes
      */
@@ -92,6 +92,7 @@ public class GoogleMail {
      *
      * @param email {MimeMessage} - Email to be set to raw of message
      * @return Message containing base64url encoded email
+     *
      * @throws IOException Signals that an I/O exception of some sort has
      * occurred. Exceptions produced by failed or interrupted I/O operations
      * @throws MessagingException The base class for all exceptions thrown by
@@ -116,7 +117,8 @@ public class GoogleMail {
      * be used to indicate the authenticated user
      * @param uuid {String} - Universally Unique Identifier (UUID) to update
      * GoogleSpreadsheet's workspace scheme if email is sent
-     * @return
+     * @return Sent message labelId if email is sent or returns the message
+     * "Error Sending"
      *
      * @throws ServiceException The ServiceException class is the base exception
      * class used to indicate an error while processing a GDataRequest
@@ -136,11 +138,10 @@ public class GoogleMail {
             message = gmailService.users().messages().send(from, message).execute();
 
             GoogleSpreadsheet.getInstance().updateSchemeStatus(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
-            return message.get("labelIds").toString().replace("[", "").replace("]", "").trim();
+            return (message.get("labelIds").toString().replace("[", "").replace("]", "")).split(",")[0].trim();
         } catch (MessagingException ex) {
             Logger.getLogger(GoogleMail.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex.getMessage());
-            return ex.getMessage();
+            return "Error Sending";
         }
     }
 }

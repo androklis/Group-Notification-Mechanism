@@ -21,6 +21,8 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/materialize.clockpicker.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="css/owl.carousel.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="css/owl.theme.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <!-- CSS  -->
 
@@ -46,6 +48,7 @@
 
         <!-- Scripts -->
         <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/owl.carousel.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/jquery.autocomplete.js"></script>
         <script src="js/jquery.mixitup.min.js"></script>
@@ -357,7 +360,7 @@
                             </div>  
                         </div>
                     </form>
-                    <div class="carousel row">
+                    <div id="owl" class="owl-carousel row">
                     </div>
                     <div id="schemesContainer" class="row">
                     </div>
@@ -428,6 +431,7 @@
 
         <!--  Scripts-->
         <script src="js/oauth.js"></script>
+        <script src="js/owl.carousel.js"></script>
         <script src="js/init.js"></script>
         <script src="js/google.calendar-v3.js"></script>
         <script src="js/modal-actions.js"></script>

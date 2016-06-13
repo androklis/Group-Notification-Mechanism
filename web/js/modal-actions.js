@@ -94,7 +94,7 @@ function addCard() {
                 if (response.status === "Error Sending") {
                     $('#errorModal').openModal();
                 } else {
-                    if ((json.eventId !== "0") && (json.calendarId !== "0")) {
+                    if ($("div[id=" + json.eventId + "]")) {
                         $("div[id=" + json.eventId + "]").remove();
                     }
 
