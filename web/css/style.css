@@ -86,15 +86,6 @@ label[for=filter], label[for=sort] {
     width: 42px;
 }
 
-.carousel{
-    height: 300px !important;
-}
-
-.carousel .carousel-item {
-    width: 300px;
-    cursor: default;
-}
-
 .suggestion{
     width: 300px !important;
 }

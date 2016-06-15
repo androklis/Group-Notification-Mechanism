@@ -272,7 +272,7 @@ $(function () {
             }
         });
 
-        $('#time, #cpTime, #startTime, #endTime').pickatime({
+        var time = $('#time, #cpTime, #endTime').pickatime({
             twelvehour: false,
             autoclose: true,
             vibrate: true,
@@ -281,13 +281,36 @@ $(function () {
 
             },
             beforeShow: function () {
-//                $('.clockpicker.picker').pickatime('hide');
-//                $('.clockpicker.picker').css('display', 'none');
                 $('.clockpicker.picker').detach().appendTo('body');
-//                $('.clockpicker.picker').css('display', 'block');
-//                $('.clockpicker.picker').pickatime('show');
             }
         });
+
+        var startTime = $('#startTime').pickatime({
+            twelvehour: false,
+            autoclose: true,
+            vibrate: true,
+            default: 'now',
+            init: function () {
+                var hh = parseInt($('#calendarModal #startTime').val().split(':')[0]);
+                $('#calendarModal #endTime').val(hh + 1 + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+            },
+            beforeShow: function () {
+                $('.clockpicker.picker').detach().appendTo('body');
+            }, afterDone: function () {
+                var hh = parseInt($('#calendarModal #startTime').val().split(':')[0]) + 1;
+
+                if (hh < 10 && hh > -1) {
+                    $('#calendarModal #endTime').val('0' + hh.toString() + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+                } else {
+                    $('#calendarModal #endTime').val(hh.toString() + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+                }
+            }
+        });
+
+        time.pickatime('show');
+        time.pickatime('hide');
+        startTime.pickatime('show');
+        startTime.pickatime('hide');
 
         initDateTime();
 
