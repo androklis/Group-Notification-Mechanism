@@ -1,7 +1,4 @@
 var today = new Date();
-//    var day = today.getDate();
-//    var monthIndex = today.getMonth() + 1;
-//    var year = today.getFullYear();
 var time = checkTime(today.getHours()) + ':'
         + checkTime(today.getMinutes());
 setInterval(function () {
@@ -133,7 +130,67 @@ $(function () {
 
         $('.button-collapse').sideNav();
 
-        autoplay();
+        $("#owl").owlCarousel({
+            // Most important owl features
+            items: 4,
+            itemsCustom: false,
+            itemsDesktop: [1199, 4],
+            itemsDesktopSmall: [980, 3],
+            itemsTablet: [768, 2],
+            itemsTabletSmall: false,
+            itemsMobile: [479, 1],
+            singleItem: false,
+            itemsScaleUp: false,
+            //Basic Speeds
+            slideSpeed: 200,
+            paginationSpeed: 800,
+            rewindSpeed: 1000,
+            //Autoplay
+            autoPlay: true,
+            stopOnHover: true,
+            // Navigation
+            navigation: false,
+            navigationText: ["prev", "next"],
+            rewindNav: true,
+            scrollPerPage: false,
+            //Pagination
+            pagination: true,
+            paginationNumbers: false,
+            // Responsive 
+            responsive: true,
+            responsiveRefreshRate: 200,
+            responsiveBaseWidth: window,
+            // CSS Styles
+            baseClass: "owl-carousel",
+            theme: "owl-theme",
+            //Lazy load
+            lazyLoad: false,
+            lazyFollow: true,
+            lazyEffect: "fade",
+            //Auto height
+            autoHeight: false,
+            //JSON 
+            jsonPath: false,
+            jsonSuccess: false,
+            //Mouse Events
+            dragBeforeAnimFinish: true,
+            mouseDrag: true,
+            touchDrag: true,
+            //Transitions
+            transitionStyle: false,
+            // Other
+            addClassActive: false,
+            //Callbacks
+            beforeUpdate: false,
+            afterUpdate: false,
+            beforeInit: false,
+            afterInit: false,
+            beforeMove: false,
+            afterMove: false,
+            afterAction: false,
+            startDragging: false,
+            afterLazyLoad: false
+        });
 
         $("#moreFilters").hide();
         $(".more").click(function () {
@@ -215,7 +272,7 @@ $(function () {
             }
         });
 
-        $('#time, #cpTime, #startTime, #endTime').pickatime({
+        var time = $('#time, #cpTime, #endTime').pickatime({
             twelvehour: false,
             autoclose: true,
             vibrate: true,
@@ -224,13 +281,36 @@ $(function () {
 
             },
             beforeShow: function () {
-//                $('.clockpicker.picker').pickatime('hide');
-//                $('.clockpicker.picker').css('display', 'none');
                 $('.clockpicker.picker').detach().appendTo('body');
-//                $('.clockpicker.picker').css('display', 'block');
-//                $('.clockpicker.picker').pickatime('show');
             }
         });
+
+        var startTime = $('#startTime').pickatime({
+            twelvehour: false,
+            autoclose: true,
+            vibrate: true,
+            default: 'now',
+            init: function () {
+                var hh = parseInt($('#calendarModal #startTime').val().split(':')[0]);
+                $('#calendarModal #endTime').val(hh + 1 + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+            },
+            beforeShow: function () {
+                $('.clockpicker.picker').detach().appendTo('body');
+            }, afterDone: function () {
+                var hh = parseInt($('#calendarModal #startTime').val().split(':')[0]) + 1;
+
+                if (hh < 10 && hh > -1) {
+                    $('#calendarModal #endTime').val('0' + hh.toString() + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+                } else {
+                    $('#calendarModal #endTime').val(hh.toString() + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+                }
+            }
+        });
+
+        time.pickatime('show');
+        time.pickatime('hide');
+        startTime.pickatime('show');
+        startTime.pickatime('hide');
 
         initDateTime();
 
@@ -462,11 +542,6 @@ function collapseAll() {
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
-}
-
-function autoplay() {
-    $('.carousel').carousel('next');
-    setTimeout(autoplay, 4500);
 }
 
 function checkTime(i) {
