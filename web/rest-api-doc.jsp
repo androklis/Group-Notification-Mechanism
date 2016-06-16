@@ -45,19 +45,14 @@
         <!-- Manifest -->
 
         <!-- Scripts -->
-        <!--<script src="js/jquery-2.1.1.min.js"></script>-->
+        <script src="js/jquery-2.1.1.min.js"></script>
         <!--<script src="js/materialize.js"></script>-->
         <!-- Scripts -->
     </head>
     <body>
         <nav class="light-blue lighten-1">
             <div class="nav-wrapper container">
-                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-                <a href="#!" class="brand-logo"><i class="material-icons">notifications</i></a>
-                <ul id="user" class="right hide-on-med-and-down">
-                </ul>
-                <ul class="side-nav" id="nav-mobile">
-                </ul>
+                <a href="#!" class="brand-logo">Rest API Documentation</a>
             </div>
         </nav>
 
@@ -69,12 +64,12 @@
         <footer id="footer" class="page-footer  light-blue lighten-1">
             <div class="footer-copyright">
                 <div class="container">
-                    © <script>document.write(new Date().getFullYear());</script> Group Notification Mechanism | Developed by <a class="white-text" href="mailto:androklis.greg@gmail.com">Androklis Gregoriou</a>
+                    © <script>document.write(new Date().getFullYear());</script> | Developed by <a class="white-text" href="mailto:androklis.greg@gmail.com">Androklis Gregoriou</a>
                 </div>
             </div>
         </footer>
 
         <!--  Scripts-->
-
+        <script src="js/docInit.js"></script>
     </body>
 </html>
