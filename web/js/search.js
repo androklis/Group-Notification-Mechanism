@@ -14,9 +14,33 @@
         });
 
         window.index.add({
+            href: 'javascript:authentication();|Authentication',
+            title: 'Add new scheme',
+            body: 'API Documentation to authenticate new user.'
+        });
+
+        window.index.add({
             href: 'javascript:addSchemeAPI();|Add new scheme',
             title: 'Add new scheme',
-            body: 'API Documentation to add a new Notification Scheme'
+            body: 'API Documentation to add a new Notification Scheme.'
+        });
+        
+        window.index.add({
+            href: 'javascript:deleteSchemeAPI();|Delete a scheme',
+            title: 'Delete a scheme',
+            body: 'API Documentation to delete a Notification Scheme.'
+        });
+        
+         window.index.add({
+            href: 'javascript:updateSchemeAPI();|Update a scheme',
+            title: 'Delete a scheme',
+            body: 'API Documentation to update a Notification Scheme.'
+        });
+        
+        window.index.add({
+            href: 'javascript:copySchemeAPI();|Copy a scheme',
+            title: 'Copy a scheme',
+            body: 'API Documentation to copy a Notification Scheme.'
         });
 
         // icon click
