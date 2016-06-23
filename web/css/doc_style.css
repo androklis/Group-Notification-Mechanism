@@ -75,6 +75,57 @@ nav.light-blue.lighten-1, #index-banner, #footer {
     outline: none;
 }
 
+table.api-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: block;
+    position: relative;
+}
+table.api-table thead {
+    border: 0;
+    border-right: 1px solid #d0d0d0;
+}
+table.api-table thead {
+    display: block;
+    float: left;
+}
+table.api-table thead tr {
+    display: block;
+    padding: 0 10px 0 0;
+}
+table.api-table th {
+    display: block;
+    text-align: right;
+}
+table.api-table thead tr th::before {
+    content: "\00a0";
+}
+table.api-table tbody {
+    display: block;
+    width: auto;
+    position: relative;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+table.api-table tbody tr {
+    display: inline-block;
+    vertical-align: top;
+}
+table.api-table tr {
+    padding: 0 10px;
+}
+table.api-table td {
+    display: block;
+    min-height: 1.25em;
+    text-align: left;
+}
+
+table.api-table th, table.api-table td {
+    margin: 0;
+    vertical-align: top;
+}
+
 @media only screen and (max-width : 992px) {
     nav.light-blue.lighten-1, #index-banner, #footer {
         padding-left: 0;
