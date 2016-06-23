@@ -272,14 +272,11 @@ $(function () {
             }
         });
 
-        var time = $('#time, #cpTime, #endTime').pickatime({
+        var time = $('#time, #cpTime').pickatime({
             twelvehour: false,
             autoclose: true,
             vibrate: true,
             default: 'now',
-            init: function () {
-
-            },
             beforeShow: function () {
                 $('.clockpicker.picker').detach().appendTo('body');
             }
@@ -290,10 +287,6 @@ $(function () {
             autoclose: true,
             vibrate: true,
             default: 'now',
-            init: function () {
-                var hh = parseInt($('#calendarModal #startTime').val().split(':')[0]);
-                $('#calendarModal #endTime').val(hh + 1 + ':' + $('#calendarModal #startTime').val().split(':')[1]);
-            },
             beforeShow: function () {
                 $('.clockpicker.picker').detach().appendTo('body');
             }, afterDone: function () {
@@ -307,10 +300,22 @@ $(function () {
             }
         });
 
+        var endTime = $('#endTime').pickatime({
+            twelvehour: false,
+            autoclose: true,
+            vibrate: true,
+            default: 'now',
+            beforeShow: function () {
+                $('.clockpicker.picker').detach().appendTo('body');
+            }
+        });
+
         time.pickatime('show');
         time.pickatime('hide');
         startTime.pickatime('show');
         startTime.pickatime('hide');
+        endTime.pickatime('show');
+        endTime.pickatime('hide');
 
         initDateTime();
 
@@ -513,7 +518,15 @@ function initDateTime() {
     $('#startDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
     $('#endDate').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);
 
-    $('#calendarModal #startTime, #calendarModal #endTime, #copyModal #cpTime').val(time);
+    $('#calendarModal #startTime, #copyModal #cpTime').val(time);
+
+    var hh = parseInt($('#calendarModal #startTime').val().split(':')[0]) + 1;
+
+    if (hh < 10 && hh > -1) {
+        $('#calendarModal #endTime').val('0' + hh.toString() + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+    } else {
+        $('#calendarModal #endTime').val(hh.toString() + ':' + $('#calendarModal #startTime').val().split(':')[1]);
+    }
 
     if ($('#addModal #now').is(':checked')) {
         $('#date').pickadate('picker').set('select', new Date().toLocaleString().substring(0, 10), {format: 'yyyy-mm-dd'}).set('max', false);

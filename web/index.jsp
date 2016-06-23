@@ -424,7 +424,7 @@
         <footer id="footer" class="page-footer  light-blue lighten-1">
             <div class="footer-copyright">
                 <div class="container">
-                    © <script>document.write(new Date().getFullYear());</script> Group Notification Mechanism | Developed by <a class="white-text" href="mailto:androklis.greg@gmail.com">Androklis Gregoriou</a>
+                    © <script>document.write(new Date().getFullYear());</script> | Developed by <a class="white-text" href="mailto:androklis.greg@gmail.com">Androklis Gregoriou</a>
                 </div>
             </div>
         </footer>

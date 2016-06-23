@@ -20,8 +20,8 @@
         <!-- CSS  -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-        <link href="css/materialize.clockpicker.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="css/doc_style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <!-- CSS  -->
 
         <!-- Favicons -->
@@ -45,36 +45,62 @@
         <!-- Manifest -->
 
         <!-- Scripts -->
-        <!--<script src="js/jquery-2.1.1.min.js"></script>-->
-        <!--<script src="js/materialize.js"></script>-->
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/materialize.js"></script>
+        <script src="js/lunr.min.js"></script>
+        <script src="js/search.js"></script>
         <!-- Scripts -->
     </head>
     <body>
+
         <nav class="light-blue lighten-1">
             <div class="nav-wrapper container">
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-                <a href="#!" class="brand-logo"><i class="material-icons">notifications</i></a>
-                <ul id="user" class="right hide-on-med-and-down">
-                </ul>
-                <ul class="side-nav" id="nav-mobile">
+                <div class="header">API Documentation | About</div>
+                <ul id="nav-mobile" class="side-nav fixed" style="transform: translateX(0%);overflow-x: hidden;">
+                    <li class="logo"><a href="documentation.jsp" class="brand-logo">
+                            <i class="material-icons">notifications</i></a></li>
+                    <li class="search">
+                        <div class="search-wrapper card">
+                            <input id="search"><i class="material-icons">search</i>
+                            <div class="search-results"></div>
+                        </div>
+                    <li class="bold active"><a class="collapsible-header waves-effect waves-teal" onclick="about();">About</a>
+                    <li id="auth" class="bold"><a class="collapsible-header waves-effect waves-teal" onclick="authentication();">Authenticate</a>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold"><a class="collapsible-header waves-effect waves-teal">Manage Schemes</a>
+                                <div class="collapsible-body" style="">
+                                    <ul>
+                                        <li><a onclick="addSchemeAPI();">Add new scheme</a></li>
+                                        <li><a onclick="deleteSchemeAPI();">Delete scheme</a></li>
+                                        <li><a onclick="updateSchemeAPI();">Update scheme</a></li>
+                                        <li><a onclick="copySchemeAPI();">Copy scheme</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </nav>
 
         <div class="section no-pad-bot" id="index-banner">
             <div class="container">
+                <h3>AJAX Requests structure</h3><blockquote>All AJAX requests have the following structure</blockquote><div style="background-color: lightgray;"><code>var <em>JSON_VAR</em> = {<br/><em>JSON_KEY_1</em>: <em>JSON_VALUE_1</em>,<br/><em>JSON_KEY_2</em>: <em>JSON_VALUE_2</em>,<br/>.<br/>.<br/>.<br/>};<br/><br/>$.post("<em>SERVLET_NAME</em>", {json: <em>JSON_VAR</em>}, function (response, statusText, xhr) {<br/>}<br/>});</code></div><br/><em style="color: black;">Before start using the API first you should auhenticate user with google and then follow <a onclick="authentication();">these</a> steps.</em>
             </div>
         </div>
 
         <footer id="footer" class="page-footer  light-blue lighten-1">
             <div class="footer-copyright">
                 <div class="container">
-                    © <script>document.write(new Date().getFullYear());</script> Group Notification Mechanism | Developed by <a class="white-text" href="mailto:androklis.greg@gmail.com">Androklis Gregoriou</a>
+                    © <script>document.write(new Date().getFullYear());</script> | Developed by <a class="white-text" href="mailto:androklis.greg@gmail.com">Androklis Gregoriou</a>
                 </div>
             </div>
         </footer>
 
-        <!--  Scripts-->
-
+        <!--Scripts-->
+        <script src="js/docInit.js"></script>
+        <script src="js/doc_actions.js"></script>
     </body>
 </html>

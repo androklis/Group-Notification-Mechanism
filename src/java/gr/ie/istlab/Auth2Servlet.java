@@ -23,9 +23,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import static java.lang.System.out;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,11 +52,9 @@ public class Auth2Servlet extends HttpServlet {
 //    private Connection con = null;
 //    private Statement st = null;
 //    private ResultSet rs = null;
-
 //    private final String url = "jdbc:postgresql://db12.grserver.gr/gnm_social_circle_db";
 //    private final String user = "androklis_root";
 //    private final String password = "!#/bin/2106/";
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -85,12 +85,11 @@ public class Auth2Servlet extends HttpServlet {
 //            if (rs.next()) {
 //                System.out.println(rs.getString(1));
 //            }
-
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
         } catch (MalformedURLException | ServiceException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
 //        finally {
 //            try {
 //                if (rs != null) {
