@@ -316,7 +316,7 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         picker.set('select', card.find('#timestamp').text().split(' ')[0], {format: 'yyyy-mm-dd'});
         $('#addModal #time').val(card.find('#timestamp').text().split(' ')[1]);
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
-        $('#addModal #message').val(card.find('#adr_description').text()).change();
+        $('#addModal #message').val(card.find('#adr_description').html()).change();
         $('#addModal').openModal({
             complete: function () {
                 $('#addModal #addBtn').attr('onclick', 'addCard();');
