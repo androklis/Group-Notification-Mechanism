@@ -20,8 +20,8 @@
         <!-- CSS  -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-        <link href="css/materialize.clockpicker.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="css/doc_style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <!-- CSS  -->
 
         <!-- Favicons -->
@@ -46,13 +46,45 @@
 
         <!-- Scripts -->
         <script src="js/jquery-2.1.1.min.js"></script>
-        <!--<script src="js/materialize.js"></script>-->
+        <script src="js/materialize.js"></script>
+        <script src="js/lunr.min.js"></script>
+        <script src="js/search.js"></script>
         <!-- Scripts -->
     </head>
     <body>
+
         <nav class="light-blue lighten-1">
             <div class="nav-wrapper container">
-                <a href="#!" class="brand-logo">Rest API Documentation</a>
+                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="side-nav fixed" style="transform: translateX(0%);">
+                    <li class="logo"><a href="rest-api-doc.jsp" class="brand-logo">
+                            <i class="material-icons">notifications</i></a></li>
+                    <li class="search">
+                        <div class="search-wrapper card">
+                            <input id="search"><i class="material-icons">search</i>
+                            <div class="search-results"></div>
+                        </div>
+                    </li>
+                    <li class="bold active"><a href="rest-api-doc.jsp" class="waves-effect waves-teal">About</a></li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold"><a class="collapsible-header waves-effect waves-teal">CSS</a>
+                                <div class="collapsible-body" style="">
+                                    <ul>
+                                        <li><a href="color.html">Color</a></li>
+                                        <li><a href="grid.html">Grid</a></li>
+                                        <li><a href="helpers.html">Helpers</a></li>
+                                        <li><a href="media-css.html">Media</a></li>
+                                        <li><a href="sass.html">Sass</a></li>
+                                        <li><a href="shadow.html">Shadow</a></li>
+                                        <li><a href="table.html">Table</a></li>
+                                        <li><a href="typography.html">Typography</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </nav>
 
