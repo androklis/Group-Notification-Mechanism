@@ -23,11 +23,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import static java.lang.System.out;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -216,6 +214,9 @@ public class Auth2Servlet extends HttpServlet {
                     }).build();
 
             credential.setFromTokenResponse(tokenResponse);
+
+            System.out.println(credential.getRefreshToken());
+            System.out.println(credential.getAccessToken());
 
         } catch (IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);

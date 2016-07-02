@@ -62,6 +62,8 @@ public class GoogleSpreadsheet {
         if (instance == null) {
             instance = new GoogleSpreadsheet();
         }
+        // Set HTTP timeout for 2 minutes for larger feed
+        spreadsheetService.setConnectTimeout(120000);
         return instance;
     }
 
