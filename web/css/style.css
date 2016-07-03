@@ -20,6 +20,14 @@ label[for=filter], label[for=sort] {
     font-size: 15px;
 }
 
+label[for=message] {
+    top: 0;
+    font-size: 0.8rem;
+    color: #29b6f6 !important;
+    -webkit-transform: translateY(-140%);
+    transform: translateY(-140%);
+}
+
 .more i{
     position: absolute;
 }
@@ -153,6 +161,10 @@ label.active{
 }
 
 #viewModal .attendees, #viewModal .desc{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
     margin: 0;
     padding: 2rem;
 }

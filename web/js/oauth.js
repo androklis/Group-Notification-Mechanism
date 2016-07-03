@@ -12,7 +12,7 @@ function render() {
 
 function signinCallback(authResult) {
     if (authResult) {
-        console.log(authResult);
+
         if (authResult['status']['signed_in']) {
 
             $.cookie("access_token", authResult['access_token'], {

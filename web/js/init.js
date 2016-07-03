@@ -130,6 +130,30 @@ $(function () {
 
         $('.button-collapse').sideNav();
 
+        $('#message').froalaEditor({
+            placeholderText: 'Enter a Message',
+            enter: $.FroalaEditor.ENTER_BR,
+            htmlAllowComments: false,
+            quickInsertButtons: [],
+            heightMin: 200,
+            toolbarSticky: false,
+            toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', '-', 'outdent', 'indent', 'quote', 'insertHR', 'insertLink', 'insertTable', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+            toolbarButtonsMD: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '-', 'fontFamily', 'fontSize', 'color', 'paragraphFormat', 'align', '-', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', 'insertLink', 'insertTable', '-', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+            toolbarButtonsSM: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '-', 'fontFamily', 'fontSize', 'color', 'paragraphFormat', 'align', '-', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', 'insertLink', 'insertTable', '-', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+            toolbarButtonsXS: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '-', 'fontFamily', 'fontSize', 'color', 'paragraphFormat', 'align', '-', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', 'insertHR', 'insertLink', 'insertTable', '-', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+            charCounterCount: true
+        });
+
+        $('.fr-placeholder').css({'font-size': '15px',
+            'line-height': '22.5px',
+            'margin-top': '0px',
+            'padding-top': '10px',
+            'padding-left': '10px',
+            'margin-left': '0px',
+            'height': '170px'});
+
+        $('[data-cmd="outdent"]').addClass('fr-disabled');
+
         $("#owl").owlCarousel({
             // Most important owl features
             items: 4,
@@ -509,6 +533,15 @@ function onModalComplete() {
     $('select#calendars').material_select();
     $('#addModal #addBtn').removeClass('disabled');
     $('#addModal #eventSettings').addClass('disabled');
+    $('#message').froalaEditor('html.set', '');
+    $('.fr-placeholder').css({'font-size': '15px',
+        'line-height': '22.5px',
+        'margin-top': '0px',
+        'padding-top': '10px',
+        'padding-left': '10px',
+        'margin-left': '0px',
+        'height': '170px'});
+    $('#message').froalaEditor('charCounter.count');
     initDateTime();
 }
 

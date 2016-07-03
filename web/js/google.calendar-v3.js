@@ -250,7 +250,11 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         $('#addModal #date, #addModal #time').prop('disabled',
                 $('#addModal #now').is(':checked'));
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
+        $('#message').froalaEditor('html.set', card.find('#adr_description').html());
+        $('#message').froalaEditor('charCounter.count');
         $('#addModal #message').val(card.find('#adr_description').text()).change();
+//        $('#message').froalaEditor('events.focus');
+//        $('#message').froalaEditor('edit.on');
         $('#addModal #eventId').val(card.find('#eventId').val());
         $('#addModal').openModal({
             complete: function () {
@@ -317,6 +321,10 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
         $('#addModal #time').val(card.find('#timestamp').text().split(' ')[1]);
         $('#addModal #subject').val(card.find('#adr_title').text()).change();
         $('#addModal #message').val(card.find('#adr_description').html()).change();
+        $('#message').froalaEditor('html.set', card.find('#adr_description').html());
+        $('#message').froalaEditor('charCounter.count');
+//        $('#message').froalaEditor('events.focus');
+//        $('#message').froalaEditor('edit.on');
         $('#addModal').openModal({
             complete: function () {
                 $('#addModal #addBtn').attr('onclick', 'addCard();');
@@ -325,7 +333,6 @@ function createCard(uuid, calendarId, eventId, className, title, content, recipi
                 onModalComplete();
             },
             ready: function () {
-
             }
         });
     });
