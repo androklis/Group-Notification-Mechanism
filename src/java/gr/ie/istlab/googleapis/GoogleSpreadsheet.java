@@ -15,6 +15,7 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import static gr.ie.istlab.GNMConstants.REFRESH_TOKENS;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -63,7 +64,9 @@ public class GoogleSpreadsheet {
             instance = new GoogleSpreadsheet();
         }
         // Set HTTP timeout for 2 minutes for larger feed
-        spreadsheetService.setConnectTimeout(120000);
+        spreadsheetService.setConnectTimeout(2 * 60000);
+
+        spreadsheetService.setReadTimeout(2 * 60000);
         return instance;
     }
 
@@ -273,6 +276,10 @@ public class GoogleSpreadsheet {
             ServiceException {
 
         for (Map.Entry<String, GoogleCredential> entry : GOOGLE_CREDENTIALS.entrySet()) {
+
+            if (entry.getValue().getExpiresInSeconds() < 62) {
+                entry.getValue().setRefreshToken(REFRESH_TOKENS.get(entry.getKey()));
+            }
 
             WorksheetEntry worksheet = getWorksheet(entry.getKey());
             URL listFeedUrl = worksheet.getListFeedUrl();

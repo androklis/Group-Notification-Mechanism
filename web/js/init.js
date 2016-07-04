@@ -239,7 +239,7 @@ $(function () {
                 filter: 'all'
             },
             pagination: {
-                limit: 12,
+                limit: 8,
                 loop: false,
                 generatePagers: true,
                 maxPagers: 5,
@@ -458,13 +458,20 @@ $(function () {
                                         }
                                     }
                                 }
+                                if (!$('#addForm .contactsList').is(':empty')) {
+                                    $('#addForm .con').css('display', 'none');
+                                } else {
+                                    $('#addForm .con').css('display', 'block');
+                                }
                             });
                         });
+
             } else {
                 if (!document.getElementById(suggestion.data)) {
                     $('.contactsList').append('<div id="' + suggestion.data + '" class="chip"><img src="' + suggestion.img + '">' + suggestion.value + '<i class="material-icons">close</i></div>');
                 }
             }
+
             $("#contacts").val('');
             $("#contacts").focus();
 
@@ -473,6 +480,7 @@ $(function () {
             } else {
                 $('#addForm .con').css('display', 'block');
             }
+
         }
     });
 });

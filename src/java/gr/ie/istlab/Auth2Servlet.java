@@ -16,6 +16,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonObject;
+import static gr.ie.istlab.GNMConstants.REFRESH_TOKENS;
 
 import gr.ie.istlab.googleapis.GoogleSpreadsheet;
 
@@ -71,6 +72,8 @@ public class Auth2Servlet extends HttpServlet {
 
             GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
 
+            REFRESH_TOKENS.put(request.getParameter("json[user_email]"), GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getRefreshToken());
+          
             if (GoogleSpreadsheet.getInstance().getWorksheet(request.getParameter("json[user_email]")) == null) {
                 GoogleSpreadsheet.getInstance().addWorksheet(request.getParameter("json[user_email]"));
             }
@@ -214,9 +217,6 @@ public class Auth2Servlet extends HttpServlet {
                     }).build();
 
             credential.setFromTokenResponse(tokenResponse);
-
-            System.out.println(credential.getRefreshToken());
-            System.out.println(credential.getAccessToken());
 
         } catch (IOException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);

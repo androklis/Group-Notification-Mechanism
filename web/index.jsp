@@ -352,7 +352,7 @@
                                 <div class="row">
                                     <label for="filter"><strong>Filter:</strong></label>
                                     <div class="chip waves-effect filter" data-filter="all" onclick="toggleSuggestions();">All</div>
-                                    <div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>
+                                    <!--<div class="chip waves-effect filter" data-filter=".suggestion" onclick="toggleSuggestions();">Suggestions</div>-->
                                     <!--<div class="chip waves-effect filter" data-filter=".scheme">Schemes</div>-->
                                     <div class="chip waves-effect filter" data-filter=".pending">Pending</div>
                                     <div class="chip waves-effect filter" data-filter=".sent">Sent</div>

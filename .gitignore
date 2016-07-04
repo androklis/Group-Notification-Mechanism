@@ -10,3 +10,4 @@ dist/
 # Package Files #
 *.war
 *.ear
+src/java/gr/ie/istlab/users/credentials/NewClass.java

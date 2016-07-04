@@ -169,6 +169,14 @@ label.active{
     padding: 2rem;
 }
 
+#viewModal .desc ol li{
+    list-style: decimal;
+}
+
+.fr-element.fr-view ul li, #viewModal .desc ul li{
+    list-style: initial;
+}
+
 .select-wrapper + label {
     top:  0.8rem;
 }

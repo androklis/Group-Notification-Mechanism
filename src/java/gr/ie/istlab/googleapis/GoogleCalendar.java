@@ -102,9 +102,18 @@ public class GoogleCalendar {
      * occurred. Exceptions produced by failed or interrupted I/O operations
      */
     public void deleteEvent(String userEmail, String calendarId, String eventId) throws IOException {
+        if (!getEvent(userEmail, calendarId, eventId).equals("cancelled")) {
+            calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
+
+            calendarService.events().delete(calendarId, eventId).execute();
+        }
+    }
+
+    private String getEvent(String userEmail, String calendarId, String eventId) throws IOException {
         calendarService = new Calendar.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(userEmail)).setApplicationName("Group Notification Mechanism").build();
 
-        calendarService.events().delete(calendarId, eventId).execute();
+        Event event = calendarService.events().get(calendarId, eventId).execute();
+        return event.getStatus();
     }
 
     /**
