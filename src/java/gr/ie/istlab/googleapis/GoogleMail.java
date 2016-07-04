@@ -1,6 +1,9 @@
 package gr.ie.istlab.googleapis;
 
-import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+//import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -17,7 +20,13 @@ import javax.mail.internet.MimeMessage;
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gdata.util.ServiceException;
+import gr.ie.istlab.GNMConstants;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,6 +61,32 @@ public class GoogleMail {
             instance = new GoogleMail();
         }
         return instance;
+    }
+
+    /**
+     *
+     * @param userEmail
+     * @return
+     * @throws IOException
+     * @throws GeneralSecurityException
+     */
+    private Credential generateCredentialWithUserApprovedToken(String userEmail) throws IOException,
+            GeneralSecurityException {
+        NetHttpTransport netHttpTransport = new NetHttpTransport();
+        JacksonFactory jacksonFactory = JacksonFactory.getDefaultInstance();
+
+        GoogleClientSecrets clientSecrets
+                = GoogleClientSecrets.load(
+                        JacksonFactory.getDefaultInstance(), new InputStreamReader(new FileInputStream(
+                                new File("WEB-INF/GNM-client_secrets.json"))));
+
+        try {
+            return new GoogleCredential.Builder().setTransport(netHttpTransport).setJsonFactory(jacksonFactory)
+                    .setClientSecrets(clientSecrets.getDetails().getClientId(), clientSecrets.getDetails().getClientSecret()).build().setRefreshToken(GNMConstants.getRefreshTokenFromEntity(userEmail));
+        } catch (EntityNotFoundException ex) {
+            Logger.getLogger(GNMConstants.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     /**
@@ -129,17 +164,16 @@ public class GoogleMail {
      * occurred. Exceptions produced by failed or interrupted I/O operations
      */
     public String sendMessage(MimeMessage email, String from, String uuid) throws MalformedURLException, IOException, ServiceException {
-
-        gmailService = new Gmail.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), GOOGLE_CREDENTIALS.get(from)).setApplicationName("Group Notification Mechanism").build();
-
         try {
+            gmailService = new Gmail.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), generateCredentialWithUserApprovedToken(from)).setApplicationName("Group Notification Mechanism").build();
+
 //            email.setHeader("Authorization", "Bearer " + GOOGLE_CREDENTIALS.get(from).getAccessToken());
             Message message = createMessageWithEmail(email);
             message = gmailService.users().messages().send(from, message).execute();
 
             GoogleSpreadsheet.getInstance().updateSchemeStatus(from, uuid, message.get("labelIds").toString().replace("[", "").replace("]", "").trim());
             return (message.get("labelIds").toString().replace("[", "").replace("]", "")).split(",")[0].trim();
-        } catch (MessagingException ex) {
+        } catch (MessagingException | GeneralSecurityException ex) {
             Logger.getLogger(GoogleMail.class.getName()).log(Level.SEVERE, null, ex);
             return "Error Sending";
         }

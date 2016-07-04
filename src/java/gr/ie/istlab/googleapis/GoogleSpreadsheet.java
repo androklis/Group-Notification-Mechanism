@@ -1,9 +1,8 @@
 package gr.ie.istlab.googleapis;
 
-import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.spreadsheet.CellEntry;
@@ -15,14 +14,12 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import static gr.ie.istlab.GNMConstants.REFRESH_TOKENS;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -271,24 +268,18 @@ public class GoogleSpreadsheet {
      * occurred. Exceptions produced by failed or interrupted I/O operations
      * @throws ServiceException The ServiceException class is the base exception
      * class used to indicate an error while processing a GDataRequest
+     * @throws EntityNotFoundException
      */
     public void checkWorksheet(String fullTextSearchString) throws IOException,
-            ServiceException {
+            ServiceException, EntityNotFoundException {
 
-        for (Map.Entry<String, GoogleCredential> entry : GOOGLE_CREDENTIALS.entrySet()) {
-
-            if (entry.getValue().getExpiresInSeconds() < 62) {
-                entry.getValue().setRefreshToken(REFRESH_TOKENS.get(entry.getKey()));
-            }
-
-            WorksheetEntry worksheet = getWorksheet(entry.getKey());
+        for (WorksheetEntry worksheet : getAllWorksheets()) {
             URL listFeedUrl = worksheet.getListFeedUrl();
             ListFeed listFeed = (ListFeed) spreadsheetService.getFeed(listFeedUrl, ListFeed.class);
 
             for (ListEntry listEntry : listFeed.getEntries()) {
                 if ("PENDING".equals(listEntry.getCustomElements().getValue("status"))) {
                     if ((fullTextSearchString).equals(listEntry.getCustomElements().getValue("timestamp"))) {
-
                         try {
                             GoogleMail.getInstance().sendMessage(
                                     GoogleMail.getInstance().createEmail(
@@ -305,7 +296,6 @@ public class GoogleSpreadsheet {
                 }
             }
         }
-
     }
 
     /**

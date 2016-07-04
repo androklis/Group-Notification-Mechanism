@@ -1,9 +1,7 @@
 package gr.ie.istlab;
 
 import static gr.ie.istlab.GNMConstants.SERVICE_GOOGLE_CREDENTIAL;
-import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.CredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponse;
@@ -14,9 +12,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
 import com.google.gdata.util.ServiceException;
 import com.google.gson.JsonObject;
-import static gr.ie.istlab.GNMConstants.REFRESH_TOKENS;
+import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 
 import gr.ie.istlab.googleapis.GoogleSpreadsheet;
 
@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 //import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static gr.ie.istlab.GNMConstants.getAllEntities;
 
 /**
  *
@@ -72,8 +73,10 @@ public class Auth2Servlet extends HttpServlet {
 
             GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
 
-            if (!REFRESH_TOKENS.containsKey(request.getParameter("json[user_email]"))) {
-                REFRESH_TOKENS.put(request.getParameter("json[user_email]"), GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getRefreshToken());
+            String refreshToken = GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getRefreshToken();
+       
+            if (refreshToken != null) {
+                GNMConstants.storeData(request.getParameter("json[user_email]"), refreshToken);
             }
 
             if (GoogleSpreadsheet.getInstance().getWorksheet(request.getParameter("json[user_email]")) == null) {
@@ -93,6 +96,23 @@ public class Auth2Servlet extends HttpServlet {
         } catch (MalformedURLException | ServiceException ex) {
             Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//                if (st != null) {
+//                    st.close();
+//                }
+//                if (con != null) {
+//                    con.close();
+//                }
+//
+//            } catch (SQLException ex) {
+//                Logger.getLogger(Auth2Servlet.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+
 //        finally {
 //            try {
 //                if (rs != null) {
@@ -193,7 +213,7 @@ public class Auth2Servlet extends HttpServlet {
                     clientSecrets.getDetails().getClientId(),
                     clientSecrets.getDetails().getClientSecret(),
                     Arrays.asList("https://mail.google.com/", "https://www.googleapis.com/auth/calendar"))
-                    .setApprovalPrompt("force").setAccessType("offline").build();
+                    .setApprovalPrompt("force").setDataStoreFactory(AppEngineDataStoreFactory.getDefaultInstance()).setAccessType("offline").build();
 
             GoogleAuthorizationCodeTokenRequest tokenRequest = authorizationFlow
                     .newTokenRequest(authCode);
