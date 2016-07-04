@@ -72,8 +72,10 @@ public class Auth2Servlet extends HttpServlet {
 
             GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
 
-            REFRESH_TOKENS.put(request.getParameter("json[user_email]"), GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getRefreshToken());
-          
+            if (!REFRESH_TOKENS.containsKey(request.getParameter("json[user_email]"))) {
+                REFRESH_TOKENS.put(request.getParameter("json[user_email]"), GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getRefreshToken());
+            }
+
             if (GoogleSpreadsheet.getInstance().getWorksheet(request.getParameter("json[user_email]")) == null) {
                 GoogleSpreadsheet.getInstance().addWorksheet(request.getParameter("json[user_email]"));
             }
