@@ -66,7 +66,7 @@
                             <div class="search-results"></div>
                         </div>
                     <li class="bold active"><a class="collapsible-header waves-effect waves-teal" onclick="about();">About</a>
-                    <li id="auth" class="bold"><a class="collapsible-header waves-effect waves-teal" onclick="authentication();">Authenticate</a>
+                    <!--<li id="auth" class="bold"><a class="collapsible-header waves-effect waves-teal" onclick="authentication();">Authenticate</a>-->
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li class="bold"><a class="collapsible-header waves-effect waves-teal">Manage Schemes</a>
@@ -87,7 +87,7 @@
 
         <div class="section no-pad-bot" id="index-banner">
             <div class="container">
-                <h3>AJAX Requests structure</h3><em><u>One-off Procedure for first time use:</u><br/>Login to <a href="http://group-notification-mechanism.appspot.com" target="_blank">Group Notification Mechanism</a> using the Google account that your service will use and grant access to specified scopes!</em><blockquote>All AJAX requests have the following structure</blockquote><div style="background-color: lightgray;"><code>var <em>JSON_VAR</em> = {<br/><em>JSON_KEY_1</em>: <em>JSON_VALUE_1</em>,<br/><em>JSON_KEY_2</em>: <em>JSON_VALUE_2</em>,<br/>.<br/>.<br/>.<br/>};<br/><br/>$.post("<em>SERVLET_NAME</em>", {json: <em>JSON_VAR</em>}, function (response, statusText, xhr) {<br/>}<br/>});</code></div><br/><em style="color: black;">Before start using the API calls first you should auhenticate user with google and then follow <a onclick="authentication();">these</a> steps.</em>
+                <h3>AJAX Requests structure</h3><em><u>One-off Procedure for first time use:</u><br/>Login to <a href="http://group-notification-mechanism.appspot.com" target="_blank">Group Notification Mechanism</a> using the Google account that your service will use and grant access to specified scopes!</em><blockquote>All AJAX requests have the following structure</blockquote><div style="background-color: lightgray;"><code>var <em>JSON_VAR</em> = {<br/><em>JSON_KEY_1</em>: <em>JSON_VALUE_1</em>,<br/><em>JSON_KEY_2</em>: <em>JSON_VALUE_2</em>,<br/>.<br/>.<br/>.<br/>};<br/><br/>$.post("<em>SERVLET_NAME</em>", {json: <em>JSON_VAR</em>}, function (response, statusText, xhr) {<br/>}<br/>});</code></div><!--<br/><em style="color: black;">Before start using the API calls first you should auhenticate user with google and then follow <a onclick="authentication();">these</a> steps.</em>-->
             </div>
         </div>
 

@@ -1,14 +1,14 @@
 function about() {
 $('.nav-wrapper div.header').html('API Documentation | About');
-        $('div#index-banner div.container').html('<h3>AJAX Requests structure</h3><em><u>One-off Procedure for first time use:</u><br/>Login to <a href="http://group-notification-mechanism.appspot.com" target="_blank">Group Notification Mechanism</a> using the Google account that your service will use and grant access to specified scopes!</em><blockquote>All AJAX requests have the following structure</blockquote><div style="background-color: lightgray;"><code>var <em>JSON_VAR</em> = {<br/><em>JSON_KEY_1</em>: <em>JSON_VALUE_1</em>,<br/><em>JSON_KEY_2</em>: <em>JSON_VALUE_2</em>,<br/>.<br/>.<br/>.<br/>};<br/><br/>$.post("<em>SERVLET_NAME</em>", {json: <em>JSON_VAR</em>}, function (response, statusText, xhr) {<br/>}<br/>});</code></div><br/><em style="color: black;">Before start using the API calls first you should auhenticate user with google and then follow <a onclick="authentication();">these</a> steps.</em>');
+        $('div#index-banner div.container').html('<h3>AJAX Requests structure</h3><em><u>One-off Procedure for first time use:</u><br/>Login to <a href="http://group-notification-mechanism.appspot.com" target="_blank">Group Notification Mechanism</a> using the Google account that your service will use and grant access to specified scopes!</em><blockquote>All AJAX requests have the following structure</blockquote><div style="background-color: lightgray;"><code>var <em>JSON_VAR</em> = {<br/><em>JSON_KEY_1</em>: <em>JSON_VALUE_1</em>,<br/><em>JSON_KEY_2</em>: <em>JSON_VALUE_2</em>,<br/>.<br/>.<br/>.<br/>};<br/><br/>$.post("<em>SERVLET_NAME</em>", {json: <em>JSON_VAR</em>}, function (response, statusText, xhr) {<br/>}<br/>});</code></div><!--<br/><em style="color: black;">Before start using the API calls first you should auhenticate user with google and then follow <a onclick="authentication();">these</a> steps.</em>-->');
 }
 
-function authentication() {
-$('li').removeClass("active");
-        $('li#auth').addClass("active");
-        $('.nav-wrapper div.header').html('API Documentation | Authentication');
-        $('div#index-banner div.container').html('<h3>User Authentication</h3><br/><table class="responsive-table striped"><thead><tr><th data-field="JSON KEY">JSON KEY</th><th data-field="TYPE">TYPE</th><th data-field="VALUE">VALUE</th><th data-field="DESCRIPTION">DESCRIPTION</th></tr></thead><tbody><tr><td>auth_code</td><td>String</td><td>String</td><td>Google Auth code</td></tr><tr><td>user_email</td><td>String</td><td>User\'s email</td><td>Authenticated user\'s email</td></tr></tbody></table>');
-}
+//function authentication() {
+//$('li').removeClass("active");
+//        $('li#auth').addClass("active");
+//        $('.nav-wrapper div.header').html('API Documentation | Authentication');
+//        $('div#index-banner div.container').html('<h3>User Authentication</h3><br/><table class="responsive-table striped"><thead><tr><th data-field="JSON KEY">JSON KEY</th><th data-field="TYPE">TYPE</th><th data-field="VALUE">VALUE</th><th data-field="DESCRIPTION">DESCRIPTION</th></tr></thead><tbody><tr><td>auth_code</td><td>String</td><td>String</td><td>Google Auth code</td></tr><tr><td>user_email</td><td>String</td><td>User\'s email</td><td>Authenticated user\'s email</td></tr></tbody></table>');
+//}
 
 function addSchemeAPI() {
 $('.nav-wrapper div.header').html('API Documentation | Manage Schemes > Add');

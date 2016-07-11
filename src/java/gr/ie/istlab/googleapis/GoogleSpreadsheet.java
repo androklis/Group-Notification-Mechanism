@@ -268,7 +268,7 @@ public class GoogleSpreadsheet {
      * occurred. Exceptions produced by failed or interrupted I/O operations
      * @throws ServiceException The ServiceException class is the base exception
      * class used to indicate an error while processing a GDataRequest
-     * @throws EntityNotFoundException
+     * @throws EntityNotFoundException When no Entity with the specified Key could be found
      */
     public void checkWorksheet(String fullTextSearchString) throws IOException,
             ServiceException, EntityNotFoundException {

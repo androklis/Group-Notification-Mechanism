@@ -3,7 +3,6 @@ package gr.ie.istlab.googleapis;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-//import static gr.ie.istlab.GNMConstants.GOOGLE_CREDENTIALS;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -64,11 +63,16 @@ public class GoogleMail {
     }
 
     /**
+     * Returns a Credential from user's refresh token to be used to send
+     * notifications when user is not online.
      *
-     * @param userEmail
-     * @return
-     * @throws IOException
-     * @throws GeneralSecurityException
+     * @param userEmail {String} - User's email for the credential.
+     * @return Credential for provided email address using user's refresh token
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. Exceptions produced by failed or interrupted I/O operations
+     * @throws GeneralSecurityException A generic security exception class that
+     * provides type safety for all the security-related exception classes that
+     * extend from it.
      */
     private Credential generateCredentialWithUserApprovedToken(String userEmail) throws IOException,
             GeneralSecurityException {

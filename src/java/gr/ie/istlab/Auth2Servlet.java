@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 //import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static gr.ie.istlab.GNMConstants.getAllEntities;
 
 /**
  *
@@ -74,7 +73,7 @@ public class Auth2Servlet extends HttpServlet {
             GOOGLE_CREDENTIALS.put(request.getParameter("json[user_email]"), getGoogleCredential(request.getParameter("json[auth_code]")));
 
             String refreshToken = GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getRefreshToken();
-       
+
             if (refreshToken != null) {
                 GNMConstants.storeData(request.getParameter("json[user_email]"), refreshToken);
             }
@@ -131,10 +130,6 @@ public class Auth2Servlet extends HttpServlet {
 //        }
     }
 
-    @Override
-    public void destroy() {
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -165,15 +160,15 @@ public class Auth2Servlet extends HttpServlet {
     }
 
     /**
-     * Returns a short description of the servlet.
+     * A convenience method which can be overridden so that there's no need to
+     * call super.init(config). Instead of overriding init(ServletConfig),
+     * simply override this method and it will be called by
+     * GenericServlet.init(ServletConfig config). The ServletConfig object can
+     * still be retrieved via getServletConfig().
      *
-     * @return a String containing servlet description
+     * @throws ServletException if an exception occurs that interrupts the
+     * servlet's normal operation
      */
-    @Override
-    public String getServletInfo() {
-        return getClass().getName();
-    }
-
     @Override
     public void init() throws ServletException {
         try {
@@ -194,6 +189,13 @@ public class Auth2Servlet extends HttpServlet {
         }
     }
 
+    /**
+     * Creates a GoogleCredential using the authorization code provided.
+     *
+     * @param authCode {String} - Google authorization code to create
+     * GoogleCredentials
+     * @return a GoogleCredential instance
+     */
     private GoogleCredential getGoogleCredential(String authCode) {
 
         GoogleCredential credential = null;
