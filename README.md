@@ -1,61 +1,20 @@
-# README #
+# Group Notification Mechanism #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This repository stands for a thesis Mashup project for postgraduate degree in Informatics Engineering at Technological Educational Institute of Crete.
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Using Google APIs, Group Notification Mechanism accesses user's Google Calendars and Google Mail to manage and send notification schemes to a group of people. Creating a new scheme can be also created a new event in the Calendar selected or from existing events, that are shown as suggestions, a new scheme can be created.
 
-### How do I get set up? ###
+### APIs used ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
-
-# Project Name
-
-TODO: Write a project description
-
-## Installation
-
-TODO: Describe the installation process
-
-## Usage
-
-TODO: Write usage instructions
-
-## Contributing
-
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
-## History
-
-TODO: Write history
-
-## Credits
-
-TODO: Write credits
-
-## License
-
-TODO: Write license
+* Google Contacts API (front-end)
+>*To retrieve user's contacts.*
+* GMail API (back-end)
+>*To send notification from user's email address.*
+* Google Calendar API (front-end & back-end)
+>*To get user's upcoming events.*
+* Google Drive API (back-end)
+>*To store a Google Spreadsheet to use it as a db for notification schemes.*
+* Google Spreadsheet API - Google Sheets API (back-end)
+>*To be used as a db for notification schemes.*
