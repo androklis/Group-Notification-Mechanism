@@ -62,16 +62,21 @@ public class GNMServlet extends HttpServlet {
                         switch (calendarId) {
                             case "8p0n8hong8jbiee7cs7da8h99o@group.calendar.google.com":
                                 //mtp calendar
-
-                                URL url = new URL("http://mtp-class2014-2015-dot-istlabcalendar.appspot.com/iSTLab_istlabCalendar_servlet?action=createEvent&eventProperties=%7B%22start%22%3A%7B%22dateTime%22%3A%22" + request.getParameter("json[eventStart]").split(" ")[0] + "T" + (request.getParameter("json[eventStart]").split(" ")[1]).replaceAll(":", "%3A") + "%3A00%22%2C%22timeZone%22%3A%22Europe%2FAthens%22%7D%2C%22end%22%3A%7B%22dateTime%22%3A%22" + request.getParameter("json[eventEnd]").split(" ")[0] + "T" + (request.getParameter("json[eventStart]").split(" ")[1]).replaceAll(":", "%3A") + "%3A00%22%2C%22timeZone%22%3A%22Europe%2FAthens%22%7D%2C%22summary%22%3A%22" + request.getParameter("json[subject]").replaceAll(" ", "+") + "%22%2C%22attendees%22%3A%5B%7B%22email%22%3A%22" + request.getParameter("json[user_email]") + "%22%7D%2C%7B%22email%22%3A%22" + request.getParameter("json[contacts]").replaceAll(",", "%22%7D%2C%7B%22email%22%3A%22") + "%22%7D%5D%2C%22status%22%3A%22confirmed%22%2C%22description%22%3A%22" + request.getParameter("json[message]").replaceAll(" ", "+") + "%22%2C%22location%22%3A%22%22%7D&additionalExtendedProperties=%7B%22eventState%22%3A%22completed%22%2C%22locationMap%22%3A%22%22%2C%22eventAffordances%22%3A%22%7B%5C%22disqus%5C%22%3Atrue%2C%5C%22googleDrive%5C%22%3Atrue%2C%5C%22flickr%5C%22%3Atrue%2C%5C%22youTube%5C%22%3Atrue%2C%5C%22asana%5C%22%3Atrue%2C%5C%22wUnderground%5C%22%3Atrue%2C%5C%22eventTagging%5C%22%3Atrue%2C%5C%22tasks_disqus%5C%22%3Atrue%2C%5C%22tasks_googleDrive%5C%22%3Atrue%2C%5C%22tasks_flickr%5C%22%3Atrue%2C%5C%22tasks_youTube%5C%22%3Atrue%7D%22%7D&googleToken=" + GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getAccessToken() + "&asanaToken=null&flickrToken=null&flickrTokenSecret=null");
-                                HttpURLConnection c = (HttpURLConnection) url.openConnection();  //connecting to url
-                                c.setConnectTimeout(0);
-                                c.setRequestMethod("GET");
-                                BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));  //stream to resource
+                                URL createURL = new URL("http://mtp-class2014-2015-dot-istlabcalendar.appspot.com/iSTLab_istlabCalendar_servlet?action=createEvent&eventProperties=%7B%22start%22%3A%7B%22dateTime%22%3A%22" + request.getParameter("json[eventStart]").split(" ")[0] + "T" + (request.getParameter("json[eventStart]").split(" ")[1]).replaceAll(":", "%3A") + "%3A00%22%2C%22timeZone%22%3A%22Europe%2FAthens%22%7D%2C%22end%22%3A%7B%22dateTime%22%3A%22" + request.getParameter("json[eventEnd]").split(" ")[0] + "T" + (request.getParameter("json[eventStart]").split(" ")[1]).replaceAll(":", "%3A") + "%3A00%22%2C%22timeZone%22%3A%22Europe%2FAthens%22%7D%2C%22summary%22%3A%22" + request.getParameter("json[subject]").replaceAll(" ", "+") + "%22%2C%22attendees%22%3A%5B%7B%22email%22%3A%22" + request.getParameter("json[user_email]") + "%22%7D%2C%7B%22email%22%3A%22" + request.getParameter("json[contacts]").replaceAll(",", "%22%7D%2C%7B%22email%22%3A%22") + "%22%7D%5D%2C%22status%22%3A%22confirmed%22%2C%22description%22%3A%22" + request.getParameter("json[message]").replaceAll(" ", "+").replaceAll("\\<.*?>", "") + "%22%2C%22location%22%3A%22%22%7D&additionalExtendedProperties=%7B%22eventState%22%3A%22completed%22%2C%22locationMap%22%3A%22%22%2C%22eventAffordances%22%3A%22%7B%5C%22disqus%5C%22%3Atrue%2C%5C%22googleDrive%5C%22%3Atrue%2C%5C%22flickr%5C%22%3Atrue%2C%5C%22youTube%5C%22%3Atrue%2C%5C%22asana%5C%22%3Atrue%2C%5C%22wUnderground%5C%22%3Atrue%2C%5C%22eventTagging%5C%22%3Atrue%2C%5C%22tasks_disqus%5C%22%3Atrue%2C%5C%22tasks_googleDrive%5C%22%3Atrue%2C%5C%22tasks_flickr%5C%22%3Atrue%2C%5C%22tasks_youTube%5C%22%3Atrue%7D%22%7D&googleToken=" + GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getAccessToken() + "&asanaToken=null&flickrToken=null&flickrTokenSecret=null");
+                                HttpURLConnection createConn = (HttpURLConnection) createURL.openConnection();  //connecting to url
+                                createConn.setConnectTimeout(0);
+                                createConn.setRequestMethod("GET");
+                                BufferedReader in = new BufferedReader(new InputStreamReader(createConn.getInputStream()));  //stream to resource
                                 String str = in.readLine();
                                 in.close();  //closing stream
                                 JSONObject jsonObj = new JSONObject(str);
+
                                 eventId = (String) jsonObj.get("id");
+
+                                URL updateURL = new URL("http://mtp-class2014-2015-dot-istlabcalendar.appspot.com/iSTLab_istlabCalendar_servlet?action=updateEvent&eventId=" + eventId + "&eventProperties=%7B%22start%22%3A%7B%22dateTime%22%3A%22" + request.getParameter("json[eventStart]").split(" ")[0] + "T" + (request.getParameter("json[eventStart]").split(" ")[1]).replaceAll(":", "%3A") + "%3A00%22%2C%22timeZone%22%3A%22Europe%2FAthens%22%7D%2C%22end%22%3A%7B%22dateTime%22%3A%22" + request.getParameter("json[eventEnd]").split(" ")[0] + "T" + (request.getParameter("json[eventStart]").split(" ")[1]).replaceAll(":", "%3A") + "%3A00%22%2C%22timeZone%22%3A%22Europe%2FAthens%22%7D%2C%22summary%22%3A%22" + request.getParameter("json[subject]").replaceAll(" ", "+") + "%22%2C%22status%22%3A%22confirmed%22%2C%22description%22%3A%22" + request.getParameter("json[message]").replaceAll(" ", "+").replaceAll("\\<.*?>", "") + "%22%2C%22location%22%3A%22%22%7D&additionalExtendedProperties=%7B%22eventState%22%3A%22completed%22%2C%22locationMap%22%3A%22%22%2C%22eventAffordances%22%3A%22%7B%5C%22disqus%5C%22%3Atrue%2C%5C%22googleDrive%5C%22%3Atrue%2C%5C%22flickr%5C%22%3Atrue%2C%5C%22youTube%5C%22%3Atrue%2C%5C%22asana%5C%22%3Atrue%2C%5C%22wUnderground%5C%22%3Atrue%2C%5C%22eventTagging%5C%22%3Atrue%2C%5C%22tasks_disqus%5C%22%3Atrue%2C%5C%22tasks_googleDrive%5C%22%3Atrue%2C%5C%22tasks_flickr%5C%22%3Atrue%2C%5C%22tasks_youTube%5C%22%3Atrue%7D%22%7D&googleToken=" + GOOGLE_CREDENTIALS.get(request.getParameter("json[user_email]")).getAccessToken() + "&asanaToken=null&flickrToken=null&flickrTokenSecret=null");
+                                HttpURLConnection updateConn = (HttpURLConnection) updateURL.openConnection();  //connecting to url
+                                updateConn.setConnectTimeout(0);
+                                updateConn.setRequestMethod("GET");
 
                                 break;
 //                            case "99maciu7cpof4v3v0dsrkt6g1k@group.calendar.google.com":
@@ -217,11 +222,6 @@ public class GNMServlet extends HttpServlet {
         }
     }
 
-    @Override
-    public void init() throws ServletException {
-
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -249,16 +249,6 @@ public class GNMServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return getClass().getName();
     }
 
 }

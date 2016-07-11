@@ -17,7 +17,7 @@ function delCard() {
     };
 
     $.post("GNMServlet", {json: json}, function (response, statusText, xhr) {
-        if (xhr.status === 200) {
+        if (xhr.status === 200 || xhr.status === 401) {
             $("div[id=" + $('#uuid').val() + "]").remove();
         }
         $('.progress').toggle();

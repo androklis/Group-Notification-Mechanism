@@ -1,5 +1,6 @@
 package gr.ie.istlab;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gdata.util.ServiceException;
 import gr.ie.istlab.googleapis.GoogleSpreadsheet;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class CheckServlet extends HttpServlet {
 
         try {
             GoogleSpreadsheet.getInstance().checkWorksheet(dateFormat.format(date));
-        } catch (ServiceException ex) {
+        } catch (ServiceException | EntityNotFoundException ex) {
             Logger.getLogger(CheckServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -72,15 +73,5 @@ public class CheckServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }
