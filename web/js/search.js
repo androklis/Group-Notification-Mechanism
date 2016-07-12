@@ -13,11 +13,11 @@
             body: 'Developed by Androklis Gregoriou, Group Notification Mechanism Rest API Documentation.'
         });
 
-        window.index.add({
-            href: 'javascript:authentication();|Authentication',
-            title: 'Add new scheme',
-            body: 'API Documentation to authenticate new user.'
-        });
+//        window.index.add({
+//            href: 'javascript:authentication();|Authentication',
+//            title: 'Authentication',
+//            body: 'API Documentation to authenticate new user.'
+//        });
 
         window.index.add({
             href: 'javascript:addSchemeAPI();|Add new scheme',
@@ -33,7 +33,7 @@
         
          window.index.add({
             href: 'javascript:updateSchemeAPI();|Update a scheme',
-            title: 'Delete a scheme',
+            title: 'Update a scheme',
             body: 'API Documentation to update a Notification Scheme.'
         });
         
