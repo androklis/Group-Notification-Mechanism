@@ -291,8 +291,10 @@ $(function () {
             clear: '',
             close: 'DONE',
             onSet: function () {
-                $('#endDate').pickadate('picker').set('min', new Date((new Date(($('#startDate').val()))).valueOf() + 1000 * 3600 * 24));
-                $('#endDate').pickadate('picker').set('select', new Date((new Date(($('#startDate').val()))).valueOf() + 1000 * 3600 * 24));
+//                $('#endDate').pickadate('picker').set('min', new Date((new Date(($('#startDate').val()))).valueOf() + 1000 * 3600 * 24));
+//                $('#endDate').pickadate('picker').set('select', new Date((new Date(($('#startDate').val()))).valueOf() + 1000 * 3600 * 24));
+                $('#endDate').pickadate('picker').set('min', new Date((new Date(($('#startDate').val()))).valueOf()));
+                $('#endDate').pickadate('picker').set('select', new Date((new Date(($('#startDate').val()))).valueOf()));
             }
         });
 
