@@ -17,7 +17,7 @@ import java.util.HashMap;
  * @author Androklis Gregoriou
  *
  */
-public class GNMConstants {
+public abstract class GNMConstants {
 
     public static GoogleCredential SERVICE_GOOGLE_CREDENTIAL = null;
 
