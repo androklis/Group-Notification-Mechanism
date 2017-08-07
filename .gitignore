@@ -1,6 +1,5 @@
 # NetBeans specific #
-nbproject/private
-nbproject/ant-deploy.xml
+/nbproject/*
 build/
 dist/
 
@@ -10,4 +9,5 @@ dist/
 # Package Files #
 *.war
 *.ear
-src/java/gr/ie/istlab/users/credentials/NewClass.java
+
+build.xml
